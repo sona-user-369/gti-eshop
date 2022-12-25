@@ -1,0 +1,442 @@
+{% extends 'DashBoard/index.html' %}
+
+{% load static %}
+
+
+{% block other %}
+    <section class="section">
+      {% if type == 'user' %}
+      <div class="col-lg-8 mx-auto">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Ajout d'utilisateur</h5>
+
+              <!-- Vertical Form -->
+              <form class="row g-3" id="form_user" method="post">
+                {% csrf_token %}
+
+                {% for field in form %}
+                  <div class="col-12">
+                    {{ field.label_tag }}
+
+                    {% if field.id_for_label == 'id_email' %}
+                          <div class="input-group has-validation">
+                            <span class="input-group-text" id="inputGroupPrepend">@</span>
+                          {{ field }}
+                    {% else %}
+
+                          {{ field }}
+
+                    {% endif %}
+
+                    {% if field.id_for_label == 'id_email' %}
+                            <div id="email_exist" class="invalid-feedback">Cet email existe deja!</div>
+                          </div>
+                    {% endif %}
+
+                    {% if field.id_for_label == 'id_contact' %}
+                          <div id="contact_invalid" class="invalid-feedback">Please, enter your contact!</div>
+                    {% endif %}
+
+                  </div>
+                {% endfor %}
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="reset" class="btn btn-secondary">Reset</button>
+                </div>
+              </form><!-- Vertical Form -->
+
+            </div>
+          </div>
+      </div><!-- End Recent Sales -->
+      {% endif %}
+
+
+      {% if type == 'categorie' %}
+
+        <div class="col-12">
+            <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Ajout de Categorie</h5>
+
+              <!-- Vertical Form -->
+              <form class="row g-3" id="form_categorie" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% for field in form %}
+                  <div class="col-12 has-error ">
+                    {{ field.label_tag }}
+                    {{ field }}
+
+                    {% if field.id_for_label == 'id_image' %}
+
+                        <div class="invalid-feedback">Please enter an Image!</div>
+
+                    {% endif %}
+
+                    {% if field.id_for_label == 'id_nom' %}
+
+                        <div class="invalid-feedback">Un categorie avec ce nom existe deja!</div>
+
+                    {% endif %}
+                  </div>
+                {% endfor %}
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="reset" class="btn btn-secondary">Reset</button>
+                </div>
+              </form><!-- Vertical Form -->
+
+            </div>
+          </div>
+        </div><!-- End Recent Sales -->
+
+      {% endif %}
+
+      {% if type == 'sousCategorie' %}
+
+        <div class="col-12">
+              <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Ajout de Sous-Categorie</h5>
+
+              <!-- Vertical Form -->
+              <form class="row g-3" id="form_sous_categorie" method="post">
+                {% csrf_token %}
+
+                {% for field in form %}
+
+                  <div class="col-12 has-error">
+                    {{ field.label_tag }}
+                    {{ field }}
+
+                    {% if field.id_for_label == 'id_nom' %}
+
+                        <div class="invalid-feedback">Un sous-categorie avec ce nom existe deja</div>
+
+                    {% endif %}
+
+                  </div>
+
+                {% endfor %}
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="reset" class="btn btn-secondary">Reset</button>
+                </div>
+              </form><!-- Vertical Form -->
+
+            </div>
+          </div>
+        </div><!-- End Recent Sales -->
+
+      {% endif %}
+
+      {% if type == 'product' %}
+
+      <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Ajout de Produit</h5>
+
+              <!-- Vertical Form -->
+              <form class="row g-3" id="form_product" method="post">
+                {% csrf_token %}
+
+                {% for field in form %}
+                  <div class="col-12 has-error ">
+                    {{ field.label_tag }}
+                    {{ field }}
+
+                    {% if field.id_for_label == 'id_image1' %}
+
+                        <div class="invalid-feedback">Please enter an Image!</div>
+
+                    {% endif %}
+                    {% if field.id_for_label == 'id_image2' %}
+
+                        <div class="invalid-feedback">Please enter an Image!</div>
+
+                    {% endif %}
+                    {% if field.id_for_label == 'id_image3' %}
+
+                        <div class="invalid-feedback">Please enter an Image!</div>
+
+                    {% endif %}
+                    {% if field.id_for_label == 'id_sous_categorie' %}
+
+                        <div class="invalid-feedback">Please enter a sous-categorie matching categorie!</div>
+
+                    {% endif %}
+                  </div>
+                {% endfor %}
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="reset" class="btn btn-secondary">Reset</button>
+                </div>
+              </form><!-- Vertical Form -->
+
+            </div>
+          </div>
+      </div><!-- End Recent Sales -->
+
+      {% endif %}
+
+
+    </section>
+{% endblock %}
+
+{% block script %}
+
+<script>
+  $(document).ready(function () {
+            // catch the form's submit event
+            $('#form_user').submit(function () {
+                // create an AJAX call
+                donne = {'data' : $(this).serialize() , 'superuser' : 0 , 'add': 1 } ;
+                $.ajax({
+                      url: "{% url 'verify_connection' %}",
+
+                      success: function(response){
+                           $.ajax({
+                                data: donne , // get the form data
+                                type: $(this).attr('method'), // GET or POST
+                                url: "{% url 'register' %}",
+                                // on success
+                                success: function (response) {
+                                    if($('#mova')){
+                                    $('#mova').remove();
+                                    }
+
+                                    if($('#movb')){
+                                    $('#movb').remove();
+                                    }
+
+                                    if($('#movc')){
+                                    $('#movc').remove();
+                                    }
+                                    document.getElementById('id_first_name').value = '';
+                                    document.getElementById('id_last_name').value = '';
+                                    document.getElementById('id_username').value = '';
+                                    $('input[type="email"]#id_email').val('');
+                                    $('input[type="password"]#id_password').val('');
+                                    document.getElementById('id_contact').value = '';
+                                    document.getElementById('id_localisation').value = '';
+                                    swal('Ajouté' , 'Utilisateur ajouté avec succés', 'success').then(function() { location.reload(); });
+                                },
+                                // on error
+                                error: function (response) {
+                                    // alert the error if any error occured
+
+                                    $('#mova').remove();
+                                    $('#movb').remove();
+                                    $('#movc').remove();
+
+                                    if(response.responseJSON.email){
+                                    $('input[type="email"]#id_email').addClass("is-invalid") ;
+                                    }
+
+                                    if(response.responseJSON.contact){
+                                    document.getElementById('id_contact').classList.add('is-invalid');
+                                    }
+
+
+
+
+                                    alert(response.responseJSON.email);
+                                    console.log(response.responseJSON.contact)
+                                }
+                            });
+                      },
+
+                      error: function(response){
+                        document.location.href = "{% url 'login_admin' %}' %}" ;
+                      }
+
+                });
+
+
+                return false;
+            });
+
+
+            $('#form_categorie').submit(function () {
+                // create an AJAX call
+                donne = {'data' : $(this).serialize() , 'superuser' : 0 , 'add': 1 } ;
+                $.ajax({
+                      url: "{% url 'verify_connection' %}",
+
+                      success: function(response){
+
+                        $.ajax({
+                            data: new FormData(this) , // get the form data
+                            type: $(this).attr('method'), // GET or POST
+                            url: "{% url 'add_categorie' %}",
+
+                            enctype: 'multipart/form-data' ,
+                            processData: false,
+                            contentType: false,
+                            // on success
+                            success: function (response) {
+
+                                $(this).trigger('reset');
+                                //alert($(this).serialize());
+                                swal('Ajouté' , 'Categorie ajouté avec succés', 'success').then(function() { location.reload(); });
+                            },
+                            // on error
+                            error: function (response) {
+                                // alert the error if any error occured
+
+
+
+                                if(response.responseJSON.image){
+                                  document.getElementById('id_image').classList.add('is-invalid');
+                                }
+
+                                if(response.responseJSON.nom){
+                                    document.getElementById('id_nom').classList.add('is-invalid');
+                                }
+
+
+
+
+                                alert(response.responseJSON.email);
+                                console.log(response.responseJSON.contact)
+                            }
+                        });
+
+                      },
+
+                      error: function(response){
+                        document.location.href = "{% url 'login_admin' %}" ;
+                      }
+                });
+
+
+                return false;
+            });
+
+
+            $('#form_sous_categorie').submit(function () {
+                // create an AJAX call
+
+                $.ajax({
+                      url: "{% url 'verify_connection' %}",
+
+                      success: function(response){
+
+                           $.ajax({
+                                data: $(this).serialize() , // get the form data
+                                type: $(this).attr('method'), // GET or POST
+                                url: "{% url 'add_sousCategorie' %}",
+                                // on success
+                                success: function (response) {
+
+                                    $(this).trigger('reset');
+                                    swal('Ajouté' , 'Sous-categorie ajouté avec succés', 'success').then(function() { location.reload(); });
+                                },
+                                // on error
+                                error: function (response) {
+                                    // alert the error if any error occured
+
+
+
+                                    if(response.responseJSON.nom){
+                                      document.getElementById('id_nom').classList.add('is-invalid');
+                                    }
+
+
+
+
+
+
+
+                                }
+                            });
+
+                      },
+
+                      error: function(response){
+                        document.location.href = "{% url 'login_admin' %}" ;
+                      }
+
+                });
+
+
+                return false;
+            });
+
+
+            $('#form_product').submit(function () {
+                // create an AJAX call
+
+                $.ajax({
+                      url: "{% url 'verify_connection' %}",
+
+                      success: function(response){
+
+                          $.ajax({
+                            data: new FormData(this) , // get the form data
+                            type: $(this).attr('method'), // GET or POST
+                            url: "{% url 'add_product' %}",
+                            enctype: 'multipart/form-data',
+                            processData: false,
+                            contentType:false,
+                            // on success
+                            success: function (response) {
+
+                                $(this).trigger('reset');
+                                swal('Ajouté' , 'Produit ajouté avec succés', 'success').then(function() { location.reload(); });
+                            },
+                            // on error
+                            error: function (response) {
+                                // alert the error if any error occured
+
+
+
+                                if(response.responseJSON.image1){
+                                  document.getElementById('id_image1').classList.add('is-invalid');
+                                }
+                                if(response.responseJSON.image2){
+                                  document.getElementById('id_image2').classList.add('is-invalid');
+                                }
+                                if(response.responseJSON.image3){
+                                  document.getElementById('id_image3').classList.add('is-invalid');
+                                }
+
+                                if(response.responseJSON.category_not_exist){
+                                document.getElementById('id_sous_categorie').classList.add('is-invalid');
+                                }
+
+
+
+
+
+                            }
+                        });
+
+                      },
+
+                      error: function(response){
+
+                        document.location.href = "{% url 'login_admin' %}" ;
+
+                      }
+
+                });
+
+
+                return false;
+            });
+
+
+
+
+  }) ;
+</script>
+
+{% endblock %}
+
+
+

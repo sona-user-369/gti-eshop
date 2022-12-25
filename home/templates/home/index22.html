@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+{% load rest_framework %}
+{% load static %}
+<html>
+
+<!-- molla/index22.html  22 Nov 2019 10:01:54 GMT -->
+<head>
+    {% block title %}
+    <title>GTI-Home</title>
+    {% endblock %}
+	<meta charset="UTF-8" lang="fr-FR">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="keywords" content="HTML5 Template">
+    <meta name="description" content="Molla - Bootstrap eCommerce Template">
+    <meta name="author" content="p-themes">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'assets_home/images/icons/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'assets_home/images/icons/gti-logo.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'assets_home/images/icons/gti-logo.png' %}">
+    <link rel="manifest" href="static/assets/images/icons/site.html">
+    <link rel="mask-icon" href="{% static 'assets_home/images/icons/gti-logo.png' %}" color="#666666">
+    <link rel="shortcut icon" href="{% static 'assets_home/images/icons/gti-logo.png' %}">
+    <meta name="apple-mobile-web-app-title" content="Molla">
+    <meta name="application-name" content="Molla">
+    <meta name="msapplication-TileColor" content="#cc9966">
+    <meta name="msapplication-config" content="{% static 'assets_home/images/icons/browserconfig.xml' %}">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="{% static 'assets_home/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets_home/js/owl.carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'assets_home/css/plugins/magnific-popup/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'assets_home/js/nouislider.css' %}">
+
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="{% static 'assets_home/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'assets_home/css/skins/skin-demo-22.css' %}">
+    <link rel="stylesheet" href="{% static 'assets_home/css/demos/demo-22.css' %}">
+    <!--<link rel="stylesheet" href="{% static 'assets_home/css/profil.css' %}">-->
+
+    {% block style %}
+    <style>
+
+
+    </style>
+
+    {% endblock %}
+
+</head>
+<body>
+
+    <div class="page-wrapper">
+        <header class="header header-22">
+            <div class="header-middle">
+                <div class="container">
+                    <div class="header-left">
+                        <button class="mobile-menu-toggler">
+                            <span class="sr-only">Toggle mobile menu</span>
+                            <i class="icon-bars"></i>
+                        </button>
+
+                        <a href="index.html" class="logo">
+                            <img src="{% static 'assets_home/images/demos/demo-22/gti-logo.png' %}" alt="Molla Logo" width="85" height="5">
+                        </a>
+                    </div><!-- End .header-left -->
+
+                    <div class="header-center">
+                        <div class="header-search header-search-extended header-search-visible header-search-no-round">
+                            <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
+                            <form action="#" method="get" id="searchForm">
+                                <div class="header-search-wrapper search-wrapper-wide">
+                                    <label for="q" class="sr-only">Search</label>
+                                    <input type="search" class="form-control" name="search" id="q" placeholder="Rechercher produit ..." required>
+
+                                    <button class="btn btn-success" type="submit"><i class="icon-search"></i></button>
+                                </div><!-- End .header-search-wrapper -->
+                            </form>
+                        </div><!-- End .header-search -->
+                    </div>
+
+                    <div class="header-right" style="margin-right:30px;">
+
+                        <a href="{% url 'wishlist' %}" class="wishlist-link">
+                            <i class="icon-heart-o" id="id_wishlist"></i>
+                            {% if wishlist_count %}
+                            <span class="wishlist-count" id="id_wishlist_count">{{ wishlist_count }}</span>
+                            {% else %}
+                            <span class="wishlist-count" id="id_wishlist_count">0</span>
+                            {% endif %}
+                        </a>
+
+                        <div class="dropdown cart-dropdown">
+                            <a href="{% url 'cart' %}" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+                                <i class="icon-shopping-cart" id="id_cart"></i>
+                                {% if cart_count %}
+                                <span class="cart-count" id="id_cart_count">{{ cart_count }}</span>
+                                {% else %}
+                                <span class="cart-count" id="id_cart_count">0</span>
+                                {% endif %}
+                            </a>
+                            {% if cart_count%}
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <div class="dropdown-cart-products">
+                                    {% for p in cart_product.product_list %}
+                                    <div class="product" id="id_div{{ p.produit.pk }}">
+                                        <div class="product-cart-details">
+                                            <h4  class="product-title">
+                                                <a href="product.html">{{ p.produit.fields.nom }}</a>
+                                            </h4>
+
+                                            <span class="cart-product-info">
+                                                <span  class="cart-product-qty">${{ p.quantite }}</span>
+                                                x ${{ p.produit.fields.prix }}
+                                                <span class="each__total">={{ p.total }}</span>
+                                            </span>
+                                        </div><!-- End .product-cart-details -->
+
+                                        <figure class="product-image-container">
+                                            <a href="product.html" class="product-image">
+                                                <img src="{{ p.produit.fields.image1 }}" alt="product">
+                                            </a>
+                                        </figure>
+                                        <button  class="btn-remove" onclick="deleteCartHome('{{ p.produit.pk }}', 'id_div'+'{{ p.produit.pk }}'); " title="Remove Product"><i class="icon-close"></i></button>
+                                    </div><!-- End .product -->
+                                    {% endfor %}
+
+                                </div><!-- End .cart-product -->
+
+                                <div class="dropdown-cart-total">
+                                    <span>Total</span>
+
+                                    <span class="cart-total-price" id="total_cart_price" >${{ total }}</span>
+                                </div><!-- End .dropdown-cart-total -->
+
+                                <div class="dropdown-cart-action">
+                                    <a href="{% url 'cart' %}" class="btn btn-success">Voir Panier</a>
+                                    <a href="#" onclick="gotToShip() ; return false ;" class="btn btn-outline-success"><span>Commander</span><i class="icon-long-arrow-right"></i></a>
+                                </div><!-- End .dropdown-cart-total -->
+                            </div><!-- End .dropdown-menu -->
+                            {% endif %}
+                        </div><!-- End .cart-dropdown -->
+                    </div><!-- End .header-right -->
+                </div><!-- End .container -->
+            </div><!-- End .header-middle -->
+
+            <div class="wrap-container sticky-header">
+                <div class="header-bottom">
+                    <div class="container">
+                        <div class="header-left">
+                            <div class="dropdown category-dropdown" data-visible="true">
+                                <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-display="static" title="Browse Categories">
+                                    Explorer les catégories
+                                </a>
+
+                                <div class="dropdown-menu">
+                                    <nav class="side-nav">
+                                        <ul class="menu-vertical sf-arrows sf-js-enabled" style="touch-action: pan-y;">
+
+                                            {% for categorie in categories %}
+                                            <li class="megamenu-container">
+                                                <a class="sf-with-ul" href="{% url 'retrieve_categorie' id=categorie.categorie_pk %}"><i class="icon-couch"></i>{{categorie.categorie_data.nom}}</a>
+                                                {% if categorie.len_sous_categories != 0 %}
+
+                                                <div class="megamenu" style="display: none;">
+                                                    <div class="row no-gutters">
+                                                        <div class="col-md-8">
+                                                            <div class="menu-col">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        {% for sous_categorie in categorie.its_sous_categorie %}
+
+                                                                        <div class="menu-title"><a href="">{{sous.categorie.nom}}</a></div><!-- End .menu-title -->
+
+
+                                                                        {% endfor %}
+                                                                    </div><!-- End .col-md-6 -->
+
+
+                                                                </div><!-- End .row -->
+                                                            </div><!-- End .menu-col -->
+                                                        </div><!-- End .col-md-8 -->
+
+                                                        <div class="col-md-4">
+                                                            <div class="banner banner-overlay">
+                                                                <a href="category.html" class="banner banner-menu">
+                                                                    <img src="{% static 'assets_home/images/demos/demo-13/menu/banner-2.jpg' %}" alt="Banner">
+                                                                </a>
+                                                            </div><!-- End .banner banner-overlay -->
+                                                        </div><!-- End .col-md-4 -->
+                                                    </div><!-- End .row -->
+                                                </div><!-- End .megamenu -->
+
+                                                {% endif %}
+                                            </li>
+                                            {% endfor %}
+
+                                        </ul><!-- End .menu-vertical -->
+                                    </nav><!-- End .side-nav -->
+                                </div><!-- End .dropdown-menu -->
+                            </div>
+                        </div>
+                        <div class="header-center">
+                            <nav class="main-nav">
+                                <ul class="menu sf-arrows">
+                                    <li class="megamenu-container">
+                                        <a href="/" class="">Home</a>
+
+
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'category' %}" class="">Boutique</a>
+
+
+                                    </li>
+                                     <li>
+                                        <a href="{% url 'about' %}" class="">A propos</a>
+
+
+                                    </li>
+                                     <li>
+                                        <a href="{% url 'contact' %}" class="">Contacter nous</a>
+
+
+                                    </li>
+
+
+
+
+                                </ul><!-- End .menu -->
+                            </nav><!-- End .main-nav -->
+                        </div><!-- End .header-left -->
+
+                        <div class="header-right">
+                            <div class="header-text">
+                                <ul class="top-menu top-link-menu">
+                                    <li>
+                                        <ul>
+                                            {% if username %}
+
+                                            <a href="{% url 'my_profil' %}" ><i class="icon-user"></i>My Profil </a>
+
+                                            <ul class="m-3">
+                                                <li><a href="#" onclick="logout(); return false ;" >Se deconnecter</a></li>
+                                            </ul>
+
+                                            {% else %}
+
+                                            <li><a href="#signin-modal" data-toggle="modal" id="link_login"><i class="icon-user"></i>Se connecter / Créer un compte</a></li>
+                                            {% endif %}
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div><!-- End .header-text -->
+                        </div><!-- End .header-right -->
+                    </div><!-- End .container -->
+                </div><!-- End .header-bottom -->
+            </div><!-- End .wrap-container -->
+        </header><!-- End .header -->
+       {% block main %}
+        <main class="main">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-12">
+                        <div class="intro-slider-container mt-2">
+                            <div class="intro-slider owl-carousel owl-theme owl-nav-inside owl-light" data-toggle="owl" 
+                                data-owl-options='{
+                                    "dots": true,
+                                    "nav": true, 
+                                    "responsive": {
+                                        "1200": {
+                                            "nav": true,
+                                            "dots": true
+                                        }
+                                    }
+                                }'>
+                                <div class="intro-slide banner-lg" style="background-image: url({% static 'assets/images/demos/demo-22/slider/slide-1.jpg' %});">
+                                    <div class="intro">
+                                        <div class="title">
+                                            <a>Accord du jour</a>
+                                        </div>
+                                        <div class="content">
+                                            <h3><span>Jusqu'à</span> 20% <span>de réduction</span></h3><h4>Offres lourdes</h4>
+                                        </div>
+                                        <div class="action">
+                                            <a href="category.html">Découvrer maintenant</a>
+                                        </div>
+                                    </div>
+                                </div><!-- End .intro-slide -->
+
+                                <div class="intro-slide banner-lg" style="background-image: url({% static 'assets/images/demos/demo-22/slider/slide-2.jpg' %});">
+                                    <div class="intro">
+                                        <div class="title">
+                                            <a>clearance</a>
+                                        </div>
+                                        <div class="content">
+                                            <h3>power tools<br>Jusqu'à <span>30% de réduction</span></h3>
+                                        </div>
+                                        <div class="action">
+                                            <a href="category.html">Découvrer maintenant</a>
+                                        </div>
+                                    </div>
+                                </div><!-- End .intro-slide -->
+
+
+                                
+                            </div><!-- End .intro-slider owl-carousel owl-simple -->
+
+                            <span class="slider-loader"></span><!-- End .slider-loader -->
+                        </div><!-- End .intro-slider-container -->
+                    </div>
+                    <div class="col-lg-4 banner">
+                        <div class="col-12" style="background-image: url({% static 'assets/images/demos/demo-22/slider/banner-1.jpg' %})">
+                            <div class="intro">
+                                <div class="title">
+                                    <h3>Nouvelles arrivages</h3>
+                                </div>
+                                <div class="content">
+                                    <h3>Jusqu'à </h3> <h3 class="highlight">&nbsp;40% de réduction</h3>
+                                </div>
+                                <div class="action">
+                                    <a href="category.html">Acheter maintenant</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12" style="background-image: url({% static 'assets/images/demos/demo-22/slider/banner-2.jpg' %})">
+                            <div class="intro">
+                                <div class="title">
+                                    <h2>outdoor</h2>
+                                </div>
+                                <div class="content">
+                                    <h4>power equipment</h4>
+                                </div>
+                                <div class="action">
+                                    <a href="category.html">Acheter maintenant</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12" style="background-image: url({% static 'assets/images/demos/demo-22/slider/banner-3.jpg' %})">
+                            <div class="intro">
+                                <div  class="title">
+                                    <h3 class="highlight">économiser 20%</h3><h3>&nbsp;ou plus</h3>
+                                </div>
+                                <div class="content">
+                                    <h3>offres & économies</h3>
+                                </div>
+                                <div class="action">
+                                    <a href="category.html">Acheter maintenant</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="container text-center shop">
+                <h2 class="title mt-4 mb-5"> Les Marques que nous proposons</h2>
+                <div class="owl-carousel mb-5 owl-simple" data-toggle="owl" 
+                    data-owl-options='{
+                        "nav": true, 
+                        "dots": false,
+                        "margin": 30,
+                        "loop": false,
+                        "responsive": {
+                            "0": {
+                                "items":2
+                            },
+                            "420": {
+                                "items":3
+                            },
+                            "600": {
+                                "items":4
+                            },
+                            "900": {
+                                "items":5
+                            },
+                            "1024": {
+                                "items":6
+                            }
+                        }
+                    }'>
+                    <a href="#" class="brand">
+                        <img src="{% static 'assets_home/images/brands/1.png' %}" alt="Brand Name">
+                    </a>
+
+                    <a href="#" class="brand">
+                        <img src="{% static 'assets_home/images/brands/2.png' %}" alt="Brand Name">
+                    </a>
+
+                    <a href="#" class="brand">
+                        <img src="{% static 'assets_home/images/brands/3.png' %}" alt="Brand Name">
+                    </a>
+
+                    <a href="#" class="brand">
+                        <img src="{% static 'assets_home/images/brands/4.png' %}" alt="Brand Name">
+                    </a>
+
+                    <a href="#" class="brand">
+                        <img src="{% static 'assets_home/images/brands/5.png' %}" alt="Brand Name">
+                    </a>
+
+                    <a href="#" class="brand">
+                        <img src="{% static 'assets_home/images/brands/6.png' %}" alt="Brand Name">
+                    </a>
+
+                    <a href="#" class="brand">
+                        <img src="{% static 'assets_home/images/brands/7.png' %}" alt="Brand Name">
+                    </a>
+                </div><!-- End .owl-carousel -->
+            </div><!-- End .container -->
+
+            <div class="featured-back" style="background-image: url({% static 'assets_home/images/demos/demo-22/featured/background.jpg' %});">
+                <div class="container">
+                    <div class="section-title">
+                        <ul class="nav nav-pills nav-border-anim" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="tab-featured-link" data-toggle="tab" href="#tab-featured" role="tab" aria-controls="tab-featured" aria-selected="true"><span>Nouvelle arrivage</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tab-best-link" data-toggle="tab" href="#tab-best" role="tab" aria-controls="tab-best" aria-selected="false"><span>Meilleurs ventes</span></a>
+                            </li>
+
+                        </ul>
+
+                    
+                        <a class="link" href="#">Boutique</a>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4">
+                            <div class="product-lg">
+                                <figure class="product-media">
+                                    <span class="product-label label-limited">Temps de vente limité</span>
+                                    <a href="product.html">
+                                        <img src="{% static 'assets_home/images/demos/demo-22/featured/product-1.jpg' %}" alt="Product image" class="product-image">
+                                    </a>
+
+                                </figure><!-- End .product-media -->
+
+                                <div class="product-body">
+                                    <h3 class="save-price"><span>économiser $64.00</span></h3>
+                                    <h3 class="product-title"><a href="product.html">DEWALT DWE575SB</a></h3><!-- End .product-title -->
+                                    <div class="product-price">
+                                        <span class="new-price">$79.00</span>
+                                        <span class="old-price">$143.00  Avant</span>
+                                    </div><!-- End .product-price -->
+                                    <div class="action">
+                                        <a href="{% url 'category' %}">Acheter maintenant</a>
+                                    </div>
+                                </div><!-- End .product-body -->
+                            </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
+                        </div>
+                        <div class="col-lg-8 col-md-8">
+                            <div class="tab-content">
+
+                                <div class="tab-pane fade show active" id="tab-featured" role="tabpanel" aria-labelledby="tab-featured-link">
+                                    <div class="row products all">
+                                        {% for produit in recent %}
+                                        <div class="col-lg-4 col-6">
+                                            <div class="product product-3 text-center">
+                                                <figure class="product-media">
+                                                    <span class="product-label label-sale">Vente</span>
+                                                    <a href="{% url 'product' id=produit.produit.pk %}">
+                                                        <img src="{{ produit.produit.image1.url }}" alt="Product image" class="product-image">
+                                                    </a>
+
+                                                    <div class="product-action-vertical">
+                                                        <a href="#" onclick="addWishlist('{{ produit.produit.pk }}'); return false;" class="btn-product-icon btn-wishlist btn-expandable"><span>Ajouter aux favoris</span></a>
+                                                    </div><!-- End .product-action-vertical -->
+                                                </figure><!-- End .product-media -->
+
+                                                <div class="product-body">
+                                                    <div class="product-cat">
+                                                        <a href="#">{{produit.produit.categorie}}</a>
+                                                    </div><!-- End .product-cat -->
+                                                    <h3 class="product-title"><a href="{% url 'product' id=produit.produit.pk %}">{{produit.produit.nom}}</a></h3><!-- End .product-title -->
+                                                    <div class="product-price">
+                                                        <span class="new-price">${{produit.produit.prix}}</span>
+                                                        <span class="old-price"> $40.99 Avant</span>
+                                                    </div><!-- End .product-price -->
+                                                </div><!-- End .product-body -->
+
+                                                <div class="product-footer">
+                                                    <div class="ratings-container">
+                                                        {% if produit.note_product == 0 %}
+                                                        <div class="ratings">
+                                                            <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
+                                                        </div><!-- End .ratings -->
+                                                        {% endif %}
+                                                        {% if produit.note_product == 1 %}
+                                                        <div class="ratings">
+                                                            <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
+                                                        </div><!-- End .ratings -->
+                                                        {% endif %}
+                                                        {% if produit.note_product == 2 %}
+                                                        <div class="ratings">
+                                                            <div class="ratings-val" style="width: 40%;"></div><!-- End .ratings-val -->
+                                                        </div><!-- End .ratings -->
+                                                        {% endif %}
+                                                        {% if produit.note_product == 3 %}
+                                                        <div class="ratings">
+                                                            <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
+                                                        </div><!-- End .ratings -->
+                                                        {% endif %}
+                                                        {% if produit.note_product == 4 %}
+                                                        <div class="ratings">
+                                                            <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
+                                                        </div><!-- End .ratings -->
+                                                        {% endif %}
+                                                        {% if produit.note_product == 5 %}
+                                                        <div class="ratings">
+                                                            <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
+                                                        </div><!-- End .ratings -->
+                                                        {% endif %}
+                                                        <span class="ratings-text">( {{ produit.review}} Reviews )</span>
+                                                    </div><!-- End .rating-container -->
+
+                                                    <div class="product-action">
+                                                        <a href="#" onclick="addCart( '{{ produit.produit.pk }}' ); return false;" class="btn-product btn-cart" title="Add to cart"><span>ajouter au panier</span></a>
+                                                        <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>vue rapide</span></a>
+                                                    </div><!-- End .product-action -->
+                                                </div><!-- End .product-footer -->
+                                            </div><!-- End .product -->
+                                        </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
+                                        {% endfor %}
+
+                                    </div><!-- End .row -->
+                                </div><!-- .End .tab-pane -->
+                                <div class="tab-pane fade" id="tab-best" role="tabpanel" aria-labelledby="tab-best-link">
+                                    <div class="row products">
+                                        {% for produit in best_sellers %}
+                                        <div class="col-lg-4 col-6">
+                                            <div class="product product-3 text-center">
+                                                <figure class="product-media">
+                                                    <span class="product-label label-sale">Vente</span>
+                                                    <a href="{% url 'product' id=produit.produit.pk %}">
+                                                        <img src="{{ produit.produit.image1.url }}" alt="Product image" class="product-image">
+                                                    </a>
+
+                                                    <div class="product-action-vertical">
+                                                        <a href="#" onclick="addWishlist('{{ produit.produit.pk }}'); return false;" class="btn-product-icon btn-wishlist btn-expandable"><span>Ajouter aux favoris</span></a>
+                                                    </div><!-- End .product-action-vertical -->
+                                                </figure><!-- End .product-media -->
+
+                                                <div class="product-body">
+                                                    <div class="product-cat">
+                                                        <a href="#">{{produit.produit.categorie}}</a>
+                                                    </div><!-- End .product-cat -->
+                                                    <h3 class="product-title"><a href="{% url 'product' id=produit.produit.pk %}">{{produit.produit.nom}}</a></h3><!-- End .product-title -->
+                                                    <div class="product-price">
+                                                        <span class="new-price">${{produit.produit.prix}}</span>
+                                                        <span class="old-price"> $40.99 Avant</span>
+                                                    </div><!-- End .product-price -->
+                                                </div><!-- End .product-body -->
+
+                                                <div class="product-footer">
+                                                    <div class="ratings-container">
+                                                        {% if produit.note_product == 0 %}
+                                                        <div class="ratings">
+                                                            <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
+                                                        </div><!-- End .ratings -->
+                                                        {% endif %}
+                                                        {% if produit.note_product == 1 %}
+                                                        <div class="ratings">
+                                                            <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
+                                                        </div><!-- End .ratings -->
+                                                        {% endif %}
+                                                        {% if produit.note_product == 2 %}
+                                                        <div class="ratings">
+                                                            <div class="ratings-val" style="width: 40%;"></div><!-- End .ratings-val -->
+                                                        </div><!-- End .ratings -->
+                                                        {% endif %}
+                                                        {% if produit.note_product == 3 %}
+                                                        <div class="ratings">
+                                                            <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
+                                                        </div><!-- End .ratings -->
+                                                        {% endif %}
+                                                        {% if produit.note_product == 4 %}
+                                                        <div class="ratings">
+                                                            <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
+                                                        </div><!-- End .ratings -->
+                                                        {% endif %}
+                                                        {% if produit.note_product == 5 %}
+                                                        <div class="ratings">
+                                                            <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
+                                                        </div><!-- End .ratings -->
+                                                        {% endif %}
+                                                        <span class="ratings-text">( {{ produit.review}} Reviews )</span>
+                                                    </div><!-- End .rating-container -->
+
+                                                    <div class="product-action">
+                                                        <a href="#" onclick="addCart( '{{ produit.produit.pk }}' ); return false;" class="btn-product btn-cart" title="Add to cart"><span>ajouter au panier</span></a>
+                                                        <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>vue rapide</span></a>
+                                                    </div><!-- End .product-action -->
+                                                </div><!-- End .product-footer -->
+                                            </div><!-- End .product -->
+                                        </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
+                                        {% endfor %}
+                                   </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        
+                    </div>
+
+                    <div class="mb-2"></div><!-- End .mb-6 -->
+                </div><!-- End .container -->
+            </div>
+
+            <div class="newsletter" style="background-image: url({% static 'assets/images/demos/demo-22/newsLetter/background.jpg' %});">
+                <div class="container">
+                    <div class="subscribe text-center">
+                        <div class="intro">
+                            <h3 class="title">Abonnez-vous à votre newsletters</h3>
+                            <h4 class="content">Découvrez les nouvelles offres et obtenez plus d'offres en vous inscrivant à notre newsletter</h4>
+                        </div>
+                        <div class="subscribe action">
+                            <form action="#" method="post" id="news">
+                                <div class="input-group">
+                                    <input type="email" id="id_email_new" name="email" placeholder="Enter your Email Address" aria-label="Email Adress" required="">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-subscribe" type="submit"><span>Subscribe now</span></button>
+                                    </div><!-- .End .input-group-append -->
+                                </div><!-- .End .input-group -->
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container banner-container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 banner-lg">
+                        <a href="category.html">
+                            <img src="{% static 'assets_home/images/demos/demo-22/banner/banner-1.jpg' %}">
+                        </a>
+                        <div class="banner-content">
+                            <div class="title">
+                                <a href="category.html">économiser jusqu'à 30%</a>
+                            </div>
+                            <div class="content">
+                                <a href="category.html">
+                                    <h3 class="highlight">Les marques premium</h3>
+                                    <h4>pour les travaux les plus difficiles</h4>
+                                </a>
+                            </div>
+                            <div class="action">
+                                <a href="{% url 'category' %}">Découvrer maintenant</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-6 banner-lg">
+                        <a href="category.html">
+                            <img src="{% static 'assets_home/images/demos/demo-22/banner/banner-2.jpg' %}">
+                        </a>
+                        <div class="banner-content">
+                            <div class="title">
+                                <a href="category.html">Meilleures ventes en outils</a>
+                            </div>
+                            <div class="content">
+                                <a href="category.html">
+                                    <h3>Pro-level tools</h3>
+                                    <h4 class="highlight">Économisez sur les meilleures ventes</h4>
+                                </a>
+                            </div>
+                            <div class="action">
+                                <a href="{% url 'category' %}">Acheter maintenant</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container service">
+                <div class="row">
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="icon-box icon-box-side">
+                            <span class="icon-box-icon text-dark">
+                                <i class="icon-rocket"></i>
+                            </span>
+
+                            <div class="icon-box-content">
+                                <h3 class="icon-box-title">Livraison gratuite</h3><!-- End .icon-box-title -->
+                                <p>Commandes de 50 $ ou plus</p>
+                            </div><!-- End .icon-box-content -->
+                        </div><!-- End .icon-box -->
+                    </div><!-- End .col-sm-6 col-lg-4 -->
+                    
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="icon-box icon-box-side">
+                            <span class="icon-box-icon text-dark">
+                                <i class="icon-rotate-left"></i>
+                            </span>
+
+                            <div class="icon-box-content">
+                                <h3 class="icon-box-title">Retours sans frais</h3><!-- End .icon-box-title -->
+                                <p>Dans les 30 jours</p>
+                            </div><!-- End .icon-box-content -->
+                        </div><!-- End .icon-box -->
+                    </div><!-- End .col-sm-6 col-lg-4 -->
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="icon-box icon-box-side">
+                            <span class="icon-box-icon text-dark">
+                                <i class="icon-info-circle"></i>
+                            </span>
+
+                            <div class="icon-box-content">
+                                <h3 class="icon-box-title">Obtenez 20 % de réduction sur 1 article</h3><!-- End .icon-box-title -->
+                                <p>Lorsque vous vous inscrivez</p>
+                            </div><!-- End .icon-box-content -->
+                        </div><!-- End .icon-box -->
+                    </div><!-- End .col-sm-6 col-lg-4 -->
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="icon-box icon-box-side">
+                            <span class="icon-box-icon text-dark">
+                                <i class="icon-life-ring"></i>
+                            </span>
+
+                            <div class="icon-box-content">
+                                <h3 class="icon-box-title">Nous soutenons</h3><!-- End .icon-box-title -->
+                                <p>Des services exceptionnels 24h/24 et 7j/7</p>
+                            </div><!-- End .icon-box-content -->
+                        </div><!-- End .icon-box -->
+                    </div><!-- End .col-sm-6 col-lg-4 -->
+
+                </div>
+            </div>
+
+            <div class="container popular">
+                <hr class="mb-5">
+
+                <div class="section-title">
+                    <div><p class="title"><span> Toutes les Catégories</span></p></div>
+                    
+                    <a class="link" href="{% url 'category' %}">Voir tous les produits</a>
+                </div>
+
+                <div class="row products">
+                    {% for category in categories %}
+                    <div class="col-6 col-md-4 col-lg-3 col-xl-5col">
+                        <div class="product product-3 text-center">
+                            <figure class="product-media">
+
+                                <a href="{% url 'retrieve_categorie' id=category.categorie_pk %}">
+                                    {% if category.categorie_image is not None %}
+                                    <img src="{{ category.categorie_image }}" alt="Product image" class="product-image">
+                                    {% else %}
+                                    <img src="{% static 'assets_home/images/demos/demo-22/products/category_default.png' %}" alt="Product image" class="product-image">
+                                    {% endif %}
+                                </a>
+
+
+                            </figure><!-- End .product-media -->
+
+                            <div class="product-body">
+
+                                <h3 class="product-title"><a href="{% url 'retrieve_categorie' id=category.categorie_pk %}">{{ category.categorie_data.nom }}</a></h3><!-- End .product-title -->
+
+                            </div><!-- End .product-body -->
+
+
+                        </div><!-- End .product -->
+                    </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
+
+                    {% endfor %}
+                </div><!-- End .row -->
+            </div>
+
+            <div class="container bannerad">
+                <div class="banner-lg"  style="background-image: url({% static 'assets/images/demos/demo-22/bannerad/background.jpg' %});">
+                    <div class="price">
+                        <h3 class="highlight">from</h3><h3>$39</h3><sup class="highlight">,99</sup>
+                    </div>
+                    <div class="content">
+                        <h4>woodworking tools</h4>
+                        <h3>from top rated brands</h3>
+                        <div class="action">
+                            <a href="category.html">discover now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </main>
+       {% endblock %}
+        <footer class="footer footer-dark">
+            <div class="footer-middle">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="widget widget-about">
+                                <img src="{% static 'assets_home/images/demos/demo-22/gti-logo.png' %}" class="footer-logo" alt="Footer Logo" width="50" height="25">
+                                <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. </p>
+
+                                <div class="social-icons">
+                                    <a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
+                                    <a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
+                                    <a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
+                                    <a href="#" class="social-icon" title="Youtube" target="_blank"><i class="icon-youtube"></i></a>
+                                    <a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
+                                </div><!-- End .soial-icons -->
+                            </div><!-- End .widget about-widget -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
+
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="widget">
+                                <h4 class="widget-title">Liens utiles</h4><!-- End .widget-title -->
+
+                                <ul class="widget-list">
+                                    <li><a href="about.html">A propos de GTI</a></li>
+                                    <li><a href="#">Comment acheter à GTI</a></li>
+                                    <li><a href="faq.html">FAQ</a></li>
+                                    <li><a href="contact.html">Contacter nous</a></li>
+                                    <li><a href="login.html">Se connecter</a></li>
+                                </ul><!-- End .widget-list -->
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
+
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="widget">
+                                <h4 class="widget-title">Services clients</h4><!-- End .widget-title -->
+
+                                <ul class="widget-list">
+                                    <li><a href="#">Méthodes de payements</a></li>
+                                    <li><a href="#">Garantie de remboursement!</a></li>
+                                    <li><a href="#">Retours</a></li>
+                                    <li><a href="#">Livraison</a></li>
+                                    <li><a href="#">Les termes et confitions</a></li>
+                                    <li><a href="#">Politique de confidentialité</a></li>
+                                </ul><!-- End .widget-list -->
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
+
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="widget">
+                                <h4 class="widget-title">Mon compte</h4><!-- End .widget-title -->
+
+                                <ul class="widget-list">
+                                    <li><a href="#">Se connecter</a></li>
+                                    <li><a href="cart.html">Voir le panier</a></li>
+                                    <li><a href="#">Ma liste de favoris</a></li>
+                                    <li><a href="#">Suivre ma commande</a></li>
+                                    <li><a href="#">Aide</a></li>
+                                </ul><!-- End .widget-list -->
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-6 col-lg-3 -->
+                    </div><!-- End .row -->
+                </div><!-- End .container -->
+            </div><!-- End .footer-middle -->
+
+            <div class="footer-bottom">
+                <div class="container">
+                    <p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p><!-- End .footer-copyright -->
+                    <figure class="footer-payments">
+                        <img src="{% static 'assets_home/images/payments.png' %}" alt="Payment methods" width="272" height="20">
+                    </figure><!-- End .footer-payments -->
+                </div><!-- End .container -->
+            </div><!-- End .footer-bottom -->
+        </footer><!-- End .footer -->
+
+
+        <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+
+        <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+        <div class="mobile-menu-container mobile-menu-light">
+            <div class="mobile-menu-wrapper">
+                <span class="mobile-menu-close"><i class="icon-close"></i></span>
+
+                <form action="#" method="get" class="mobile-search">
+                    <label for="mobile-search" class="sr-only">Search</label>
+                    <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
+                    <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+                </form>
+                
+                <nav class="mobile-nav">
+                    <ul class="mobile-menu">
+                        <li class="megamenu-container">
+
+                            <a href="/" class="">Home</a>
+
+
+                        </li>
+                        <li>
+
+                            <a href="{% url 'category' %}" class="">Boutique</a>
+
+
+                        </li>
+                         <li>
+
+                             <a href="{% url 'about' %}" class="">A propos</a>
+
+
+                         </li>
+                          <li>
+
+                              <a href="{% url 'contact' %}" class="">Contacter nous</a>
+
+
+                          </li>
+                          <li>
+                            {% if username %}
+
+                              <a href="{% url 'my_profil' %}" ><i class="icon-user"></i>My Profil</a>
+                                <ul>
+                                    <li>Se deconnecter</li>
+                                </ul>
+                            {% else %}
+
+                              <a href="#signin-modal" data-toggle="modal" id="link_login"><i class="icon-user"></i>Se connecter / Créer un compte</a>
+                            {% endif %}
+                          </li>
+
+
+                    </ul>
+
+                </nav><!-- End .mobile-nav -->
+
+                <div class="social-icons">
+                    <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+                    <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+                    <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+                    <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+                </div><!-- End .social-icons -->
+            </div><!-- End .mobile-menu-wrapper -->
+        </div><!-- End .mobile-menu-container -->
+    </div>
+
+    <!-- Sign in / Register Modal -->
+    <div class="modal fade" id="signin-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="icon-close"></i></span>
+                    </button>
+
+                    <div class="form-box">
+                        <div class="form-tab">
+                            <ul class="nav nav-pills nav-fill" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active text-success" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="true">Se connecter</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-success " id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">Creer un compte</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="tab-content-5">
+                                <div class="tab-pane fade show active" id="signin" role="tabpanel" aria-labelledby="signin-tab">
+                                   <form action="#" method="post" id="login_form">
+                                        {% csrf_token %}
+                                        {% for field in Login %}
+                                        <div class="form-group">
+                                            {{field.label_tag}}
+                                            {{ field }}
+                                        </div>
+                                        {% endfor %}
+
+                                       <p id="lor_footer">    </p>
+
+                                        <div class="form-footer">
+                                            <button type="submit" class="btn btn-outline-success-2 btn-success">
+                                                <span>LOG IN</span>
+                                                <i class="icon-long-arrow-right"></i>
+                                            </button>
+
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="signin-remember">
+                                                <label class="custom-control-label" for="signin-remember">Remember Me</label>
+                                            </div><!-- End .custom-checkbox -->
+
+                                            <a href="#forgot-modal" data-toggle="modal" data-dismiss="modal" class="forgot-link">Forgot Your Password?</a>
+                                        </div><!-- End .form-footer -->
+                                    </form>
+                                    <div class="form-choice">
+                                        <p class="text-center">or sign in with</p>
+                                        <div class="row">
+                                            <div class="col-sm-6 mx-auto">
+                                                <a href="{% url 'google_login' %}" class="btn btn-login btn-g">
+                                                    <i class="icon-google"></i>
+                                                    Login With Google
+                                                </a>
+                                            </div><!-- End .col-6 -->
+
+                                        </div><!-- End .row -->
+                                    </div><!-- End .form-choice -->
+                                </div><!-- .End .tab-pane -->
+                                <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
+                                    <form action="#" method="post" class="" id="register_form">
+                                        {% csrf_token %}
+                                        {% for field in Register %}
+                                        <div class="form-group has-error">
+                                            {{field.label_tag}}
+                                            {{ field }}
+
+                                            {% if field.id_for_label == 'id_username' %}
+                                            <div class="invalid-feedback">Ce nom d'utilisateur existe deja</div>
+                                            {% endif %}
+
+                                            {% if field.id_for_label == 'id_contact' %}
+                                            <div class="invalid-feedback"><h6 class="text-danger" >Entrer un contact valide</h6></div>
+                                            {% endif %}
+
+                                            {% if field.id_for_label == 'id_email' %}
+                                            <div class="invalid-feedback"><h6 class="text-danger" >Cet email existe deja</h6></div>
+                                            {% endif %}
+                                        </div>
+                                        {% endfor %}
+
+
+
+
+                                        <p id="for_footer">    </p>
+
+                                        <div class="form-footer" >
+
+                                            <button type="submit" class="btn btn-outline-success-2 btn-success">
+                                                <span>SIGN UP</span>
+                                                <i class="icon-long-arrow-right"></i>
+                                            </button>
+
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="register-policy" required>
+                                                <label class="custom-control-label" for="register-policy">I agree to the <a href="#">privacy policy</a> *</label>
+                                            </div><!-- End .custom-checkbox -->
+                                        </div><!-- End .form-footer -->
+                                    </form>
+                                    <div class="form-choice">
+                                        <p class="text-center">or sign in with</p>
+                                        <div class="row">
+                                            <div class="col-sm-6 mx-auto">
+                                                <a href="#" class="btn btn-login btn-g">
+                                                    <i class="icon-google"></i>
+                                                    Login With Google
+                                                </a>
+                                            </div><!-- End .col-6 -->
+
+                                        </div><!-- End .row -->
+                                    </div><!-- End .form-choice -->
+                                </div><!-- .End .tab-pane -->
+                            </div><!-- End .tab-content -->
+                        </div><!-- End .form-tab -->
+                    </div><!-- End .form-box -->
+                </div><!-- End .modal-body -->
+            </div><!-- End .modal-content -->
+        </div><!-- End .modal-dialog -->
+    </div><!-- End .modal -->
+
+    <div class="modal fade" id="forgot-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="icon-close"></i></span>
+                    </button>
+
+                    <div class="form-box">
+                        <div class="form-tab">
+
+
+                                <div class="tab-pane fade show active" id="forgot" role="tabpanel" aria-labelledby="signin-tab">
+                                   <form action="#"  method="post" id="forgot_form">
+                                        {% csrf_token %}
+                                        <h3 class="text-center text-success" >Mot de passe oublié</h3>
+                                        <div class="form-group has-error">
+                                          <label for="email"><h5>Email</h5></label>
+                                          <input type="email" class="form-control" name="email" id="email" placeholder="you@email.com" title="enter your email.">
+                                          <div class="invalid-feedback"><h6 class="text-danger" >L'email entre n'est pas enregistre</h6></div>
+                                        </div>
+
+
+
+
+                                        <div class="form-footer">
+                                            <button type="submit" class="btn btn-outline-success-2 btn-success">
+                                                <span>VALIDER</span>
+                                                <i class="icon-long-arrow-right"></i>
+                                            </button>
+
+
+
+
+                                        </div><!-- End .form-footer -->
+                                    </form>
+
+                                </div><!-- .End .tab-pane -->
+
+
+                        </div><!-- End .form-tab -->
+                    </div><!-- End .form-box -->
+                </div><!-- End .modal-body -->
+            </div><!-- End .modal-content -->
+        </div><!-- End .modal-dialog -->
+    </div><!-- End .modal -->
+
+
+    {% if not username %}
+    <div class="container newsletter-popup-container mfp-hide" id="newsletter-popup-form">
+        <div class="row justify-content-center">
+            <div class="col-10">
+                <div class="row no-gutters bg-white newsletter-popup-content">
+                    <div class="col-xl-3-5col col-lg-7 banner-content-wrap">
+                        <div class="banner-content text-center">
+                            <img src="{% static 'assets_home/images/popup/newsletter/logo.png' %}" class="logo" alt="logo" width="60" height="15">
+                            <h2 class="banner-title">get <span>25<light>%</light></span> off</h2>
+                            <p>Subscribe to the Molla eCommerce newsletter to receive timely updates from your favorite products.</p>
+                            <form action="#">
+                                <div class="input-group input-group-round">
+                                    <input type="email" class="form-control form-control-white" placeholder="Your Email Address" aria-label="Email Adress" required>
+                                    <div class="input-group-append">
+                                        <button class="btn" type="submit"><span>go</span></button>
+                                    </div><!-- .End .input-group-append -->
+                                </div><!-- .End .input-group -->
+                            </form>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="register-policy-2" required>
+                                <label class="custom-control-label" for="register-policy-2">Do not show this popup again</label>
+                            </div><!-- End .custom-checkbox -->
+                        </div>
+                    </div>
+                    <div class="col-xl-2-5col col-lg-5 ">
+                        <img src="{% static 'assets_home/images/popup/newsletter/img-1.jpg' %}" class="newsletter-img" alt="newsletter">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+ 	<!-- Plugins JS File -->
+
+    <script src="{% static 'assets_home/js/jquery.min.js' %}"></script>
+    <script src="{% static 'assets_home/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets_home/js/jquery.hoverIntent.min.js' %}"></script>
+    <script src="{% static 'assets_home/js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'assets_home/js/superfish.min.js' %}"></script>
+    <script src="{% static 'assets_home/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'assets_home/js/bootstrap-input-spinner.js' %}"></script>
+    <script src="{% static 'assets_home/js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'assets_home/js/nouislider.min.js' %}"></script>
+    <script src="{% static 'assets_home/js/wNumb.js' %}"></script>
+    <script src="{% static 'assets_home/js/slide.js' %}"></script>
+
+    <script src="{% static 'assets_home/css/sweetalert.min.js' %}"></script>
+
+
+    <!-- Main JS File -->
+    <script src="{% static 'assets_home/js/main.js' %}"></script>
+    <script type="text/javascript">
+
+
+
+
+
+
+
+
+        $.ajax({
+            url: "{% url 'verify_connection' %}",
+
+            success: function( response ){
+
+            },
+
+            error: function( response ){
+                document.getElementById('link_login').click();
+            }
+        });
+
+
+        function addCart(prod){
+
+            $.ajax({
+                url: "{% url 'verify_connection' %}",
+
+                //type: "POST",
+                success: function( response ){
+                    $.ajax({
+                        url: "{% url 'add_cart' %}",
+                        data:{"id_produit": prod},
+                        //type: "POST",
+                        success: function( response ){
+                            document.getElementById('id_cart_count').innerHTML = response.cart_number ;
+                            swal("Ajout au panier!", "Le produit a été bien ajouté au panier!", "success");
+
+                        },
+
+                        error: function( response ){
+
+                        }
+
+                    });
+
+                },
+
+                error: function( response ){
+
+                       document.getElementById('link_login').click();
+
+
+
+                       //swal("Oops!", "Vous n'etes pas connecte!", "error");
+
+                }
+
+            });
+
+
+
+
+
+    }
+
+
+        function addWishlist(prod){
+
+
+            $.ajax({
+                url: "{% url 'verify_connection' %}",
+
+                //type: "POST",
+                success: function( response ){
+                    $.ajax({
+                        url: "{% url 'add_wishlist' %}",
+                        data:{"id_produit": prod},
+                        //type: "POST",
+                        success: function( response ){
+                            document.getElementById('id_wishlist_count').innerHTML = response.wishlist_number ;
+                            swal("Ajout aux souhaits!", "Le produit a été bien ajouté aux souhaits!", "success");
+
+                        },
+
+                        error: function( response ){
+                            swal("Attention!", "Ce produit est deja dans vos souhaits", "warning");
+                        }
+
+                    });
+
+                },
+
+                error: function( response ){
+                    document.getElementById('link_login').click();
+                    //alert('you are not not connected');
+                }
+
+            });
+
+
+
+
+    }
+
+        function deleteCartHome(prod, id_row){
+
+			$.ajax({
+				url: "{% url 'verify_connection' %}",
+
+				success: function(response){
+
+					$.ajax({
+						url: "{% url 'delete_cart' %}",
+						data:{"id_produit": prod},
+						//type: "POST",
+						success: function( response ){
+							document.getElementById('id_cart_count').innerHTML = response.cart_number ;
+
+							document.getElementById(id_row).remove();
+
+							var total_row = document.getElementsByClassName('each__total');
+							var total_len = total_row.length ;
+							var s = 0 ;
+
+							for (var i=0 ; i<total_len ; i++){
+
+								s += parseInt(String(total_row[i].innerHTML).replace('=', '')) ;
+
+
+
+							}
+
+							document.getElementById('total_cart_price').innerHTML = '$' + s ;
+							
+
+
+							//window.location.reload();
+							swal("Supprimé!", "Le produit a été bien supprimé!", "success");
+
+						},
+
+						error: function( response ){
+
+						}
+
+					});
+
+
+				},
+
+				error: function(response){
+
+					document.getElementById('link_login').click();
+
+				}
+
+			});
+
+        }
+
+
+        $(document).ready(function () {
+
+            // catch the form's submit event
+            $('#register_form').submit(function () {
+                // create an AJAX call
+                donne = {'data' : $(this).serialize() , 'superuser' : 0 , 'add': 0} ;
+                $.ajax({
+                    data: donne , // get the form data
+                    type: $(this).attr('method'), // GET or POST
+                    url: "{% url 'register' %}",
+                    // on success
+                    success: function (response) {
+                        if($('#mova')){
+                        $('#mova').remove();
+                        }
+
+                        if($('#movb')){
+                        $('#movb').remove();
+                        }
+
+                        if($('#movc')){
+                        $('#movc').remove();
+                        }
+                        $('input[type="email"]#id_email').removeClass("is-invalid") ;
+                        $('input[type="email"]#id_email').addClass("is-ivalid") ;
+                        document.getElementById('register_form').reset();
+
+                        //alert(response.username);
+                        swal('Email envoyé', 'Verifier votre email pour confirmer votre inscription', 'success');
+                    },
+                    // on error
+                    error: function (response) {
+                        // alert the error if any error occured
+
+                        $('#mova').remove();
+                        $('#movb').remove();
+                        $('#movc').remove();
+
+                        if(response.responseJSON.email){
+                        $('input[type="email"]#id_email').addClass("is-invalid") ;
+                        }
+
+                        if(response.responseJSON.contact){
+                        document.getElementById('id_contact').classList.add('is-invalid');
+                        }
+
+
+
+
+                        alert(response.responseJSON.email);
+                        console.log(response.responseJSON.contact)
+                    }
+                });
+                return false;
+            });
+
+
+            $('#login_form').submit(function () {
+                // create an AJAX call
+                donne = {'data': $(this).serialize() , 'verify_superuser': 0 } ;
+                $.ajax({
+                    data: donne, // get the form data
+                    type: $(this).attr('method'), // GET or POST
+                    url: "{% url 'login' %}",
+                    // on success
+                    success: function (response) {
+
+                        document.getElementById('login_form').reset();
+                        window.location.href = "{% url 'home' %}" ;
+                        if($('#mover')){
+                        $('#mover').remove();
+                        }
+                    },
+                    // on error
+                    error: function (response) {
+                        // alert the error if any error occured
+
+                        $('#mover').remove();
+                        if(response.responseJSON.email){
+                        $('#lor_footer').prepend('<div id="mover">' + '<ul>' + '<li class="">' +'<h6 class="text-danger">' + response.responseJSON.email + '</h6>' +'</li>'+'</ul>'+ '</div>');
+                        }else{
+                        $('#lor_footer').prepend('<div id="mover">' + '<ul>' + '<li class="">' +'<h6 class="text-danger">' + response.responseJSON.password + '</h6>' +'</li>'+'</ul>'+ '</div>');
+                        }
+                        $('input[type="email"]#id__email').addClass("is-invalid") ;
+                        $('input[type="password"]#id__password').addClass("is-invalid") ;
+
+
+
+                        console.log(response.responseJSON.contact)
+                    }
+                });
+                return false;
+            });
+
+
+            $('#forgot_form').submit(function () {
+                // create an AJAX call
+                $.ajax({
+                    data: $(this).serialize(), // get the form data
+                    type: $(this).attr('method'), // GET or POST
+                    url: "{% url 'api_forgot' %}",
+                    // on success
+                    success: function (response) {
+
+                        $('input[type="email"]#email').val('');
+
+                        swal("Un email est envoye!", "Verifier votre email pour changer de mot de passe!", "success");
+
+                    },
+                    // on error
+                    error: function (response) {
+                        // alert the error if any error occured
+
+
+                        $('input[type="email"]#email').addClass("is-invalid") ;
+
+
+                        console.log(response.responseJSON.contact)
+                    }
+                });
+                return false;
+            });
+
+        }) ;
+
+
+        $('#searchForm').submit(function () {
+            // create an AJAX call
+            $.ajax({
+                data: $(this).serialize(), // get the form data
+                type: $(this).attr('method'), // GET or POST
+                url: "{% url 'search' %}",
+                // on success
+                success: function (response) {
+                    location.href = "{% url 'category' %}" ;
+                },
+                // on error
+                error: function (response) {
+                    // alert the error if any error occured
+
+
+                }
+            });
+            return false;
+        });
+
+        function logout(){
+
+                $.ajax({
+                    url: "{% url 'verify_connection' %}",
+
+                    success: function(response){
+
+                        $.ajax({
+                            url: "{% url 'logout' %}",
+                            //data:{"id_produit": prod},
+                            //type: "POST",
+                            success: function( response ){
+
+
+
+                                window.location.reload();
+                                //document.location.href = "{% url 'home' %}"
+                                //alert('user logout sucessfully');
+
+                            },
+
+                            error: function( response ){
+
+                            }
+
+                        });
+
+
+                    },
+
+                    error: function(response){
+
+
+
+                    }
+
+                });
+
+            }
+
+        let inactivityTime = function(){
+            let time ;
+            window.onload = resetTimer ;
+            window.onmousemove = resetTimer;
+            window.onkeypress = resetTimer ;
+
+
+
+            function resetTimer(){
+                clearTimeout(time);
+                time = setTimeout(logout, 1000*900);
+            }
+
+
+
+        };
+
+        window.onload = function() {
+            inactivityTime();
+        }
+    </script>
+    {% block javascript %}
+    <script>
+
+
+
+
+
+        $(document).ready(function () {
+            $('#news').submit(function () {
+                // create an AJAX call
+                $.ajax({
+                    data: $(this).serialize(), // get the form data
+                    type: $(this).attr('method'), // GET or POST
+                    url: "{% url 'subscribe' %}",
+                    // on success
+                    success: function (response) {
+                        $('input[type="email"]#id_email_new').val('');
+                        alert("Ajout sucess");
+
+                    },
+                    // on error
+                    error: function (response) {
+                        // alert the error if any error occured
+
+                        location.reload();
+
+
+                        console.log(response.responseJSON.contact);
+                    }
+                });
+                return false;
+            });
+        })
+    </script>
+    {% endblock javascript %}
+</body>
+
+<!-- molla/index22.html  22 Nov 2019 10:02:10 GMT -->
+</html>

@@ -1,0 +1,156 @@
+{% extends 'DashBoard/index.html' %}
+
+{% block dash %}
+
+<body>
+
+  <main>
+    <div class="container">
+
+      <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+              <div class="d-flex justify-content-center py-4">
+                <a href="index.html" class="logo d-flex align-items-center w-auto">
+                  <img src="assets/img/logo.png" alt="">
+                  <span class="d-none d-lg-block">NiceAdmin</span>
+                </a>
+              </div><!-- End Logo -->
+
+              <div class="card mb-3">
+
+                <div class="card-body">
+
+                  <div class="pt-4 pb-2">
+                    <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
+                    <p class="text-center small">Enter your username & password to login</p>
+                  </div>
+
+                  <form class="row g-3 " id="login_admin_form" method="post">
+                    {% csrf_token %}
+
+                    {% for field in login_form %}
+                    <div class="col-12 has-error">
+                      {{ field.label_tag }}
+
+                      {% if field.id_for_label == 'id_email' %}
+                        <div class="input-group has-validation">
+                          <span class="input-group-text" id="inputGroupPrepend">@</span>
+                        {{ field }}
+                      {% else %}
+
+                        {{ field }}
+
+                      {% endif %}
+
+
+
+
+                      {% if field.id_for_label == 'id__email' %}
+                          <div  class="invalid-feedback">L'email ou le mot de passe est incorrect!</div>
+                        </div>
+                      {% endif %}
+
+                      {% if field.id_for_label == 'id__password' %}
+                          <div  class="invalid-feedback">L'email ou le mot de passe est incorrect!</div>
+                        </div>
+                      {% endif %}
+
+                    <div>
+
+                </div>
+                    {% endfor %}
+
+                    <div class="col-12">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">Remember me</label>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <button class="btn btn-primary w-100" type="submit">Login</button>
+                    </div>
+                    <div class="col-12">
+                      <p class="small mb-0">Don't have account? <a href="pages-register.html">Create an account</a></p>
+                    </div>
+                  </form>
+
+                </div>
+              </div>
+
+              <div class="credits">
+                <!-- All the links in the footer should remain intact. -->
+                <!-- You can delete the links only if you purchased the pro version. -->
+                <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+                Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main><!-- End #main -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+{% endblock %}
+
+{% block script %}
+<script>
+  $(document).ready(function() {
+      $('#login_admin_form').submit(function () {
+                // create an AJAX call
+                donne = {'data': $(this).serialize() , 'verify_superuser': 1 } ;
+                $.ajax({
+                    data: donne , // get the form data
+                    type: $(this).attr('method'), // GET or POST
+                    url: "{% url 'login' %}",
+                    // on success
+                    success: function (response) {
+                        $('input[type="email"]#id__email').val('');
+                        $('input[type="password"]#id__password').val('');
+                        window.location.reload();
+                        if($('#mover')){
+                        $('#mover').remove();
+                        }
+
+                        location.href = "{% url 'dash' %}" ;
+                    },
+                    // on error
+                    error: function (response) {
+                        // alert the error if any error occured
+
+                        $('#mover').remove();
+                        if(response.responseJSON.email){
+                        $('#lor_footer').prepend('<div id="mover">' + '<ul>' + '<li class="">' +'<h6 class="text-danger">' + response.responseJSON.email + '</h6>' +'</li>'+'</ul>'+ '</div>');
+                        }else{
+                        $('#lor_footer').prepend('<div id="mover">' + '<ul>' + '<li class="">' +'<h6 class="text-danger">' + response.responseJSON.password + '</h6>' +'</li>'+'</ul>'+ '</div>');
+                        }
+
+                        if(response.responseJSON.warning) {
+                            swal("Attention" , "Vous n'etes pas autorise", "error") ;
+                        }else
+                        {
+
+                          $('input[type="email"]#id__email').addClass("is-invalid") ;
+                          $('input[type="password"]#id__password').addClass("is-invalid") ;
+
+                        }
+
+                        console.log(response.responseJSON.contact)
+                    }
+                });
+                return false;
+            });
+      }) ;
+
+</script>
+
+
+{% endblock %}

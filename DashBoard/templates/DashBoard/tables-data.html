@@ -1,0 +1,772 @@
+{% extends 'DashBoard/index.html' %}
+
+{% load static %}
+
+
+{% block other %}
+    <section class="section">
+      {% if type == 'user' %}
+      <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+
+
+
+                <div class="card-body">
+                  <h5 class="card-title">Utilisateurs <span>| Today</span></h5>
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Prenom</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Contact</th>
+                        <th scope="col">Super-Utilisateur</th>
+                        <th scope="col">Derniere connexion</th>
+                        <th scope="col">Date de création</th>
+                        <th scope="col" >Action</th>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for field  in table %}
+                      <tr>
+                        <th scope="row"><a href="{% url 'dash_forms_update' intitule='user' id=field.user_pk %}">{{ field.user_pk }}</a></th>
+                        <td>{{ field.user_data.last_name }}</td>
+                        <td>{{ field.user_data.first_name }}</td>
+                        <td><a href="#" >{{ field.user_data.email }}</a></td>
+                        <td>{{ field.user_data.contact }}</td>
+                        <td>{{ field.user_data.is_superuser }}</td>
+                        <td>{{ field.user_data.last_login }}</td>
+                        <td>{{ field.user_data.date_joined }}</td>
+                        <td scope=""><button onclick="deleteUser('{{ field.user_pk }}') ;" class="btn btn-danger" >Supprimer</button></td>
+
+
+                      </tr>
+                    {% endfor %}
+
+                    </tbody>
+                  </table>
+
+                </div>
+               <div class="card-footer" >
+                 <a href="{% url 'dash_forms' intitule='user' %}" class="btn btn-success">Ajouter</a>
+
+               </div>
+
+              </div>
+      </div><!-- End Recent Sales -->
+      {% endif %}
+
+
+      {% if type == 'categorie' %}
+
+      <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+
+
+                <div class="card-body">
+                  <h5 class="card-title">Utilisateurs <span>| Today</span></h5>
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Sous-categorie</th>
+                        <th scope="col">Action</th>
+
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for field  in table %}
+
+                        {% if field.first_sous_categorie %}
+                          <tr>
+                            <th rowspan="{{ field.len_sous_categorie }}" scope="row"><a href="{% url 'dash_forms_update' intitule='categorie' id=field.categorie_pk %}">{{ field.categorie_pk }}</a></th>
+                            <td rowspan="{{ field.len_sous_categorie }}">{{ field.categorie_data.nom }}</td>
+                            <td rowspan="{{ field.len_sous_categorie }}"><img style="height:100px; width: 100px ;" alt="Categorie Image" src="{{ field.categorie_image }}"></td>
+                            <td>{{ first_sous_categorie.nom }}</td>
+
+                            {% if field.have_product == 1 %}
+                            <td rowspan="{{ field.len_sous_categorie }}"  scope=""><button onclick="deleteCategorie('{{ field.categorie_pk }}') ;" class="btn btn-danger" disabled>Supprimer</button></td>
+                            {% else %}
+                            <td rowspan="{{ field.len_sous_categorie }}"  scope=""><button onclick="deleteCategorie('{{ field.categorie_pk }}') ;" class="btn btn-danger" >Supprimer</button></td>
+                            {% endif %}
+
+
+
+
+
+                          </tr>
+                          {% for field_ext in field.its_sous_categorie_ext %}
+                            <tr>
+                              <td>{{ field_ext.nom }}</td>
+                            </tr>
+                          {% endfor %}
+                        {% else %}
+                          <tr>
+                            <th  scope="row"><a href="{% url 'dash_forms_update' intitule='categorie' id=field.categorie_pk %}">{{ field.categorie_pk }}</a></th>
+                            <td>{{ field.categorie_data.nom }}</td>
+                            <td><img style="height:100px; width: 100px ;" alt="Categorie Image" src="{{ field.categorie_image }}"></td>
+
+                            {% if field.len_sous_categorie == 0 %}
+
+                              <td>None</td>
+
+
+                            {% else %}
+                              {% for field_sous_categorie in field.its_sous_categorie %}
+
+                                <td>{{ field_sous_categorie.nom }}</td>
+                              {% endfor %}
+                            {% endif %}
+
+                            {% if field.have_product == 1%}
+                            <td scope=""  ><button  onclick="deleteCategorie('{{ field.categorie_pk }}') ;" class="btn btn-danger" disabled>Supprimer</button></td>
+                            {% else %}
+                            <td scope=""  ><button  onclick="deleteCategorie('{{ field.categorie_pk }}') ;" class="btn btn-danger" >Supprimer</button></td>
+                            {% endif %}
+                        {% endif %}
+
+
+
+
+
+                          </tr>
+                    {% endfor %}
+
+                    </tbody>
+                  </table>
+
+                </div>
+               <div class="card-footer" >
+                 <a href="{% url 'dash_forms' intitule='categorie' %}" class="btn btn-success">Ajouter</a>
+
+               </div>
+
+              </div>
+      </div><!-- End Recent Sales -->
+
+      {% endif %}
+
+      {% if type == 'sousCategorie' %}
+
+        <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+
+
+
+                <div class="card-body">
+                  <h5 class="card-title">Sous-Categorie <span>| Today</span></h5>
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Categorie</th>
+                        <th scope="col" >Action</th>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for field  in table %}
+                      <tr>
+                        <th scope="row"><a href="{% url 'dash_forms_update' intitule='sous_categorie' id=field.sousCategorie_pk %}">{{ field.sousCategorie_pk }}</a></th>
+                        <td>{{ field.sousCategorie_data.nom }}</td>
+                        <td>{{ field.categorie }}</td>
+                        {% if field.have_product %}
+                        <td scope=""><button onclick="deleteSousCategorie('{{ field.sousCategorie_pk }}') ;" class="btn btn-danger" >Supprimer</button></td>
+                        {% else %}
+                        <td scope=""><button onclick="deleteSousCategorie('{{ field.sousCategorie_pk }}') ;" class="btn btn-danger" >Supprimer</button></td>
+                        {% endif %}
+
+                      </tr>
+                    {% endfor %}
+
+                    </tbody>
+                  </table>
+
+                </div>
+               <div class="card-footer" >
+                 <a href="{% url 'dash_forms' intitule='sous_categorie' %}" class="btn btn-success">Ajouter</a>
+
+               </div>
+
+              </div>
+        </div><!-- End Recent Sales -->
+
+      {% endif %}
+
+      {% if type == 'product' %}
+
+        <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+
+
+
+                <div class="card-body">
+                  <h5 class="card-title">Produits <span>| Today</span></h5>
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Image1</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Date création</th>
+                        <th scope="col">Stock</th>
+                        <th scope="col">Description Longue</th>
+                        <th scope="col">Description Courte</th>
+                        <th scope="col">Prix</th>
+                        <th scope="col" >Categorie</th>
+                        <th scope="col" >Action</th>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for field  in table %}
+                      <tr>
+
+                        <th scope="row"><a href="{% url 'dash_forms_update' intitule='product' id=field.product_pk %}">{{ field.product_pk }}</a></th>
+                        <td><a href="{% url 'download_qr' id=field.product_pk %}"><img style="height:100px ; width:100px" alt="CODE QR" src="{{ field.product_qr}}"></a></td>
+                        <td><img style="height:100px ; width:100px" src="{{ field.product_data.image1 }}"></td>
+                        <td>{{ field.product_data.nom }}</td>
+                        <td>{{ field.product_data.date_de_stock }}</td>
+                        <td>{{ field.product_data.stock }}</td>
+                        <td>{{ field.product_data.description_longue }}</td>
+                        <td>{{ field.product_data.description_courte }}</td>
+                        <td>{{ field.product_data.prix }}</td>
+                        <td>{{ field.product_categorie }}</td>
+                        <td scope=""><button onclick="archiveProduct('{{ field.product_pk }}') ;" class="btn btn-danger" >Archiver</button></td>
+
+
+                      </tr>
+                    {% endfor %}
+
+                    </tbody>
+                  </table>
+
+                </div>
+               <div class="card-footer" >
+                 <a href="{% url 'dash_forms' intitule='product' %}" class="btn btn-success">Ajouter</a>
+
+               </div>
+
+              </div>
+      </div><!-- End Recent Sales -->
+
+      {% endif %}
+
+      {% if type == 'review' %}
+
+        <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+
+
+
+                <div class="card-body">
+                  <h5 class="card-title">Avis <span>| Today</span></h5>
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Utilisateur</th>
+                        <th scope="col">Pseudo</th>
+                        <th scope="col">Produit</th>
+                        <th scope="col">Contenu</th>
+                        <th scope="col">Date création</th>
+                        <th scope="col">Rate</th>
+
+                        <th scope="col" >Action</th>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for field  in table %}
+                      <tr>
+                        <th scope="row"><a href="#">{{ field.review_pk }}</a></th>
+                        <td>{{ field.review_user }}</td>
+                        <td>{{ field.review_data.name }}</td>
+                        <td><a href="#" >{{ field.review_product }}</a></td>
+                        <td>{{ field.review_data.contenu }}</td>
+                        <td>{{ field.review_data.date }}</td>
+                        <td>{{ field.user_data.rating }}</td>
+
+                        <td scope=""><button class="btn btn-danger" >Supprimer</button></td>
+
+
+                      </tr>
+                    {% endfor %}
+
+                    </tbody>
+                  </table>
+
+                </div>
+               <div class="card-footer" >
+                 <button class="btn btn-success">Ajouter</button>
+
+               </div>
+
+              </div>
+      </div><!-- End Recent Sales -->
+
+      {% endif %}
+
+
+      {% if type == 'commande' %}
+
+        <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+
+
+
+                <div class="card-body">
+                  <h5 class="card-title">Commandes <span>| Today</span></h5>
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Utilisateur</th>
+                        <th scope="col">Date Commande</th>
+                        <th scope="col">Livraison</th>
+                        <th scope="col">Date Livraison</th>
+                        <th scope="col">Status Livraison</th>
+                        <th scope="col">Status Commande</th>
+                        <th scope="col">Produit</th>
+                        <th scope="col">Quantite</th>
+                        <th scope="col">Option</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Action1</th>
+                        <th scope="col">Action2</th>
+                        <th scope="col">Action3</th>
+
+
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for field  in table %}
+
+                        {% if field.first_product %}
+                          <tr>
+                            <th rowspan="{{ field.len_products }}" scope="row"><a href="#">{{ field.commande_pk }}</a></th>
+                            <td rowspan="{{ field.len_products }}">{{ field.commande_user }}</td>
+                            <td rowspan="{{ field.len_products }}">{{ field.commande_data.date_commande }}</td>
+                            <td rowspan="{{ field.len_products }}">{{ field.commande_livraison }}</td>
+                            <td rowspan="{{ field.len_products }}">{{ field.commande_data.date_livraison }}</td>
+                            {% if field.commande_data.livree == 1 %}
+                              <td rowspan="{{ field.len_products }}"><span class="badge bg-success">Livré</span></td>
+                            {% else %}
+                              <td rowspan="{{ field.len_products }}"><span class="badge bg-warning">Non Livré</span></td>
+                            {% endif %}
+
+                            {% if field.commande_data.valide == 1 %}
+                              <td rowspan="{{ field.len_products }}"><span class="badge bg-success">Approuvé</span></td>
+                            {% else %}
+                              {% if field.commande_data.valide == 0 and field.commande_data.pending == 0 %}
+                                <td rowspan="{{ field.len_products }}"><span class="badge bg-danger">Rejeté</span></td>
+                              {% else %}
+                                <td rowspan="{{ field.len_products }}"><span class="badge bg-warning">En cours</span></td>
+                              {% endif %}
+                            {% endif %}
+                            <td>{{ field.first_product.nom }}</td>
+                            <td>{{ field.first_product.quantite }}</td>
+                            <td rowspan="{{ field.len_products }}">{{ field.commande_data.ship_option }}</td>
+                            <td rowspan="{{ field.len_products }}">{{ field.commande_data.prix_total }}</td>
+
+
+                            <td rowspan="{{ field.len_products }}" scope=""><button onclick="deleteCommande('{{ field.commande_pk }}') ;" class="btn btn-danger" >Supprimer</button></td>
+                            <td rowspan="{{ field.len_products }}" scope=""><button class="btn btn-success" onclick="validateCommande('{{ field.commande_pk }}') ;" >Valider</button></td>
+                            <td rowspan="{{ field.len_products }}" scope=""><button class="btn btn-success" onclick="livrateCommande('{{ field.commande_pk }}') ;" >Marquer Livré</button></td>
+
+
+
+
+
+                          </tr>
+                          {% for field_ext in field.its_products_ext %}
+                            <tr>
+                              <td>{{ field_ext.nom }}</td>
+                              <td>{{ field_ext.quantite }}</td>
+                            </tr>
+                          {% endfor %}
+                        {% else %}
+                          <tr>
+                            <th  scope="row"><a href="#">{{ field.commande_pk }}</a></th>
+                            <td>{{ field.commande_user }}</td>
+                            <td>{{ field.commande_data.date_commande }}</td>
+                            <td>{{ field.commande_livraison }}</td>
+                            <td>{{ field.commande_data.date_livraison }}</td>
+                            {% if field.commande_data.livree == 1 %}
+                              <td><span class="badge bg-success">Livré</span></td>
+                            {% else %}
+                              <td><span class="badge bg-warning">Non Livré</span></td>
+                            {% endif %}
+
+                            {% if field.commande_data.valide == 1 %}
+                              <td><span class="badge bg-success">Approuvé</span></td>
+                            {% else %}
+                              {% if field.commande_data.valide == 0 and field.commande_data.pending == 0 %}
+                                <td><span class="badge bg-danger">Rejeté</span></td>
+                              {% else %}
+                                <td><span class="badge bg-warning">En cours</span></td>
+                              {% endif %}
+                            {% endif %}
+
+                            {% if field.len_products == 0 %}
+
+                              <td>None</td>
+                              <td>None</td>
+
+
+                            {% else %}
+                              {% for field_product in field.its_products %}
+
+                                <td>{{ field_product.product.nom }}</td>
+                                <td>{{ field_product.quantite }}</td>
+                              {% endfor %}
+                            {% endif %}
+                            <td rowspan="{{ field.len_products }}">{{ field.commande_data.ship_option }}</td>
+                            <td rowspan="{{ field.len_products }}">{{ field.commande_data.prix_total }}</td>
+                            <td scope=""><button class="btn btn-danger" onclick="deleteCommande('{{ field.commande_pk }}') ;" >Supprimer</button></td>
+                            <td scope=""><button class="btn btn-success" onclick="validateCommande('{{ field.commande_pk }}') ;" >Valider</button></td>
+                            <td scope=""><button class="btn btn-success"  onclick="livrateCommande('{{ field.commande_pk }}') ;" >Marquer Livré</button></td>
+
+                        {% endif %}
+
+
+
+
+
+                          </tr>
+                    {% endfor %}
+
+                    </tbody>
+                  </table>
+
+                </div>
+               <div class="card-footer" >
+                 <button class="btn btn-success">Ajouter</button>
+
+               </div>
+
+              </div>
+      </div><!-- End Recent Sales -->
+
+      {% endif %}
+
+
+    </section>
+{% endblock %}
+
+{% block script %}
+
+<script>
+
+  function deleteUser(id){
+
+                  $.ajax({
+                    url: "{% url 'verify_connection' %}",
+
+                    success: function(response){
+
+                      $.ajax({
+                          url: "{% url 'delete_user' %}",
+                          data:{"id": id},
+                          //type: "POST",
+                          success: function( response ){
+
+
+
+                              //window.location.reload();
+
+                              //alert('user delete sucessfully');
+                              swal("Supprimé", "Utilisateur supprimé avec succes", "success").then(function () { location.reload() ; }) ;
+
+                          },
+
+                          error: function( response ){
+
+                          }
+
+                      });
+
+                    },
+
+                    error: function(response){
+
+                      document.location.href = "{% url 'login_admin' %}" ;
+
+                    }
+
+                  });
+
+
+
+		 }
+
+		 function deleteCategorie(id){
+
+                  $.ajax({
+                    url: "{% url 'verify_connection' %}",
+
+                    success: function(response){
+
+                      $.ajax({
+                          url: "{% url 'delete_categorie' %}",
+                          data:{"id": id},
+                          //type: "POST",
+                          success: function( response ){
+
+
+
+                              //window.location.reload();
+
+                              //alert('user delete sucessfully');
+                              swal('Supprimé', 'Categorie supprimé avec succes', 'success').then(function () { location.reload() ; }) ;
+
+                          },
+
+                          error: function( response ){
+
+                          }
+
+                      });
+
+                    },
+
+                    error: function(response){
+                      document.location.href = "{% url 'login_admin' %}" ;
+                    }
+
+                  }) ;
+
+
+
+
+
+		 }
+
+
+		 function deleteSousCategorie(id){
+
+
+                    $.ajax({
+                      url: "{% url 'verify_connection' %}",
+
+                      success: function(response){
+                        $.ajax({
+                            url: "{% url 'delete_sousCategorie' %}",
+                            data:{"id": id},
+                            //type: "POST",
+                            success: function( response ){
+
+
+
+                                //window.location.reload();
+
+                                //alert('user delete sucessfully');
+                                swal('Supprimé', 'Sous-Categorie supprimé avec succes', 'success').then(function () { location.reload() ; }) ;
+
+                            },
+
+                            error: function( response ){
+
+                            }
+
+                        });
+
+                      },
+
+                      error: function(response){
+                        document.location.href = "{% url 'login_admin' %}" ;
+                      }
+
+                    });
+
+
+
+		 }
+
+		 function archiveProduct(id){
+
+                   $.ajax({
+                      url: "{% url 'verify_connection' %}",
+
+                      success: function(response){
+
+                        $.ajax({
+                            url: "{% url 'archive_product' %}",
+                            data:{"id": id},
+                            //type: "POST",
+                            success: function( response ){
+
+
+
+                                //window.location.reload();
+
+                                //alert('user delete sucessfully');
+                                swal('Archive', 'Produit archive avec succes', 'success').then(function () { location.reload() ; }) ;
+
+                            },
+
+                            error: function( response ){
+
+                            }
+
+                        });
+
+                      },
+
+                      error: function(response){
+
+                        document.location.href = "{% url 'login_admin' %}" ;
+
+                      }
+
+                    });
+
+
+
+		 }
+
+		 function deleteCommande(id){
+
+                  $.ajax({
+                      url: "{% url 'verify_connection' %}",
+
+                      success: function(response){
+
+                        $.ajax({
+                            url: "{% url 'delete_commande' %}",
+                            data:{"id": id},
+                            //type: "POST",
+                            success: function( response ){
+
+
+
+                                //window.location.reload();
+
+                                //alert('user delete sucessfully');
+                                swal('Supprimé', 'Commande supprimé avec succes', 'success').then(function () { location.reload() ; }) ;
+
+                            },
+
+                            error: function( response ){
+
+                            }
+
+                        });
+
+                      },
+
+                      error: function(response){
+
+                        document.location.href = "{% url 'login_admin' %}" ;
+
+                      }
+
+                    });
+
+
+
+		 }
+
+
+		 function validateCommande(id){
+
+                  $.ajax({
+                      url: "{% url 'verify_connection' %}",
+
+                      success: function(response){
+
+
+
+                         $.ajax({
+                            url: "{% url 'validate_commande' %}",
+                            data:{"id": id},
+                            //type: "POST",
+                            success: function( response ){
+
+
+
+                                //window.location.reload();
+
+                                //alert('user delete sucessfully');
+                                swal('Validé', 'Commande validé avec succes', 'success').then(function () { location.reload() ; }) ;
+
+                            },
+
+                            error: function( response ){
+
+                            }
+
+                        });
+                      },
+
+                      error: function(response){
+
+                        document.location.href = "{% url 'login_admin' %}" ;
+
+                      }
+
+                   });
+
+
+
+		 }
+
+		 function livrateCommande(id){
+
+                  $.ajax({
+                      url: "{% url 'verify_connection' %}",
+
+                      success: function(response){
+
+                         $.ajax({
+                            url: "{% url 'livrate_commande' %}",
+                            data:{"id": id},
+                            //type: "POST",
+                            success: function( response ){
+
+
+
+                                //window.location.reload();
+
+                                //alert('user delete sucessfully');
+                                swal('Marquer Livré', 'Commande marqué livré avec succes', 'success').then(function () { location.reload() ; }) ;
+
+                            },
+
+                            error: function( response ){
+
+                            }
+
+                        });
+
+
+                      },
+
+                      error: function(response){
+
+                        document.location.href = "{% url 'login_admin' %}" ;
+
+                      }
+
+                  });
+
+
+		 }
+
+
+</script>
+
+{% endblock %}

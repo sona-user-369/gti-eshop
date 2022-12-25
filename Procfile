@@ -1,0 +1,1 @@
+web: gunicorn <EShopGTI>.wsgi --log-file -

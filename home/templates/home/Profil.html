@@ -1,0 +1,40 @@
+{% extends 'home/index22.html' %}
+
+{% load static %}
+
+{% block main %}
+        <main class="main">
+        	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        		<div class="container">
+        			<img src="">
+					<form action="#" method="post" id="register_form">
+                                        {% csrf_token %}
+                                        {% for field in Register %}
+                                        <div class="form-group">
+                                            {{field.label_tag}}
+                                            {{ field }}
+                                        </div>
+                                        {% endfor %}
+
+
+
+
+                                        <p id="for_footer">    </p>
+
+                                        <div class="form-footer" >
+
+                                            <button type="submit" class="btn btn-outline-primary-2">
+                                                <span>SIGN UP</span>
+                                                <i class="icon-long-arrow-right"></i>
+                                            </button>
+
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="register-policy" required>
+                                                <label class="custom-control-label" for="register-policy">I agree to the <a href="#">privacy policy</a> *</label>
+                                            </div><!-- End .custom-checkbox -->
+                                        </div><!-- End .form-footer -->
+                                    </form>
+        		</div><!-- End .container -->
+        	</div><!-- End .page-header -->
+        </main><!-- End .main -->
+{% endblock %}

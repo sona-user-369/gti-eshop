@@ -1,0 +1,7 @@
+{% autoescape off %}
+
+Hello,
+
+Please {{ user.username }} Change your password http://{{ domain }}{% url 'refresh_password' uidb64=uid token=token %}
+
+{% endautoescape %}

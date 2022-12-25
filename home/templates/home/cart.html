@@ -1,0 +1,355 @@
+{% extends 'home/index22.html' %}
+
+{% load static %}
+{% block title %}
+    <title>GTI-Panier</title>
+{% endblock %}
+{% block main %}
+
+    <main class="main">
+        	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        		<div class="container">
+        			<h1 class="page-title">Shopping Cart<span>Shop</span></h1>
+        		</div><!-- End .container -->
+        	</div><!-- End .page-header -->
+            <nav aria-label="breadcrumb" class="breadcrumb-nav">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="page-content">
+            	<div class="cart">
+	                <div class="container">
+						{% if cart_product %}
+	                	<div class="row">
+	                		<div class="col-lg-9">
+	                			<table class="table table-cart table-mobile">
+									<thead>
+										<tr>
+											<th>Product</th>
+											<th>Price</th>
+											<th>Quantity</th>
+											<th>Total</th>
+											<th></th>
+										</tr>
+									</thead>
+
+									<tbody>
+										{% for p in cart_product.product_list %}
+											<tr id="row{{ p.produit.pk }}" >
+											<td class="product-col">
+												<div class="product">
+													<figure class="product-media">
+														<a href="#">
+															<img src="{{ p.produit.fields.image1 }}" alt="Product image">
+														</a>
+													</figure>
+
+													<h3 class="product-title">
+														<a href="#">{{ p.produit.fields.nom }}</a>
+													</h3><!-- End .product-title -->
+												</div><!-- End .product -->
+											</td>
+											<td class="price-col" id="mma{{ p.produit.pk}}">${{ p.produit.fields.prix }}</td>
+											<td class="quantity-col">
+                                                <div class="cart-product-quantity">
+                                                    <input type="number" class="form-control" id="{{ p.produit.pk }}" onchange="document.getElementById('toto'+'{{ p.produit.pk }}').innerHTML='$'+ parseInt(this.value)*parseInt(String(getElementById('mma'+ '{{ p.produit.pk }}').innerHTML).replace('$', ''));" name="id_quantity_input" value="{{ p.quantite }}" min="1" max="10" step="1" data-decimals="0" required>
+                                                </div><!-- End .cart-product-quantity -->
+                                            </td>
+											<td class="total-col" id="toto{{ p.produit.pk }}" name="total_cart">${{ p.total }}</td>
+											<td class="remove-col"><button onclick="deleteCart('{{ p.produit.pk }}', 'row'+'{{ p.produit.pk }}')" class="btn-remove"><i class="icon-close"></i></button></td>
+										</tr>
+										{% endfor %}
+
+									</tbody>
+								</table><!-- End .table table-wishlist -->
+
+	                			<div class="cart-bottom">
+			            			<div class="cart-discount">
+			            				<form action="#">
+			            					<div class="input-group">
+				        						<input type="text" class="form-control" required placeholder="coupon code">
+				        						<div class="input-group-append">
+													<button class="btn btn-outline-primary-2" type="submit"><i class="icon-long-arrow-right"></i></button>
+												</div><!-- .End .input-group-append -->
+			        						</div><!-- End .input-group -->
+			            				</form>
+			            			</div><!-- End .cart-discount -->
+
+			            			<button  class="btn btn-outline-dark-2" onclick="updateCart();"><span>UPDATE CART</span><i class="icon-refresh"></i></button>
+		            			</div><!-- End .cart-bottom -->
+	                		</div><!-- End .col-lg-9 -->
+	                		<aside class="col-lg-3">
+	                			<div class="summary summary-cart">
+	                				<h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
+
+	                				<table class="table table-summary">
+	                					<tbody>
+	                						<tr class="summary-subtotal">
+	                							<td>Subtotal:</td>
+	                							<td id="all_total">${{ total }}</td>
+	                						</tr><!-- End .summary-subtotal -->
+	                						<tr class="summary-shipping">
+	                							<td>Shipping:</td>
+	                							<td>&nbsp;</td>
+	                						</tr>
+
+	                						<tr class="summary-shipping-row">
+	                							<td>
+													<div class="custom-control custom-radio">
+														<input type="radio" id="free-shipping" name="shipping" class="custom-control-input">
+														<label class="custom-control-label" for="free-shipping">Free Shipping</label>
+													</div><!-- End .custom-control -->
+	                							</td>
+	                							<td>$0.00</td>
+	                						</tr><!-- End .summary-shipping-row -->
+
+	                						<tr class="summary-shipping-row">
+	                							<td>
+	                								<div class="custom-control custom-radio">
+														<input type="radio" id="standart-shipping"  name="shipping" class="custom-control-input">
+														<label class="custom-control-label" for="standart-shipping">Standart:</label>
+													</div><!-- End .custom-control -->
+	                							</td>
+	                							<td>$10.00</td>
+	                						</tr><!-- End .summary-shipping-row -->
+
+	                						<tr class="summary-shipping-row">
+	                							<td>
+	                								<div class="custom-control custom-radio">
+														<input type="radio" id="express-shipping" name="shipping" class="custom-control-input">
+														<label class="custom-control-label" for="express-shipping">Express:</label>
+													</div><!-- End .custom-control -->
+	                							</td>
+	                							<td>$20.00</td>
+	                						</tr><!-- End .summary-shipping-row -->
+
+	                						<tr class="summary-shipping-estimate">
+	                							<td>Estimate for Your Country<br> <a href="dashboard.html">Change address</a></td>
+	                							<td>&nbsp;</td>
+	                						</tr><!-- End .summary-shipping-estimate -->
+
+	                						<tr class="summary-total">
+	                							<td>Total:</td>
+	                							<td id="all__total">${{ total }}</td>
+	                						</tr><!-- End .summary-total -->
+	                					</tbody>
+	                				</table><!-- End .table table-summary -->
+
+	                				<a href="" onclick="goToShip(); return false ;" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a>
+	                			</div><!-- End .summary -->
+
+		            			<a href="{% url 'category' %}" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
+	                		</aside><!-- End .col-lg-3 -->
+	                	</div><!-- End .row -->
+						{% else %}
+						<div><h1>Aucun produit dans votre panier</h1></div>
+						{% endif %}
+	                </div><!-- End .container -->
+                </div><!-- End .cart -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript" >
+
+	function goToShip(){
+
+		var all_radio = document.getElementsByName('shipping') ;
+		var ship_option = 'No Option' ;
+
+		for (var i=0 ; i< all_radio.length ; i++){
+			if(all_radio[i].checked){
+				if ( all_radio[i].id == 'free-shipping' ){
+					 ship_option = 'Free Shipping' ;
+				}else{
+
+					if(all_radio[i].id == 'standard-shipping'){
+
+						ship_option = 'Standard Shipping' ;
+
+					}else{
+
+						ship_option = 'Express Shipping' ;
+
+					}
+
+				}
+
+			}
+		}
+
+		$.ajax({
+			url: "{% url 'verify_connection' %}",
+
+			success: function(response){
+				$.ajax({
+					url: "{% url 'save_ship_option' %}",
+					data : {'shipping_option' : ship_option },
+
+					success: function(response) {
+						location.href = "{% url 'shipping' %}" ;
+					},
+
+					error: function(response){
+						String name = '' ;
+						for(var i=0; i< response.length ; i++){
+							name += ' '+response[i] ;
+						}
+						swal("Désolé", 'les produits' + name + ' sont en rupture de stock', 'warning') ;
+
+					}
+
+				});
+			},
+
+			error: function(response){
+				document.location.href = "{% url 'home' %}";
+			}
+		});
+
+
+	}
+
+
+    function deleteCart(prod, id_row){
+
+			$.ajax({
+				url: "{% url 'verify_connection' %}",
+
+				success: function(response){
+
+					$.ajax({
+						url: "{% url 'delete_cart' %}",
+						data:{"id_produit": prod},
+						//type: "POST",
+						success: function( response ){
+
+							document.getElementById('id_cart_count').innerHTML = response.cart_number ;
+
+							document.getElementById(id_row).remove();
+							var total_row = document.getElementsByName('total_cart');
+							var total_len = total_row.length ;
+							var s = 0 ;
+							for (var i =0 ; i<total_len; i++){
+
+								s += parseInt(String(total_row[i].innerHTML).replace('$', '')) ;
+
+							}
+
+							document.getElementById('all_total').innerHTML = '$' + s ;
+							document.getElementById('all__total').innerHTML = '$' + s ;
+
+
+							//window.location.reload();
+							swal("Supprimé!", "Le produit a été bien supprimé!", "success");
+
+						},
+
+						error: function( response ){
+
+						}
+
+					});
+
+
+				},
+
+				error: function(response){
+
+					window.location.reload();
+
+				}
+
+			});
+
+
+
+
+    }
+
+
+    function updateCart(){
+
+
+		$.ajax({
+			url: "{% url 'verify_connection' %}",
+
+			success: function( response ){
+				var row = document.getElementsByName('id_quantity_input');
+
+				var len = row.length ;
+				var values = {};
+
+				for(var i=0; i<len ; i++){
+
+					values['produit'+String(i)] = {'id' : row[i].id, 'qte' :  row[i].value}
+
+
+				}
+
+
+				$.ajax({
+						url: "{% url 'update_cart' %}",
+						data: JSON.stringify(values),
+						//type: "POST",
+						success: function( response ){
+
+
+							var total_row = document.getElementsByName('total_cart');
+							var total_len = total_row.length
+							var s = 0 ;
+							for (var i =0 ; i<total_len; i++){
+
+								s += parseInt(String(total_row[i].innerHTML).replace('$', '')) ;
+
+							}
+
+							document.getElementById('all_total').innerHTML = '$' + s ;
+							document.getElementById('all__total').innerHTML = '$' + s ;
+							//window.location.reload();
+							swal("Mise à jour!", "Votre panier a été bien mise à jour!", "success");
+
+						},
+
+						error: function( response ){
+
+						}
+
+				});
+
+			},
+
+			error: function( response ){
+
+				window.location.reload();
+
+			}
+		});
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+
+</script>
+
+
+
+{% endblock %}

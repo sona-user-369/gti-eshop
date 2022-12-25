@@ -1,0 +1,131 @@
+{% extends 'home/index22.html' %}
+
+{% load static %}
+
+{% block title %}
+    <title>GTI-Livraison</title>
+{% endblock %}
+
+{% block main %}
+
+<main class="main">
+
+    <div class="container ">
+        <div class="row" >
+
+            <div class=" mx-auto mt-4">
+                <h4>Information Adresse de livraison</h4>
+
+            </div>
+
+        </div>
+        <div class="row">
+
+
+            <div class="col-sm-9 mx-auto ">
+
+
+
+
+
+                        <hr>
+
+                          <form class="form" action="##" method="post" id="shipForm">
+
+                                  {% csrf_token %}
+
+                                {% for field in ShipForm %}
+                                  <div class="form-group col ">
+
+
+                                      <div class="col-xs-6">
+                                          {{ field.label_tag }}
+                                          {{ field }}
+
+                                          {% if field.id_for_label == 'id_phone_number' %}
+                                            <div class="invalid-feedback"><h6 class="text-danger" >Le numero de telephone entrer est incorrect </h6></div>
+                                          {% endif %}
+
+                                      </div>
+                                  </div>
+
+
+                                {% endfor %}
+
+
+
+                                  <div class="form-group ">
+                                       <div class="col-xs-12">
+                                            <br>
+                                            <button class="btn btn-outline-success" type="submit"><i class="icon icon-refresh"></i>Valider</button>
+                                       </div>
+                                  </div>
+                          </form>
+
+                      <hr>
+
+
+
+
+
+
+
+            </div><!--/col-9-->
+        </div><!--/row-->
+    </div>
+</main>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+$(document).ready(function () {
+
+   $('#shipForm').submit(function () {
+                // create an AJAX call
+
+                $.ajax({
+                    url: "{% url 'verify_connection' %}",
+
+                    success: function( response ){
+
+                        $.ajax({
+                            data: $('#shipForm').serialize(), // get the form data
+                            type: $('#shipForm').attr('method'), // GET or POST
+                            url: "{% url 'valid_commande' %}",
+                            // on success
+                            success: function (response) {
+
+                                swal({
+                                        title:"Commande ajouté!",
+                                        text:"Votre commande a été ajouté avec succes!",
+                                        type:"success"}).this(function(){  window.location.href = "{% url 'invoice' %}" ; });
+
+                            },
+                            // on error
+                            error: function (response) {
+                                // alert the error if any error occured
+
+
+                                if(response.responseJSON.phone_number){
+                                document.getElementById('id_phone_number').classList.add('is-invalid');
+                                }
+
+
+                                console.log(response.responseJSON.contact);
+                            }
+                        });
+
+                    },
+
+                    error: function( response ){
+                        window.location = "{% url 'home' %}";
+                    }
+                });
+
+
+                return false;
+            });
+		})
+</script>
+{% endblock %}
