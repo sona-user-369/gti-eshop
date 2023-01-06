@@ -1,0 +1,554 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-12-31 02:41+0100\n"
+"PO-Revision-Date: 2022-12-31 02:45+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#: .\EShopGTI\settings.py:167
+msgid "Anglais"
+msgstr "English"
+
+#: .\EShopGTI\settings.py:168
+msgid "Français"
+msgstr "French"
+
+#: .\home\templates\home\OtherProfil.html:44
+#: .\home\templates\home\index22.html:1025
+msgid "Entrer un contact valide"
+msgstr "Enter a valid contact"
+
+#: .\home\templates\home\OtherProfil.html:48
+#: .\home\templates\home\index22.html:1029
+msgid "Cet email existe deja"
+msgstr "This email already exists"
+
+#: .\home\templates\home\OtherProfil.html:62
+#: .\home\templates\home\index22.html:260
+#: .\home\templates\home\index22.html:930
+msgid "Se deconnecter"
+msgstr "Log out"
+
+#: .\home\templates\home\OtherProfil.html:63
+msgid "Mise a jour"
+msgstr "Update"
+
+#: .\home\templates\home\OtherProfil.html:65
+msgid "Changer Password"
+msgstr "Change Password"
+
+#: .\home\templates\home\cart.html:14 .\home\templates\home\cart.html:22
+msgid "Panier"
+msgstr "Shopping cart"
+
+#: .\home\templates\home\cart.html:14 .\home\templates\home\cart.html:21
+#: .\home\templates\home\category.html:14
+#: .\home\templates\home\index22.html:442
+#: .\home\templates\home\index22.html:909
+msgid "Boutique"
+msgstr "Shop"
+
+#: .\home\templates\home\cart.html:36
+msgid "Produit"
+msgstr "Product"
+
+#: .\home\templates\home\cart.html:37 .\home\templates\home\category.html:566
+msgid "Prix"
+msgstr "Price"
+
+#: .\home\templates\home\cart.html:38
+msgid "Quantité"
+msgstr "Quantity"
+
+#: .\home\templates\home\cart.html:86
+msgid "METTRE A JOUR PANIER"
+msgstr "UPDATE CART"
+
+#: .\home\templates\home\cart.html:91
+msgid "Total du panier"
+msgstr "Cart total"
+
+#: .\home\templates\home\cart.html:96
+msgid "Sous-total:"
+msgstr "Subtotal"
+
+#: .\home\templates\home\cart.html:100
+msgid "Livraison:"
+msgstr "Shipping"
+
+#: .\home\templates\home\cart.html:108
+msgid "Livraison Gratuite"
+msgstr "Free Shipping"
+
+#: .\home\templates\home\cart.html:118
+msgid "Standart:"
+msgstr "Standart"
+
+#: .\home\templates\home\cart.html:128
+msgid "Expresse:"
+msgstr "Express"
+
+#: .\home\templates\home\cart.html:135
+msgid "Estimation pour votre pays"
+msgstr ""
+
+#: .\home\templates\home\cart.html:146
+msgid "PROCEEDER AU PAIEMENT"
+msgstr ""
+
+#: .\home\templates\home\cart.html:149
+msgid "CONTINUER A ACHETER"
+msgstr ""
+
+#: .\home\templates\home\cart.html:153
+msgid "Aucun produit dans votre panier"
+msgstr ""
+
+#: .\home\templates\home\category.html:34
+msgid "Affiche"
+msgstr ""
+
+#: .\home\templates\home\category.html:34 .\home\templates\home\product.html:55
+msgid "Produits"
+msgstr ""
+
+#: .\home\templates\home\category.html:40
+msgid "Trier par:"
+msgstr ""
+
+#: .\home\templates\home\category.html:43
+msgid "Plus populaire"
+msgstr ""
+
+#: .\home\templates\home\category.html:44
+msgid "Most Rated"
+msgstr ""
+
+#: .\home\templates\home\category.html:108
+#: .\home\templates\home\product.html:371
+msgid "ajouter aux favoris"
+msgstr ""
+
+#: .\home\templates\home\category.html:161
+#: .\home\templates\home\product.html:175
+msgid "Ajouter au panier"
+msgstr ""
+
+#: .\home\templates\home\category.html:414
+msgid "Efacer tout"
+msgstr ""
+
+#: .\home\templates\home\category.html:574
+msgid "Echelle des prix:"
+msgstr ""
+
+#: .\home\templates\home\category.html:592
+msgid "Le produit recherché n"
+msgstr ""
+
+#: .\home\templates\home\category.html:594
+msgid "Retour à la page d"
+msgstr ""
+
+#: .\home\templates\home\index22.html:153
+msgid "Voir Panier"
+msgstr ""
+
+#: .\home\templates\home\index22.html:154
+msgid "Commander"
+msgstr ""
+
+#: .\home\templates\home\index22.html:169
+msgid "Explorer les catégories"
+msgstr "Explore categories"
+
+#: .\home\templates\home\index22.html:257
+#: .\home\templates\home\index22.html:928
+msgid "Mon Profil"
+msgstr ""
+
+#: .\home\templates\home\index22.html:265
+#: .\home\templates\home\index22.html:934
+msgid "Se connecter / Créer un compte"
+msgstr ""
+
+#: .\home\templates\home\index22.html:296
+msgid "Accord du jour"
+msgstr ""
+
+#: .\home\templates\home\index22.html:299
+#: .\home\templates\home\index22.html:313
+#: .\home\templates\home\index22.html:335
+msgid "Jusqu'à"
+msgstr ""
+
+#: .\home\templates\home\index22.html:299
+msgid "de réduction"
+msgstr ""
+
+#: .\home\templates\home\index22.html:299
+msgid "Offres lourdes"
+msgstr ""
+
+#: .\home\templates\home\index22.html:302
+#: .\home\templates\home\index22.html:316
+#: .\home\templates\home\index22.html:666
+msgid "Découvrer maintenant"
+msgstr ""
+
+#: .\home\templates\home\index22.html:310
+msgid "autorisation"
+msgstr ""
+
+#: .\home\templates\home\index22.html:313
+msgid "power tools"
+msgstr ""
+
+#: .\home\templates\home\index22.html:313
+#, python-format
+msgid "30%% de réduction"
+msgstr ""
+
+#: .\home\templates\home\index22.html:332
+msgid "Nouvelles arrivages"
+msgstr ""
+
+#: .\home\templates\home\index22.html:335
+#, python-format
+msgid "40%% de réduction"
+msgstr ""
+
+#: .\home\templates\home\index22.html:338
+#: .\home\templates\home\index22.html:351
+#: .\home\templates\home\index22.html:364
+#: .\home\templates\home\index22.html:464
+#: .\home\templates\home\index22.html:686
+msgid "Acheter maintenant"
+msgstr ""
+
+#: .\home\templates\home\index22.html:345
+msgid "extérieure"
+msgstr ""
+
+#: .\home\templates\home\index22.html:348
+msgid "equipment électrique"
+msgstr ""
+
+#: .\home\templates\home\index22.html:358
+#, python-format
+msgid "économiser 20%%"
+msgstr ""
+
+#: .\home\templates\home\index22.html:358
+msgid "ou plus"
+msgstr ""
+
+#: .\home\templates\home\index22.html:361
+msgid "offres & économies"
+msgstr ""
+
+#: .\home\templates\home\index22.html:373
+msgid "Les Marques que nous proposons"
+msgstr ""
+
+#: .\home\templates\home\index22.html:433
+msgid "Nouvelle arrivage"
+msgstr ""
+
+#: .\home\templates\home\index22.html:436
+msgid "Meilleurs ventes"
+msgstr ""
+
+#: .\home\templates\home\index22.html:449
+msgid "Temps de vente limité"
+msgstr ""
+
+#: .\home\templates\home\index22.html:457
+msgid "économiser $64.00"
+msgstr ""
+
+#: .\home\templates\home\index22.html:484
+#: .\home\templates\home\index22.html:557
+msgid "Ajouter aux favoris"
+msgstr ""
+
+#: .\home\templates\home\index22.html:535
+#: .\home\templates\home\index22.html:608
+#: .\home\templates\home\product.html:172
+msgid "ajouter au panier"
+msgstr ""
+
+#: .\home\templates\home\index22.html:632
+msgid "Abonnez-vous à votre newsletters"
+msgstr ""
+
+#: .\home\templates\home\index22.html:633
+msgid ""
+"Découvrez les nouvelles offres et obtenez plus d'offres en vous inscrivant à "
+"notre newsletter"
+msgstr ""
+
+#: .\home\templates\home\index22.html:640
+msgid "Abonnez-vous maintenant"
+msgstr ""
+
+#: .\home\templates\home\index22.html:657
+#, python-format
+msgid "économiser jusqu'à 30%%"
+msgstr ""
+
+#: .\home\templates\home\index22.html:661
+msgid "Les marques premium"
+msgstr ""
+
+#: .\home\templates\home\index22.html:662
+msgid "pour les travaux les plus difficiles"
+msgstr ""
+
+#: .\home\templates\home\index22.html:677
+msgid "Meilleures ventes en outils"
+msgstr ""
+
+#: .\home\templates\home\index22.html:681
+msgid "outils professionnels"
+msgstr ""
+
+#: .\home\templates\home\index22.html:682
+msgid "Économisez sur les meilleures ventes"
+msgstr ""
+
+#: .\home\templates\home\index22.html:702
+msgid "Livraison gratuite"
+msgstr ""
+
+#: .\home\templates\home\index22.html:703
+msgid "Commandes de 50 $ ou plus"
+msgstr ""
+
+#: .\home\templates\home\index22.html:715
+msgid "Retours sans frais"
+msgstr ""
+
+#: .\home\templates\home\index22.html:716
+msgid "Dans les 30 jours"
+msgstr ""
+
+#: .\home\templates\home\index22.html:728
+#, python-format
+msgid "Obtenez 20 %% de réduction sur 1 article"
+msgstr ""
+
+#: .\home\templates\home\index22.html:729
+msgid "Lorsque vous vous inscrivez"
+msgstr ""
+
+#: .\home\templates\home\index22.html:741
+msgid "Nous soutenons"
+msgstr ""
+
+#: .\home\templates\home\index22.html:742
+msgid "Des services exceptionnels 24h/24 et 7j/7"
+msgstr ""
+
+#: .\home\templates\home\index22.html:754
+#, fuzzy
+#| msgid "Explorer les catégories"
+msgid "Toutes les Catégories"
+msgstr "Explore categories"
+
+#: .\home\templates\home\index22.html:756
+msgid "Voir tous les produits"
+msgstr ""
+
+#: .\home\templates\home\index22.html:793
+msgid "A partir de"
+msgstr ""
+
+#: .\home\templates\home\index22.html:796
+msgid "outils de travail de bois"
+msgstr ""
+
+#: .\home\templates\home\index22.html:797
+msgid "A partir des marques les mieux notés"
+msgstr ""
+
+#: .\home\templates\home\index22.html:799
+msgid "Decouvrir maintenant"
+msgstr ""
+
+#: .\home\templates\home\index22.html:830
+msgid "Liens utiles"
+msgstr ""
+
+#: .\home\templates\home\index22.html:833
+msgid "A propos de GTI"
+msgstr ""
+
+#: .\home\templates\home\index22.html:834
+msgid "Comment acheter à GTI"
+msgstr ""
+
+#: .\home\templates\home\index22.html:836
+#: .\home\templates\home\index22.html:921
+msgid "Contacter nous"
+msgstr ""
+
+#: .\home\templates\home\index22.html:837
+#: .\home\templates\home\index22.html:862
+#: .\home\templates\home\index22.html:966
+msgid "Se connecter"
+msgstr ""
+
+#: .\home\templates\home\index22.html:844
+msgid "Services clients"
+msgstr ""
+
+#: .\home\templates\home\index22.html:847
+msgid "Méthodes de payements"
+msgstr ""
+
+#: .\home\templates\home\index22.html:848
+msgid "Garantie de remboursement!"
+msgstr ""
+
+#: .\home\templates\home\index22.html:849
+msgid "Retours"
+msgstr ""
+
+#: .\home\templates\home\index22.html:850
+msgid "Livraison"
+msgstr ""
+
+#: .\home\templates\home\index22.html:851
+msgid "Les termes et confitions"
+msgstr ""
+
+#: .\home\templates\home\index22.html:852
+msgid "Politique de confidentialité"
+msgstr ""
+
+#: .\home\templates\home\index22.html:859
+msgid "Mon compte"
+msgstr ""
+
+#: .\home\templates\home\index22.html:863
+msgid "Voir le panier"
+msgstr ""
+
+#: .\home\templates\home\index22.html:864
+msgid "Ma liste de favoris"
+msgstr ""
+
+#: .\home\templates\home\index22.html:865
+msgid "Suivre ma commande"
+msgstr ""
+
+#: .\home\templates\home\index22.html:866
+msgid "Aide"
+msgstr ""
+
+#: .\home\templates\home\index22.html:876
+msgid "Copyright © 2019 Green Tech Innovation. Tout droits réservés"
+msgstr ""
+
+#: .\home\templates\home\index22.html:915
+msgid "A propos"
+msgstr ""
+
+#: .\home\templates\home\index22.html:969
+msgid "Creer un compte"
+msgstr ""
+
+#: .\home\templates\home\index22.html:996
+msgid "Mot de passe oublié?"
+msgstr ""
+
+#: .\home\templates\home\index22.html:1000
+#: .\home\templates\home\index22.html:1053
+msgid "ou se connecter avec"
+msgstr ""
+
+#: .\home\templates\home\index22.html:1005
+#: .\home\templates\home\index22.html:1058
+msgid "Se Connecter Avec Google"
+msgstr ""
+
+#: .\home\templates\home\index22.html:1021
+msgid "Ce nom d'utilisateur existe deja"
+msgstr ""
+
+#: .\home\templates\home\index22.html:1048
+msgid "Je suis d'accord avec"
+msgstr ""
+
+#: .\home\templates\home\index22.html:1048
+msgid "la politique de confidentialité"
+msgstr ""
+
+#: .\home\templates\home\index22.html:1088
+msgid "Mot de passe oublié"
+msgstr ""
+
+#: .\home\templates\home\index22.html:1092
+msgid "L'email entre n'est pas enregistre"
+msgstr ""
+
+#: .\home\templates\home\index22.html:1100
+msgid "VALIDER"
+msgstr ""
+
+#: .\home\templates\home\index22.html:1130
+msgid ""
+"Abonnez-vous à la newsletter Molla eCommerce pour recevoir des mises à jour "
+"en temps opportun de vos produits préférés"
+msgstr ""
+
+#: .\home\templates\home\index22.html:1141
+msgid "Ne plus afficher cette fenêtre contextuelle"
+msgstr ""
+
+#: .\home\templates\home\product.html:65
+msgid "Suivant"
+msgstr ""
+
+#: .\home\templates\home\product.html:207
+msgid "Information additonnelle"
+msgstr ""
+
+#: .\home\templates\home\product.html:210
+msgid "Shipping & Returns"
+msgstr ""
+
+#: .\home\templates\home\product.html:213
+msgid "Avis"
+msgstr ""
+
+#: .\home\templates\home\product.html:315
+msgid ""
+"Votre adresse email ne sera pas publiée. Les champs requis sont indiqués * "
+msgstr ""
+
+#: .\home\templates\home\product.html:346
+msgid "PUBLIER COMMENTAIRE"
+msgstr ""
+
+#: .\home\templates\home\product.html:358
+msgid "Vous pourez aimer aussi"
+msgstr ""
+
+#: .\home\templates\home\product.html:365
+msgid "Vente"
+msgstr ""
