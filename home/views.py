@@ -1,16 +1,16 @@
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.shortcuts import render , HttpResponse, redirect
+from django.shortcuts import render, HttpResponse, redirect
 from django.urls import reverse
 from elasticsearch_dsl.query import Q
 
 from Applink.serializer import UserRegisterSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.contrib.auth import  login , logout , authenticate
+from django.contrib.auth import login, logout, authenticate
 from rest_framework.authentication import TokenAuthentication
 from django.core.mail import EmailMessage
-from django.utils.http import urlsafe_base64_decode , urlsafe_base64_encode
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_str
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
@@ -28,48 +28,42 @@ from .models import *
 
 
 def home(request):
-
     Register = RegisterForm()
     Login = LoginForm()
     categories = get_categorie(request)
+    languages = select_languages(request)
 
-    #Getting recents products
+    # Getting recents products
     recent_products = get_recent_products()
 
-
-    #Getting best selling products
+    # Getting best selling products
     best_seller_products = get_best_seller(6)
 
-    #Getting all
-    #all_categorie = Categorie.objects.all()
-
-
-
+    # Getting all
+    # all_categorie = Categorie.objects.all()
 
     user = verify_user(request)["user"]
     cart_count = verify_user(request)["cart_total"]
     wishlist_count = verify_user(request)["wishlist_total"]
     cart_product = verify_user(request)["cart_product"]
     total = verify_user(request)["total"]
-    context ={'Register': Register,
-              'Login': Login,
-              'username': user,
-              'cart_count': cart_count,
-              'wishlist_count': wishlist_count,
-              'cart_product' : cart_product,
-              'total': total,
-              'categories': categories,
-              'recent': recent_products,
-              'best_sellers' : best_seller_products,
+    context = {'Register': Register,
+               'Login': Login,
+               'username': user,
+               'cart_count': cart_count,
+               'wishlist_count': wishlist_count,
+               'cart_product': cart_product,
+               'total': total,
+               'categories': categories,
+               'recent': recent_products,
+               'best_sellers': best_seller_products,
+               'languages': languages,
+               }
 
-              }
-
-    return render(request, 'home/index22.html' , context )
-
+    return render(request, 'home/index22.html', context)
 
 
 def activate(request, uidb64, token):
-
     try:
         uid = force_str(uuid.UUID(bytes=urlsafe_base64_decode(uidb64)))
 
@@ -78,16 +72,15 @@ def activate(request, uidb64, token):
     except(TypeError, ValueError, OverflowError, Utilisateurs.DoesNotExist):
         user = None
     if user is not None and PasswordResetTokenGenerator().check_token(user=user, token=token):
-        user.is_active= True
+        user.is_active = True
         user.save()
 
         return redirect('home')
-    else :
+    else:
         return HttpResponse('Activation link is invalid')
 
 
 def activate_forgout(request, uidb64, token):
-
     try:
         uid = force_str(uuid.UUID(bytes=urlsafe_base64_decode(uidb64)))
 
@@ -100,9 +93,8 @@ def activate_forgout(request, uidb64, token):
         request.session["user_email"] = user.email
 
         return redirect('forgot_render')
-    else :
+    else:
         return HttpResponse('Activation link is invalid')
-
 
 
 def forgout_pass(request):
@@ -120,7 +112,6 @@ def forgout_pass(request):
     return render(request, 'home/forgotPassword.html', {'ForgotForm': forgot_form})
 
 
-
 #####Logout User
 def logout_user(request):
     if not verify_user(request)["user"]:
@@ -135,17 +126,15 @@ def delete_user(request):
         return redirect('home')
 
 
-
 def product(request, id):
-
     id_produit = str(id)
     id_produit = id_produit.replace('-', '')
     produit = Produit.objects.get(pk=id_produit)
     same_product = Produit.objects.filter(categorie=produit.categorie)
-    i=0
+    i = 0
     same_product_copy = list(same_product)
     same_product_copy.pop(same_product_copy.index(produit))
-    four_same_product =[]
+    four_same_product = []
     if len(same_product_copy) < 4:
         len_result = len(same_product_copy)
     else:
@@ -156,10 +145,12 @@ def product(request, id):
         note_for_product = 0
         for avis in Avis.objects.filter(produit=same_product_copy[i]):
             note_for_product += avis.rating
-        note_for_product = int(note_for_product/len_review)
-        four_same_product.append({'produit':same_product_copy[i], 'review': len_review, 'note_product': note_for_product})
-
-
+        try:
+            note_for_product = int(note_for_product / len_review)
+        except:
+            pass
+        four_same_product.append(
+            {'produit': same_product_copy[i], 'review': len_review, 'note_product': note_for_product})
 
     avis_more = []
     avis = Avis.objects.filter(produit=produit)
@@ -169,16 +160,16 @@ def product(request, id):
     for a in avis:
         date_all = timezone.now() - a.date
         if date_all.days:
-            if date_all.days <7:
+            if date_all.days < 7:
                 date = str(date_all.days) + " jours"
             else:
-                if date_all.days >=7 and date_all.days < 30:
-                    date = str(int(date_all.days/7)) + " semaines"
-                else :
-                    if date_all.days >=30 and date_all.days < 30*12:
-                        date = str(int(date_all.days/30)) + "mois"
+                if date_all.days >= 7 and date_all.days < 30:
+                    date = str(int(date_all.days / 7)) + " semaines"
+                else:
+                    if date_all.days >= 30 and date_all.days < 30 * 12:
+                        date = str(int(date_all.days / 30)) + "mois"
                     else:
-                        date = str(int(date_all.days/(30*12))) + "ans"
+                        date = str(int(date_all.days / (30 * 12))) + "ans"
 
 
         else:
@@ -187,13 +178,16 @@ def product(request, id):
                     date = str(date_all.seconds) + " secondes"
                 else:
                     if date_all.seconds >= 60 and date_all.seconds < 3600:
-                        date = str(int(date_all.seconds/60)) + " minutes"
-                    else :
-                        date = str(int(date_all.seconds/3600)) + " heures"
+                        date = str(int(date_all.seconds / 60)) + " minutes"
+                    else:
+                        date = str(int(date_all.seconds / 3600)) + " heures"
 
         note += a.rating
-        avis_more.append({'avis':a, 'ago': date})
-    note = int(note/len(avis_more))
+        avis_more.append({'avis': a, 'ago': date})
+    try:
+        note = int(note / len(avis_more))
+    except:
+        pass
     Register = RegisterForm()
     Login = LoginForm()
     Review = ReviewForm()
@@ -212,14 +206,12 @@ def product(request, id):
                'total': total,
                'produit': produit,
                'four_product': four_same_product,
-               'avis':avis_more,
-               'avis_count' : len(avis_more),
+               'avis': avis_more,
+               'avis_count': len(avis_more),
                'note': note,
                }
 
-    return render(request , 'home/product.html', context)
-
-
+    return render(request, 'home/product.html', context)
 
 
 def cart(request):
@@ -238,18 +230,18 @@ def cart(request):
                'username': user,
                'cart_count': cart_count,
                'wishlist_count': wishlist_count,
-               'cart_product' : cart_product,
-               'total' : total,
+               'cart_product': cart_product,
+               'total': total,
 
                }
 
     if not user:
-        return  redirect('home')
+        return redirect('home')
 
     return render(request, 'home/cart.html', context)
 
-def test(request):
 
+def test(request):
     return render(request, 'home/Test.html')
 
 
@@ -273,20 +265,15 @@ def wishlist(request):
                'total': total
                }
     if not user:
-        return  redirect('home')
-
+        return redirect('home')
 
     return render(request, 'home/wishlist.html', context)
 
 
-
-
-
 def category(request):
-
     product = Produit.objects.filter(is_archive=False)
     categorie = Categorie.objects.all()
-    categorie_products =[]
+    categorie_products = []
     product_info = []
     query_not_match = 0
     try:
@@ -302,25 +289,25 @@ def category(request):
     if session is not None:
         search_done = search_for_product(session)
         request.session['search_phrase'] = None
-        if search_done['data'] is not None :
+        if search_done['data'] is not None:
             product_info = search_done['data']
-        else :
+        else:
 
             query_not_match = 1
 
     else:
         if session_categorie is not None:
-            request.session['category_name'] =  None
+            request.session['category_name'] = None
             category_name = session_categorie
             got_categorie = Categorie.objects.get(nom=category_name)
-            products = Produit.objects.filter(categorie=got_categorie, is_archive = False)
+            products = Produit.objects.filter(categorie=got_categorie, is_archive=False)
             for p in products:
                 note_for_product = 0
                 len_review = len(Avis.objects.filter(produit=p))
                 for avis in Avis.objects.filter(produit=p):
                     note_for_product += avis.rating
                 try:
-                    note_for_product = int(note_for_product/len_review)
+                    note_for_product = int(note_for_product / len_review)
                 except:
                     pass
                 product_info.append({'produit': p, 'review': len_review, 'note_product': note_for_product})
@@ -336,16 +323,16 @@ def category(request):
                     pass
                 product_info.append({'produit': p, 'review': len_review, 'note_product': note_for_product})
 
-    paginator = Paginator(product_info,4)
+    paginator = Paginator(product_info, 4)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     for c in categorie:
         try:
-            p = Produit.objects.filter(categorie=c, is_archive = False)
-            categorie_products.append({'categorie': c, 'length' : len(p)})
-        except :
+            p = Produit.objects.filter(categorie=c, is_archive=False)
+            categorie_products.append({'categorie': c, 'length': len(p)})
+        except:
             pass
     Register = RegisterForm()
     Login = LoginForm()
@@ -384,10 +371,11 @@ def retrieve_categorie(request, id):
 
     return redirect('category')
 
+
 def search_product(request):
     categorie = Categorie.objects.all()
     categorie_products = []
-    product_info =[]
+    product_info = []
 
     q = Q(
         'multi_match',
@@ -410,7 +398,7 @@ def search_product(request):
             note_for_product = int(note_for_product / len_review)
         except:
             pass
-        product_info.append({'produit': p, 'review':len_review, 'note_product': note_for_product})
+        product_info.append({'produit': p, 'review': len_review, 'note_product': note_for_product})
 
     paginator = Paginator(search, 3)
 
@@ -449,13 +437,11 @@ def search_product(request):
     return render(request, 'home/category.html', context)
 
 
-def about (request):
-
+def about(request):
     return render(request, 'home/about2.html')
 
+
 def contact(request):
-
-
     Register = RegisterForm()
     Login = LoginForm()
     ContactEnter = ContactForm()
@@ -476,39 +462,28 @@ def contact(request):
 
     return render(request, 'home/contact.html', context)
 
-def thankregistration(request, user):
 
-    return render(request, 'home/ThankRegistration.html', {'user' : str(user)})
+def thankregistration(request, user):
+    return render(request, 'home/ThankRegistration.html', {'user': str(user)})
+
 
 def LinkValidation(request):
-
     return render(request, 'home/ValidLink.html')
 
-def profil(request):
 
+def profil(request):
     user = verify_user(request)["user"]
     if not user:
         return redirect('home')
     UpForm = UpdateForm(user)
 
-
-
-
-
-
-    return render(request, 'home/OtherProfil.html', {"user":user, "UpForm" : UpForm})
-
-
-
-
-
-
+    return render(request, 'home/OtherProfil.html', {"user": user, "UpForm": UpForm})
 
 
 def update_user(request):
     if verify_update(request):
         return redirect('my_profil')
-    else :
+    else:
         return redirect('my_profil')
 
 
@@ -516,7 +491,7 @@ def google_login(request):
     redirect_uri = "%s://%s%s" % (
         request.scheme, request.get_host(), reverse('google_login')
     )
-    if('code' in request.GET):
+    if ('code' in request.GET):
         params = {
             'grant_type': 'authorization_code',
             'code': request.GET.get('code'),
@@ -534,7 +509,7 @@ def google_login(request):
         if email:
             try:
                 user = Utilisateurs.objects.get(email=email)
-            except Utilisateurs.DoesNotExist :
+            except Utilisateurs.DoesNotExist:
                 user = None
             data = {
                 'first_name': user_data.get('name', '').split()[0],
@@ -544,22 +519,24 @@ def google_login(request):
             }
             if user is not None:
 
-
-
-
                 user.__dict__.update(data)
                 user.save()
                 user.backend = settings.AUTHENTICATION_BACKENDS[0]
                 print("trtrtrrtttttttttttttttttttttttttttttttttttttttttt")
 
-                url_login =  "http://127.0.0.1:8000/link/login"
-                #print(model_to_dict(user))
-                response =requests.post(url_login, data={'email': user.email, 'password': user.password , 'from_google': 1, 'verify_superuser': 0})
+                url_login = "http://127.0.0.1:8000/link/login"
+                # print(model_to_dict(user))
+                response = requests.post(url_login,
+                                         data={'email': user.email, 'password': user.password, 'from_google': 1,
+                                               'verify_superuser': 0})
                 request.session['token'] = response.json()['token']
+                primary_key = str(user.pk)
+                primary_key = primary_key.replace('-', '')
+                request.session["user_primary"] = primary_key
                 print(response.json())
                 return redirect('/')
-            else :
-                data['is_active']=False
+            else:
+                data['is_active'] = False
                 data['email'] = email
                 user = Utilisateurs.objects.create(email=email)
                 user.__dict__.update(data)
@@ -601,11 +578,9 @@ def fill(request):
     return render(request, 'home/Fillup.html', {'FillForm': FillForm})
 
 
-
 def password_change(request):
-
     user = verify_user(request)["user"]
-    if not user :
+    if not user:
         return redirect('home')
     PasswordForm = ChangeForm()
 
@@ -642,7 +617,7 @@ def invoice_order(request):
 
 def shipping(request):
     user = verify_user(request)["user"]
-    if not user :
+    if not user:
         return redirect('home')
 
     cart_count = verify_user(request)["cart_total"]
@@ -662,8 +637,6 @@ def shipping(request):
                'product': product,
                'total': total,
                }
-
-
 
     return render(request, 'home/shipping.html', context)
 # Create your views here.

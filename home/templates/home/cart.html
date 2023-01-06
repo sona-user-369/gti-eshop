@@ -1,6 +1,8 @@
 {% extends 'home/index22.html' %}
 
 {% load static %}
+{% load i18n %}
+
 {% block title %}
     <title>GTI-Panier</title>
 {% endblock %}
@@ -9,15 +11,15 @@
     <main class="main">
         	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
         		<div class="container">
-        			<h1 class="page-title">Shopping Cart<span>Shop</span></h1>
+        			<h1 class="page-title">{% trans 'Panier' %}<span>{% trans 'Boutique' %}</span></h1>
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
             <nav aria-label="breadcrumb" class="breadcrumb-nav">
                 <div class="container">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
+                        <li class="breadcrumb-item"><a href="#">{% trans 'Boutique' %}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{% trans 'Panier' %}</li>
                     </ol>
                 </div><!-- End .container -->
             </nav><!-- End .breadcrumb-nav -->
@@ -31,9 +33,9 @@
 	                			<table class="table table-cart table-mobile">
 									<thead>
 										<tr>
-											<th>Product</th>
-											<th>Price</th>
-											<th>Quantity</th>
+											<th>{% trans 'Produit' %}</th>
+											<th>{% trans 'Prix' %}</th>
+											<th>{% trans 'Quantité' %}</th>
 											<th>Total</th>
 											<th></th>
 										</tr>
@@ -81,21 +83,21 @@
 			            				</form>
 			            			</div><!-- End .cart-discount -->
 
-			            			<button  class="btn btn-outline-dark-2" onclick="updateCart();"><span>UPDATE CART</span><i class="icon-refresh"></i></button>
+			            			<button  class="btn btn-outline-dark-2" onclick="updateCart();"><span>{% trans 'METTRE A JOUR PANIER' %}</span><i class="icon-refresh"></i></button>
 		            			</div><!-- End .cart-bottom -->
 	                		</div><!-- End .col-lg-9 -->
 	                		<aside class="col-lg-3">
 	                			<div class="summary summary-cart">
-	                				<h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
+	                				<h3 class="summary-title">{% trans 'Total du panier' %}</h3><!-- End .summary-title -->
 
 	                				<table class="table table-summary">
 	                					<tbody>
 	                						<tr class="summary-subtotal">
-	                							<td>Subtotal:</td>
+	                							<td>{% trans 'Sous-total:' %}</td>
 	                							<td id="all_total">${{ total }}</td>
 	                						</tr><!-- End .summary-subtotal -->
 	                						<tr class="summary-shipping">
-	                							<td>Shipping:</td>
+	                							<td>{% trans 'Livraison:' %}</td>
 	                							<td>&nbsp;</td>
 	                						</tr>
 
@@ -103,7 +105,7 @@
 	                							<td>
 													<div class="custom-control custom-radio">
 														<input type="radio" id="free-shipping" name="shipping" class="custom-control-input">
-														<label class="custom-control-label" for="free-shipping">Free Shipping</label>
+														<label class="custom-control-label" for="free-shipping">{% trans 'Livraison Gratuite' %}</label>
 													</div><!-- End .custom-control -->
 	                							</td>
 	                							<td>$0.00</td>
@@ -113,7 +115,7 @@
 	                							<td>
 	                								<div class="custom-control custom-radio">
 														<input type="radio" id="standart-shipping"  name="shipping" class="custom-control-input">
-														<label class="custom-control-label" for="standart-shipping">Standart:</label>
+														<label class="custom-control-label" for="standart-shipping">{% trans 'Standart:' %}</label>
 													</div><!-- End .custom-control -->
 	                							</td>
 	                							<td>$10.00</td>
@@ -123,14 +125,14 @@
 	                							<td>
 	                								<div class="custom-control custom-radio">
 														<input type="radio" id="express-shipping" name="shipping" class="custom-control-input">
-														<label class="custom-control-label" for="express-shipping">Express:</label>
+														<label class="custom-control-label" for="express-shipping">{% trans 'Expresse:' %}</label>
 													</div><!-- End .custom-control -->
 	                							</td>
 	                							<td>$20.00</td>
 	                						</tr><!-- End .summary-shipping-row -->
 
 	                						<tr class="summary-shipping-estimate">
-	                							<td>Estimate for Your Country<br> <a href="dashboard.html">Change address</a></td>
+	                							<td>{% trans 'Estimation pour votre pays' %}<br> <a href="dashboard.html">Change address</a></td>
 	                							<td>&nbsp;</td>
 	                						</tr><!-- End .summary-shipping-estimate -->
 
@@ -141,14 +143,14 @@
 	                					</tbody>
 	                				</table><!-- End .table table-summary -->
 
-	                				<a href="" onclick="goToShip(); return false ;" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a>
+	                				<a href="" onclick="goToShip(); return false ;" class="btn btn-outline-primary-2 btn-order btn-block">{% trans 'PROCEEDER AU PAIEMENT' %}</a>
 	                			</div><!-- End .summary -->
 
-		            			<a href="{% url 'category' %}" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
+		            			<a href="{% url 'category' %}" class="btn btn-outline-dark-2 btn-block mb-3"><span>{% trans 'CONTINUER A ACHETER' %}</span><i class="icon-refresh"></i></a>
 	                		</aside><!-- End .col-lg-3 -->
 	                	</div><!-- End .row -->
 						{% else %}
-						<div><h1>Aucun produit dans votre panier</h1></div>
+						<div><h1>{% trans 'Aucun produit dans votre panier' %}</h1></div>
 						{% endif %}
 	                </div><!-- End .container -->
                 </div><!-- End .cart -->

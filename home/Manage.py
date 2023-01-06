@@ -233,8 +233,6 @@ def get_product_list(_list):
     return _list_product
 
 
-
-
 def get_recent_products():
     """Get recent products """
     products_recent = Produit.objects.filter(is_archive=False).order_by('-date_de_stock')
@@ -246,10 +244,11 @@ def get_recent_products():
             for avis in Avis.objects.filter(produit=products_recent[i]):
                 note_for_product += avis.rating
             try:
-                note_for_product = int(note_for_product/len_review)
+                note_for_product = int(note_for_product / len_review)
             except:
                 pass
-            products_recent_six.append({'produit': products_recent[i], 'review': len_review,'note_product': note_for_product})
+            products_recent_six.append(
+                {'produit': products_recent[i], 'review': len_review, 'note_product': note_for_product})
         except:
             pass
     return products_recent_six
@@ -276,13 +275,14 @@ def get_best_seller(dim):
                 else:
                     note_for_product = 0
                     len_review = len(Avis.objects.filter(produit=sorted_products[i]['produit']))
-                    for avis in Avis.objects.filter(produit=sorted_products[i]['produit']) :
+                    for avis in Avis.objects.filter(produit=sorted_products[i]['produit']):
                         note_for_product += avis.rating
                     try:
-                        note_for_product = int(note_for_product/len_review)
+                        note_for_product = int(note_for_product / len_review)
                     except:
                         pass
-                    final_products.append({'produit': sorted_products[i]['produit'], 'review': len_review, 'note_product': note_for_product})
+                    final_products.append({'produit': sorted_products[i]['produit'], 'review': len_review,
+                                           'note_product': note_for_product})
             else:
                 note_for_product = 0
                 len_review = len(Avis.objects.filter(produit=sorted_products[i]['produit']))
@@ -292,9 +292,22 @@ def get_best_seller(dim):
                     note_for_product = int(note_for_product / len_review)
                 except:
                     pass
-                final_products.append({'produit': sorted_products[i]['produit'], 'review': len_review, 'note_product': note_for_product})
+                final_products.append(
+                    {'produit': sorted_products[i]['produit'], 'review': len_review, 'note_product': note_for_product})
         except:
             pass
     return final_products
 
 
+def select_languages(object):
+    if 'language' in object.session:
+        if object.session['language'] == 'Français':
+            second_language = 'English'
+            all_language = {'selected':object.session['language'], 'second':second_language}
+        else:
+            second_language = 'Français'
+            all_language = {'selected':object.session['language'], 'second':second_language}
+    else:
+        all_language = {'selected':'Français', 'second':'English'}
+
+    return all_language

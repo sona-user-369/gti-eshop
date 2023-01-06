@@ -2,6 +2,8 @@
 {% extends 'home/index22.html' %}
 
 {% load static %}
+{% load i18n %}
+
 
 {% block title %}
     <title>GTI-Profil</title>
@@ -41,11 +43,11 @@
                                           {{ field }}
 
 										  {% if field.id_for_label == 'id_contact' %}
-										  <div class="invalid-feedback"><h6 class="text-danger" >Entrer un contact valide</h6></div>
+										  <div class="invalid-feedback"><h6 class="text-danger" >{% trans 'Entrer un contact valide' %}</h6></div>
 										  {% endif %}
 
 										  {% if field.id_for_label == 'id_email' %}
-										  <div class="invalid-feedback"><h6 class="text-danger" >Cet email existe deja</h6></div>
+										  <div class="invalid-feedback"><h6 class="text-danger" >{% trans 'Cet email existe deja' %}</h6></div>
 										  {% endif %}
                                       </div>
                                   </div>
@@ -59,10 +61,10 @@
                                   <div class="form-group ">
                                        <div class="col-xs-12 ">
                                             <br>
-                                            <button class="btn btn-outline-danger mr-4 mt-2" onclick="logoutUser();" type="button"><i class="icon icon-off"></i>Logout</button>
-                                            <button class="btn btn-outline-success mr-4 mt-2" type="submit"><i class="icon icon-refresh"></i>Update</button>
-                                            <button class="btn btn-outline-danger mr-4 mt-2" onclick="deleteUser();" type="button"><i class="icon icon-remove"></i>Delete account</button>
-                                            <a class="btn btn-outline-success mr-4 mt-2" href="{% url 'pass' %}"><i class="icon icon-refresh"></i>Change Password</a>
+                                            <button class="btn btn-outline-danger mr-4 mt-2" onclick="logoutUser();" type="button"><i class="icon icon-off"></i>{% trans 'Se deconnecter' %}</button>
+                                            <button class="btn btn-outline-success mr-4 mt-2" type="submit"><i class="icon icon-refresh"></i>{% trans 'Mise a jour' %}</button>
+                                            <button class="btn btn-outline-danger mr-4 mt-2" onclick="deleteUser();" type="button"><i class="icon icon-remove"></i>{% trans 'Supprimer compte' %}</button>
+                                            <a class="btn btn-outline-success mr-4 mt-2" href="{% url 'pass' %}"><i class="icon icon-refresh"></i>{% trans 'Changer Password' %}</a>
                                        </div>
                                   </div>
 

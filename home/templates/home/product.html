@@ -52,7 +52,7 @@
                 <div class="container d-flex align-items-center">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Produits</a></li>
+                        <li class="breadcrumb-item"><a href="#">{% trans 'Produits' %}</a></li>
                     </ol>
 
                     <nav class="product-pager ml-auto" aria-label="Product">
@@ -62,7 +62,7 @@
                         </a>
 
                         <a class="product-pager-link product-pager-next" href="#" aria-label="Next" tabindex="-1">
-                            <span>Next</span>
+                            <span>{% trans 'Suivant' %}</span>
                             <i class="icon-angle-right"></i>
                         </a>
                     </nav><!-- End .pager-nav -->
@@ -156,16 +156,7 @@
 
 
                                     <div class="details-filter-row details-row-size">
-                                        <label for="size">Size:</label>
-                                        <div class="select-custom">
-                                            <select name="size" id="size" class="form-control">
-                                                <option value="#" selected="selected">Select a size</option>
-                                                <option value="s">Small</option>
-                                                <option value="m">Medium</option>
-                                                <option value="l">Large</option>
-                                                <option value="xl">Extra Large</option>
-                                            </select>
-                                        </div><!-- End .select-custom -->
+
 
 
                                     </div><!-- End .details-filter-row -->
@@ -178,10 +169,10 @@
                                     </div><!-- End .details-filter-row -->
 
                                     <div class="product-details-action">
-                                        <button onclick="addCart('{{ produit.pk }}') ;" value="{{ produit.pk }}" id="btn_primary" class="btn-product  btn-cart "><span>add to cart</span></button>
+                                        <button onclick="addCart('{{ produit.pk }}') ;" value="{{ produit.pk }}" id="btn_primary" class="btn-product  btn-cart "><span>{% trans 'ajouter au panier' %}</span></button>
 
                                         <div class="details-action-wrapper">
-                                            <a href="#" onclick="addWishlist('{{ produit.pk }}') ; return false;" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
+                                            <a href="#" onclick="addWishlist('{{ produit.pk }}') ; return false;" class="btn-product btn-wishlist" title="Wishlist"><span>{% trans 'Ajouter au panier' %}</span></a>
 
                                         </div><!-- End .details-action-wrapper -->
                                     </div><!-- End .product-details-action -->
@@ -213,13 +204,13 @@
                                 <a class="nav-link active" id="product-desc-link" data-toggle="tab" href="#product-desc-tab" role="tab" aria-controls="product-desc-tab" aria-selected="true">Description</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="product-info-link" data-toggle="tab" href="#product-info-tab" role="tab" aria-controls="product-info-tab" aria-selected="false">Additional information</a>
+                                <a class="nav-link" id="product-info-link" data-toggle="tab" href="#product-info-tab" role="tab" aria-controls="product-info-tab" aria-selected="false">{% trans 'Information additonnelle' %}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="product-shipping-link" data-toggle="tab" href="#product-shipping-tab" role="tab" aria-controls="product-shipping-tab" aria-selected="false">Shipping & Returns</a>
+                                <a class="nav-link" id="product-shipping-link" data-toggle="tab" href="#product-shipping-tab" role="tab" aria-controls="product-shipping-tab" aria-selected="false">{% trans 'Shipping & Returns' %}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="product-review-link" data-toggle="tab" href="#product-review-tab" role="tab" aria-controls="product-review-tab" aria-selected="false">Reviews ({{ avis_count }})</a>
+                                <a class="nav-link" id="product-review-link" data-toggle="tab" href="#product-review-tab" role="tab" aria-controls="product-review-tab" aria-selected="false"> {% trans 'Avis' %} ({{ avis_count }})</a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -320,8 +311,8 @@
 
                                         <div class="reply">
                                             <div class="heading">
-                                                <h3 class="title">Leave A Reply</h3><!-- End .title -->
-                                                <p class="title-desc">Your email address will not be published. Required fields are marked *</p>
+                                                <h3 class="title">{% trans 'Laisser une réponse %}'</h3><!-- End .title -->
+                                                <p class="title-desc">{% trans 'Votre adresse email ne sera pas publiée. Les champs requis sont indiqués * ' %} </p>
                                             </div><!-- End .heading -->
 
                                             <form id="reviewForm" method="post">
@@ -352,7 +343,7 @@
 
 
                                                 <button type="submit" class="btn btn-outline-primary-2">
-                                                    <span>POST COMMENT</span>
+                                                    <span>{% trans 'PUBLIER COMMENTAIRE'  %}</span>
                                                     <i class="icon-long-arrow-right"></i>
                                                 </button>
                                             </form>
@@ -364,20 +355,20 @@
                         </div><!-- End .tab-content -->
                     </div><!-- End .product-details-tab -->
 
-                    <h2 class="title text-center mb-4">Vous pourez aimer aussi</h2><!-- End .title text-center -->
+                    <h2 class="title text-center mb-4">{% trans 'Vous pourez aimer aussi' %}</h2><!-- End .title text-center -->
 
                    <div class="row products">
                        {% for product in four_product %}
                        <div class="col-6 col-md-4 col-lg-3 col-xl-4col">
                         <div class="product product-3 text-center">
                             <figure class="product-media">
-                                <span class="product-label label-sale">Vente</span>
+                                <span class="product-label label-sale">{% trans 'Vente' %}</span>
                                 <a href="{% url 'product' id=product.produit.pk %}">
                                     <img src="{{ product.produit.image1.url }}" alt="Product image" class="product-image">
                                 </a>
 
                                 <div class="product-action-vertical">
-                                    <a href="#" onclick="addWishlist('{{ produit.pk }}') ; return false ;" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                    <a href="#" onclick="addWishlist('{{ produit.pk }}') ; return false ;" class="btn-product-icon btn-wishlist btn-expandable"><span>{% trans 'ajouter aux favoris' %}</span></a>
                                 </div><!-- End .product-action-vertical -->
                             </figure><!-- End .product-media -->
 

@@ -21,5 +21,6 @@ urlpatterns = [
     path('all_tables_users', get_all_user),
     path('delete_users_admin', delete_on_user, name='delete_user'),
     path('contact_enter', contact_register, name='contact_enter'),
+    path('translate', translate, name='translate'),
 
 ]

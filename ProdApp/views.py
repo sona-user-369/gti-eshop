@@ -1,4 +1,6 @@
 import json
+import re
+
 from django.http import FileResponse
 from django.forms import model_to_dict
 from django.shortcuts import render, redirect
@@ -282,8 +284,19 @@ def comment_product(request):
     for i in range(1, 3):
         b = a[i].split('=')
         liste.append(b[1])
+    string_unicode_content = str(liste[0])
+    string_encode_content = string_unicode_content.encode('utf8')
+    string_decode_content = string_encode_content.decode('utf8')
+    s = re.sub(r'(%[0-9A-Fa-f]+)', lambda matchobj: chr(int(matchobj.group(0)[2:], 16)), string_unicode_content)
+    print(string_decode_content)
+    print(string_unicode_content)
+    print(s)
 
-    data_got = {'contenu': liste[0], 'name': liste[1]}
+    string_unicode_name = str(liste[1])
+    string_encode_name = string_unicode_name.encode('ascii', 'ignore')
+    string_decode_name = string_encode_name.decode()
+
+    data_got = {'contenu': string_decode_content, 'name': string_decode_name}
 
     review_content = ReviewSerializer(data=data_got)
     if review_content.is_valid():

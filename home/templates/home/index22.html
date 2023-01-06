@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% load rest_framework %}
 {% load static %}
+{% load i18n %}
 <html>
 
 <!-- molla/index22.html  22 Nov 2019 10:01:54 GMT -->
@@ -37,11 +38,11 @@
     <link rel="stylesheet" href="{% static 'assets_home/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'assets_home/css/skins/skin-demo-22.css' %}">
     <link rel="stylesheet" href="{% static 'assets_home/css/demos/demo-22.css' %}">
+    <link rel="stylesheet" href="{% static 'assets_home/css/intlTelInput.css' %}">
     <!--<link rel="stylesheet" href="{% static 'assets_home/css/profil.css' %}">-->
 
     {% block style %}
     <style>
-
 
     </style>
 
@@ -54,6 +55,7 @@
         <header class="header header-22">
             <div class="header-middle">
                 <div class="container">
+
                     <div class="header-left">
                         <button class="mobile-menu-toggler">
                             <span class="sr-only">Toggle mobile menu</span>
@@ -134,8 +136,8 @@
                                 </div><!-- End .dropdown-cart-total -->
 
                                 <div class="dropdown-cart-action">
-                                    <a href="{% url 'cart' %}" class="btn btn-success">Voir Panier</a>
-                                    <a href="#" onclick="gotToShip() ; return false ;" class="btn btn-outline-success"><span>Commander</span><i class="icon-long-arrow-right"></i></a>
+                                    <a href="{% url 'cart' %}" class="btn btn-success">{% trans 'Voir Panier' %}</a>
+                                    <a href="#" onclick="gotToShip() ; return false ;" class="btn btn-outline-success"><span>{% trans 'Commander' %}</span><i class="icon-long-arrow-right"></i></a>
                                 </div><!-- End .dropdown-cart-total -->
                             </div><!-- End .dropdown-menu -->
                             {% endif %}
@@ -150,7 +152,7 @@
                         <div class="header-left">
                             <div class="dropdown category-dropdown" data-visible="true">
                                 <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-display="static" title="Browse Categories">
-                                    Explorer les catégories
+                                    {% trans 'Explorer les catégories' %}
                                 </a>
 
                                 <div class="dropdown-menu">
@@ -204,22 +206,22 @@
                             <nav class="main-nav">
                                 <ul class="menu sf-arrows">
                                     <li class="megamenu-container">
-                                        <a href="/" class="">Home</a>
+                                        <a href="/" class="">{% trans 'Acceuil' %}</a>
 
 
                                     </li>
                                     <li>
-                                        <a href="{% url 'category' %}" class="">Boutique</a>
+                                        <a href="{% url 'category' %}" class="">{% trans 'Boutique' %}</a>
 
 
                                     </li>
                                      <li>
-                                        <a href="{% url 'about' %}" class="">A propos</a>
+                                        <a href="{% url 'about' %}" class="">{% trans 'A propos' %}</a>
 
 
                                     </li>
                                      <li>
-                                        <a href="{% url 'contact' %}" class="">Contacter nous</a>
+                                        <a href="{% url 'contact' %}" class="">{% trans 'Contacter nous' %}</a>
 
 
                                     </li>
@@ -238,15 +240,15 @@
                                         <ul>
                                             {% if username %}
 
-                                            <a href="{% url 'my_profil' %}" ><i class="icon-user"></i>My Profil </a>
+                                            <a href="{% url 'my_profil' %}" ><i class="icon-user"></i>{% trans 'Mon Profil' %} </a>
 
                                             <ul class="m-3">
-                                                <li><a href="#" onclick="logout(); return false ;" >Se deconnecter</a></li>
+                                                <li><a href="#" onclick="logout(); return false ;" >{% trans 'Se deconnecter' %}</a></li>
                                             </ul>
 
                                             {% else %}
 
-                                            <li><a href="#signin-modal" data-toggle="modal" id="link_login"><i class="icon-user"></i>Se connecter / Créer un compte</a></li>
+                                            <li><a href="#signin-modal" data-toggle="modal" id="link_login"><i class="icon-user"></i>{% trans 'Se connecter / Créer un compte' %}</a></li>
                                             {% endif %}
                                         </ul>
                                     </li>
@@ -277,13 +279,13 @@
                                 <div class="intro-slide banner-lg" style="background-image: url({% static 'assets/images/demos/demo-22/slider/slide-1.jpg' %});">
                                     <div class="intro">
                                         <div class="title">
-                                            <a>Accord du jour</a>
+                                            <a>{% trans 'Accord du jour'%}</a>
                                         </div>
                                         <div class="content">
-                                            <h3><span>Jusqu'à</span> 20% <span>de réduction</span></h3><h4>Offres lourdes</h4>
+                                            <h3 class=""><span>{% trans "Jusqu'à" %}</span> 20% <span>{% trans 'de réduction' %}</span></h3><h4 class="">{% trans 'Offres lourdes' %}</h4>
                                         </div>
                                         <div class="action">
-                                            <a href="category.html">Découvrer maintenant</a>
+                                            <a href="category.html">{% trans 'Découvrer maintenant' %}</a>
                                         </div>
                                     </div>
                                 </div><!-- End .intro-slide -->
@@ -291,13 +293,13 @@
                                 <div class="intro-slide banner-lg" style="background-image: url({% static 'assets/images/demos/demo-22/slider/slide-2.jpg' %});">
                                     <div class="intro">
                                         <div class="title">
-                                            <a>clearance</a>
+                                            <a>{% trans 'autorisation' %}</a>
                                         </div>
                                         <div class="content">
-                                            <h3>power tools<br>Jusqu'à <span>30% de réduction</span></h3>
+                                            <h3>{% trans 'power tools' %}<br>{% trans "Jusqu'à" %} <span>{% trans '30% de réduction' %}</span></h3>
                                         </div>
                                         <div class="action">
-                                            <a href="category.html">Découvrer maintenant</a>
+                                            <a href="category.html">{% trans 'Découvrer maintenant' %}</a>
                                         </div>
                                     </div>
                                 </div><!-- End .intro-slide -->
@@ -313,39 +315,39 @@
                         <div class="col-12" style="background-image: url({% static 'assets/images/demos/demo-22/slider/banner-1.jpg' %})">
                             <div class="intro">
                                 <div class="title">
-                                    <h3>Nouvelles arrivages</h3>
+                                    <h3>{% trans 'Nouvelles arrivages' %}</h3>
                                 </div>
                                 <div class="content">
-                                    <h3>Jusqu'à </h3> <h3 class="highlight">&nbsp;40% de réduction</h3>
+                                    <h3>{% trans "Jusqu'à" %} </h3><h3 class="highlight">{% trans '40% de réduction' %}</h3>
                                 </div>
                                 <div class="action">
-                                    <a href="category.html">Acheter maintenant</a>
+                                    <a href="category.html">{% trans 'Acheter maintenant' %}</a>
                                 </div>
                             </div>
                         </div>
                         <div class="col-12" style="background-image: url({% static 'assets/images/demos/demo-22/slider/banner-2.jpg' %})">
                             <div class="intro">
                                 <div class="title">
-                                    <h2>outdoor</h2>
+                                    <h2>{% trans 'extérieure' %}</h2>
                                 </div>
                                 <div class="content">
-                                    <h4>power equipment</h4>
+                                    <h4>{% trans 'equipment électrique' %}</h4>
                                 </div>
                                 <div class="action">
-                                    <a href="category.html">Acheter maintenant</a>
+                                    <a href="category.html">{%  trans 'Acheter maintenant' %}</a>
                                 </div>
                             </div>
                         </div>
                         <div class="col-12" style="background-image: url({% static 'assets/images/demos/demo-22/slider/banner-3.jpg' %})">
                             <div class="intro">
                                 <div  class="title">
-                                    <h3 class="highlight">économiser 20%</h3><h3>&nbsp;ou plus</h3>
+                                    <h3 class="highlight">{% trans 'économiser 20%' %}</h3><h3>{% trans 'ou plus' %}</h3>
                                 </div>
                                 <div class="content">
-                                    <h3>offres & économies</h3>
+                                    <h3>{% trans 'offres & économies' %}</h3>
                                 </div>
                                 <div class="action">
-                                    <a href="category.html">Acheter maintenant</a>
+                                    <a href="category.html">{% trans 'Acheter maintenant' %}</a>
                                 </div>
                             </div>
                         </div>
@@ -354,7 +356,7 @@
             </div>
             
             <div class="container text-center shop">
-                <h2 class="title mt-4 mb-5"> Les Marques que nous proposons</h2>
+                <h2 class="title mt-4 mb-5"> {% trans 'Les Marques que nous proposons' %}</h2>
                 <div class="owl-carousel mb-5 owl-simple" data-toggle="owl" 
                     data-owl-options='{
                         "nav": true, 
@@ -414,23 +416,23 @@
                     <div class="section-title">
                         <ul class="nav nav-pills nav-border-anim" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" id="tab-featured-link" data-toggle="tab" href="#tab-featured" role="tab" aria-controls="tab-featured" aria-selected="true"><span>Nouvelle arrivage</span></a>
+                                <a class="nav-link active" id="tab-featured-link" data-toggle="tab" href="#tab-featured" role="tab" aria-controls="tab-featured" aria-selected="true"><span>{% trans 'Nouvelle arrivage' %}</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="tab-best-link" data-toggle="tab" href="#tab-best" role="tab" aria-controls="tab-best" aria-selected="false"><span>Meilleurs ventes</span></a>
+                                <a class="nav-link" id="tab-best-link" data-toggle="tab" href="#tab-best" role="tab" aria-controls="tab-best" aria-selected="false"><span>{% trans 'Meilleurs ventes' %}</span></a>
                             </li>
 
                         </ul>
 
                     
-                        <a class="link" href="#">Boutique</a>
+                        <a class="link" href="#">{% trans 'Boutique' %}</a>
                     </div>
 
                     <div class="row">
                         <div class="col-lg-4 col-md-4">
                             <div class="product-lg">
                                 <figure class="product-media">
-                                    <span class="product-label label-limited">Temps de vente limité</span>
+                                    <span class="product-label label-limited">{% trans 'Temps de vente limité' %}</span>
                                     <a href="product.html">
                                         <img src="{% static 'assets_home/images/demos/demo-22/featured/product-1.jpg' %}" alt="Product image" class="product-image">
                                     </a>
@@ -438,14 +440,14 @@
                                 </figure><!-- End .product-media -->
 
                                 <div class="product-body">
-                                    <h3 class="save-price"><span>économiser $64.00</span></h3>
+                                    <h3 class="save-price"><span>{% trans 'économiser $64.00' %}</span></h3>
                                     <h3 class="product-title"><a href="product.html">DEWALT DWE575SB</a></h3><!-- End .product-title -->
                                     <div class="product-price">
                                         <span class="new-price">$79.00</span>
                                         <span class="old-price">$143.00  Avant</span>
                                     </div><!-- End .product-price -->
                                     <div class="action">
-                                        <a href="{% url 'category' %}">Acheter maintenant</a>
+                                        <a href="{% url 'category' %}">{% trans 'Acheter maintenant' %}</a>
                                     </div>
                                 </div><!-- End .product-body -->
                             </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
@@ -465,7 +467,7 @@
                                                     </a>
 
                                                     <div class="product-action-vertical">
-                                                        <a href="#" onclick="addWishlist('{{ produit.produit.pk }}'); return false;" class="btn-product-icon btn-wishlist btn-expandable"><span>Ajouter aux favoris</span></a>
+                                                        <a href="#" onclick="addWishlist('{{ produit.produit.pk }}'); return false;" class="btn-product-icon btn-wishlist btn-expandable"><span>{% trans 'Ajouter aux favoris' %}</span></a>
                                                     </div><!-- End .product-action-vertical -->
                                                 </figure><!-- End .product-media -->
 
@@ -516,8 +518,8 @@
                                                     </div><!-- End .rating-container -->
 
                                                     <div class="product-action">
-                                                        <a href="#" onclick="addCart( '{{ produit.produit.pk }}' ); return false;" class="btn-product btn-cart" title="Add to cart"><span>ajouter au panier</span></a>
-                                                        <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>vue rapide</span></a>
+                                                        <a href="#" onclick="addCart( '{{ produit.produit.pk }}' ); return false;" class="btn-product btn-cart" title="Add to cart"><span>{% trans 'ajouter au panier' %}</span></a>
+
                                                     </div><!-- End .product-action -->
                                                 </div><!-- End .product-footer -->
                                             </div><!-- End .product -->
@@ -538,7 +540,7 @@
                                                     </a>
 
                                                     <div class="product-action-vertical">
-                                                        <a href="#" onclick="addWishlist('{{ produit.produit.pk }}'); return false;" class="btn-product-icon btn-wishlist btn-expandable"><span>Ajouter aux favoris</span></a>
+                                                        <a href="#" onclick="addWishlist('{{ produit.produit.pk }}'); return false;" class="btn-product-icon btn-wishlist btn-expandable"><span>{% trans 'Ajouter aux favoris' %}</span></a>
                                                     </div><!-- End .product-action-vertical -->
                                                 </figure><!-- End .product-media -->
 
@@ -589,8 +591,8 @@
                                                     </div><!-- End .rating-container -->
 
                                                     <div class="product-action">
-                                                        <a href="#" onclick="addCart( '{{ produit.produit.pk }}' ); return false;" class="btn-product btn-cart" title="Add to cart"><span>ajouter au panier</span></a>
-                                                        <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>vue rapide</span></a>
+                                                        <a href="#" onclick="addCart( '{{ produit.produit.pk }}' ); return false;" class="btn-product btn-cart" title="Add to cart"><span>{% trans 'ajouter au panier' %}</span></a>
+
                                                     </div><!-- End .product-action -->
                                                 </div><!-- End .product-footer -->
                                             </div><!-- End .product -->
@@ -613,15 +615,15 @@
                 <div class="container">
                     <div class="subscribe text-center">
                         <div class="intro">
-                            <h3 class="title">Abonnez-vous à votre newsletters</h3>
-                            <h4 class="content">Découvrez les nouvelles offres et obtenez plus d'offres en vous inscrivant à notre newsletter</h4>
+                            <h3 class="title">{% trans 'Abonnez-vous à votre newsletters' %}</h3>
+                            <h4 class="content">{% trans "Découvrez les nouvelles offres et obtenez plus d'offres en vous inscrivant à notre newsletter" %}</h4>
                         </div>
                         <div class="subscribe action">
                             <form action="#" method="post" id="news">
                                 <div class="input-group">
                                     <input type="email" id="id_email_new" name="email" placeholder="Enter your Email Address" aria-label="Email Adress" required="">
                                     <div class="input-group-append">
-                                        <button class="btn btn-subscribe" type="submit"><span>Subscribe now</span></button>
+                                        <button class="btn btn-subscribe" type="submit"><span>{% trans 'Abonnez-vous maintenant' %}</span></button>
                                     </div><!-- .End .input-group-append -->
                                 </div><!-- .End .input-group -->
                             </form>
@@ -638,16 +640,16 @@
                         </a>
                         <div class="banner-content">
                             <div class="title">
-                                <a href="category.html">économiser jusqu'à 30%</a>
+                                <a href="category.html">{% trans "économiser jusqu'à 30%" %}</a>
                             </div>
                             <div class="content">
                                 <a href="category.html">
-                                    <h3 class="highlight">Les marques premium</h3>
-                                    <h4>pour les travaux les plus difficiles</h4>
+                                    <h3 class="highlight">{% trans 'Les marques premium' %}</h3>
+                                    <h4>{% trans 'pour les travaux les plus difficiles' %}</h4>
                                 </a>
                             </div>
                             <div class="action">
-                                <a href="{% url 'category' %}">Découvrer maintenant</a>
+                                <a href="{% url 'category' %}">{% trans 'Découvrer maintenant' %}</a>
                             </div>
                         </div>
                     </div>
@@ -658,16 +660,16 @@
                         </a>
                         <div class="banner-content">
                             <div class="title">
-                                <a href="category.html">Meilleures ventes en outils</a>
+                                <a href="category.html">{% trans 'Meilleures ventes en outils' %}</a>
                             </div>
                             <div class="content">
                                 <a href="category.html">
-                                    <h3>Pro-level tools</h3>
-                                    <h4 class="highlight">Économisez sur les meilleures ventes</h4>
+                                    <h3>{% trans 'outils professionnels' %}</h3>
+                                    <h4 class="highlight">{% trans 'Économisez sur les meilleures ventes' %}</h4>
                                 </a>
                             </div>
                             <div class="action">
-                                <a href="{% url 'category' %}">Acheter maintenant</a>
+                                <a href="{% url 'category' %}">{% trans 'Acheter maintenant' %}</a>
                             </div>
                         </div>
                     </div>
@@ -683,8 +685,8 @@
                             </span>
 
                             <div class="icon-box-content">
-                                <h3 class="icon-box-title">Livraison gratuite</h3><!-- End .icon-box-title -->
-                                <p>Commandes de 50 $ ou plus</p>
+                                <h3 class="icon-box-title">{% trans 'Livraison gratuite' %}</h3><!-- End .icon-box-title -->
+                                <p>{% trans 'Commandes de 50 $ ou plus' %}</p>
                             </div><!-- End .icon-box-content -->
                         </div><!-- End .icon-box -->
                     </div><!-- End .col-sm-6 col-lg-4 -->
@@ -696,8 +698,8 @@
                             </span>
 
                             <div class="icon-box-content">
-                                <h3 class="icon-box-title">Retours sans frais</h3><!-- End .icon-box-title -->
-                                <p>Dans les 30 jours</p>
+                                <h3 class="icon-box-title">{% trans 'Retours sans frais' %}</h3><!-- End .icon-box-title -->
+                                <p>{% trans 'Dans les 30 jours' %}</p>
                             </div><!-- End .icon-box-content -->
                         </div><!-- End .icon-box -->
                     </div><!-- End .col-sm-6 col-lg-4 -->
@@ -709,8 +711,8 @@
                             </span>
 
                             <div class="icon-box-content">
-                                <h3 class="icon-box-title">Obtenez 20 % de réduction sur 1 article</h3><!-- End .icon-box-title -->
-                                <p>Lorsque vous vous inscrivez</p>
+                                <h3 class="icon-box-title">{% trans 'Obtenez 20 % de réduction sur 1 article' %}</h3><!-- End .icon-box-title -->
+                                <p>{% trans 'Lorsque vous vous inscrivez' %}</p>
                             </div><!-- End .icon-box-content -->
                         </div><!-- End .icon-box -->
                     </div><!-- End .col-sm-6 col-lg-4 -->
@@ -722,8 +724,8 @@
                             </span>
 
                             <div class="icon-box-content">
-                                <h3 class="icon-box-title">Nous soutenons</h3><!-- End .icon-box-title -->
-                                <p>Des services exceptionnels 24h/24 et 7j/7</p>
+                                <h3 class="icon-box-title">{% trans 'Nous soutenons' %}</h3><!-- End .icon-box-title -->
+                                <p>{% trans 'Des services exceptionnels 24h/24 et 7j/7' %}</p>
                             </div><!-- End .icon-box-content -->
                         </div><!-- End .icon-box -->
                     </div><!-- End .col-sm-6 col-lg-4 -->
@@ -735,9 +737,9 @@
                 <hr class="mb-5">
 
                 <div class="section-title">
-                    <div><p class="title"><span> Toutes les Catégories</span></p></div>
+                    <div><p class="title"><span> {% trans 'Toutes les Catégories' %}</span></p></div>
                     
-                    <a class="link" href="{% url 'category' %}">Voir tous les produits</a>
+                    <a class="link" href="{% url 'category' %}">{% trans 'Voir tous les produits' %}</a>
                 </div>
 
                 <div class="row products">
@@ -774,13 +776,13 @@
             <div class="container bannerad">
                 <div class="banner-lg"  style="background-image: url({% static 'assets/images/demos/demo-22/bannerad/background.jpg' %});">
                     <div class="price">
-                        <h3 class="highlight">from</h3><h3>$39</h3><sup class="highlight">,99</sup>
+                        <h3 class="highlight">{% trans 'A partir de' %}</h3><h3>$39</h3><sup class="highlight">,99</sup>
                     </div>
                     <div class="content">
-                        <h4>woodworking tools</h4>
-                        <h3>from top rated brands</h3>
+                        <h4>{% trans 'outils de travail de bois' %}</h4>
+                        <h3>{% trans 'A partir des marques les mieux notés' %}</h3>
                         <div class="action">
-                            <a href="category.html">discover now</a>
+                            <a href="category.html">{% trans 'Decouvrir maintenant' %}</a>
                         </div>
                     </div>
                 </div>
@@ -811,53 +813,68 @@
 
                         <div class="col-sm-6 col-lg-3">
                             <div class="widget">
-                                <h4 class="widget-title">Liens utiles</h4><!-- End .widget-title -->
+                                <h4 class="widget-title">{% trans 'Liens utiles' %}</h4><!-- End .widget-title -->
 
                                 <ul class="widget-list">
-                                    <li><a href="about.html">A propos de GTI</a></li>
-                                    <li><a href="#">Comment acheter à GTI</a></li>
+                                    <li><a href="about.html">{% trans 'A propos de GTI' %}</a></li>
+                                    <li><a href="#">{% trans 'Comment acheter à GTI' %}</a></li>
                                     <li><a href="faq.html">FAQ</a></li>
-                                    <li><a href="contact.html">Contacter nous</a></li>
-                                    <li><a href="login.html">Se connecter</a></li>
+                                    <li><a href="contact.html">{% trans 'Contacter nous' %}</a></li>
+                                    <li><a href="login.html">{% trans 'Se connecter' %}</a></li>
                                 </ul><!-- End .widget-list -->
                             </div><!-- End .widget -->
                         </div><!-- End .col-sm-6 col-lg-3 -->
 
                         <div class="col-sm-6 col-lg-3">
                             <div class="widget">
-                                <h4 class="widget-title">Services clients</h4><!-- End .widget-title -->
+                                <h4 class="widget-title">{% trans 'Services clients' %}</h4><!-- End .widget-title -->
 
                                 <ul class="widget-list">
-                                    <li><a href="#">Méthodes de payements</a></li>
-                                    <li><a href="#">Garantie de remboursement!</a></li>
-                                    <li><a href="#">Retours</a></li>
-                                    <li><a href="#">Livraison</a></li>
-                                    <li><a href="#">Les termes et confitions</a></li>
-                                    <li><a href="#">Politique de confidentialité</a></li>
+                                    <li><a href="#">{% trans 'Méthodes de payements' %}</a></li>
+                                    <li><a href="#">{% trans 'Garantie de remboursement!' %}</a></li>
+                                    <li><a href="#">{% trans 'Retours' %}</a></li>
+                                    <li><a href="#">{% trans 'Livraison' %}</a></li>
+                                    <li><a href="#">{% trans 'Les termes et confitions' %}</a></li>
+                                    <li><a href="#">{% trans 'Politique de confidentialité' %}</a></li>
                                 </ul><!-- End .widget-list -->
                             </div><!-- End .widget -->
                         </div><!-- End .col-sm-6 col-lg-3 -->
 
                         <div class="col-sm-6 col-lg-3">
                             <div class="widget">
-                                <h4 class="widget-title">Mon compte</h4><!-- End .widget-title -->
+                                <h4 class="widget-title">{% trans 'Mon compte' %}</h4><!-- End .widget-title -->
 
                                 <ul class="widget-list">
-                                    <li><a href="#">Se connecter</a></li>
-                                    <li><a href="cart.html">Voir le panier</a></li>
-                                    <li><a href="#">Ma liste de favoris</a></li>
-                                    <li><a href="#">Suivre ma commande</a></li>
-                                    <li><a href="#">Aide</a></li>
+                                    <li><a href="#">{% trans 'Se connecter' %}</a></li>
+                                    <li><a href="cart.html">{% trans 'Voir le panier' %}</a></li>
+                                    <li><a href="#">{% trans 'Ma liste de favoris' %}</a></li>
+                                    <li><a href="#">{% trans 'Suivre ma commande' %}</a></li>
+                                    <li><a href="#">{% trans 'Aide' %}</a></li>
                                 </ul><!-- End .widget-list -->
                             </div><!-- End .widget -->
                         </div><!-- End .col-sm-6 col-lg-3 -->
+                        <div class="" style="margin-left:1050px;">
+                            <select onchange="Translate(event);" id="mySelect">
+                                {% if languages.second == 'Français' %}
+                                <option value="fr">{{ languages.second }}</option>
+                                {% else %}
+                                <option value="en">{{ languages.second }}</option>
+                                {% endif %}
+
+                                {% if languages.selected == 'English' %}
+                                <option value="en" selected >{{ languages.selected }}</option>
+                                {% else %}
+                                <option value="fr" selected >{{ languages.selected }}</option>
+                                {% endif %}
+                            </select>
+                    </div>
                     </div><!-- End .row -->
                 </div><!-- End .container -->
             </div><!-- End .footer-middle -->
 
             <div class="footer-bottom">
                 <div class="container">
-                    <p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p><!-- End .footer-copyright -->
+                    <p class="footer-copyright">{% trans  'Copyright © 2019 Green Tech Innovation. Tout droits réservés' %}</p><!-- End .footer-copyright -->
                     <figure class="footer-payments">
                         <img src="{% static 'assets_home/images/payments.png' %}" alt="Payment methods" width="272" height="20">
                     </figure><!-- End .footer-payments -->
@@ -890,32 +907,32 @@
                         </li>
                         <li>
 
-                            <a href="{% url 'category' %}" class="">Boutique</a>
+                            <a href="{% url 'category' %}" class="">{% trans 'Boutique' %}</a>
 
 
                         </li>
                          <li>
 
-                             <a href="{% url 'about' %}" class="">A propos</a>
+                             <a href="{% url 'about' %}" class="">{% trans 'A propos' %}</a>
 
 
                          </li>
                           <li>
 
-                              <a href="{% url 'contact' %}" class="">Contacter nous</a>
+                              <a href="{% url 'contact' %}" class="">{% trans 'Contacter nous' %}</a>
 
 
                           </li>
                           <li>
                             {% if username %}
 
-                              <a href="{% url 'my_profil' %}" ><i class="icon-user"></i>My Profil</a>
+                              <a href="{% url 'my_profil' %}" ><i class="icon-user"></i>{% trans 'Mon Profil' %}</a>
                                 <ul>
-                                    <li>Se deconnecter</li>
+                                    <li>{% trans 'Se deconnecter' %}</li>
                                 </ul>
                             {% else %}
 
-                              <a href="#signin-modal" data-toggle="modal" id="link_login"><i class="icon-user"></i>Se connecter / Créer un compte</a>
+                              <a href="#signin-modal" data-toggle="modal" id="link_login"><i class="icon-user"></i>{% trans 'Se connecter / Créer un compte' %}</a>
                             {% endif %}
                           </li>
 
@@ -947,10 +964,10 @@
                         <div class="form-tab">
                             <ul class="nav nav-pills nav-fill" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active text-success" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="true">Se connecter</a>
+                                    <a class="nav-link active text-success" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="true">{% trans 'Se connecter' %}</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-success " id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">Creer un compte</a>
+                                    <a class="nav-link text-success " id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">{% trans 'Creer un compte' %}</a>
                                 </li>
                             </ul>
                             <div class="tab-content" id="tab-content-5">
@@ -977,16 +994,16 @@
                                                 <label class="custom-control-label" for="signin-remember">Remember Me</label>
                                             </div><!-- End .custom-checkbox -->
 
-                                            <a href="#forgot-modal" data-toggle="modal" data-dismiss="modal" class="forgot-link">Forgot Your Password?</a>
+                                            <a href="#forgot-modal" data-toggle="modal" data-dismiss="modal" class="forgot-link">{% trans 'Mot de passe oublié?' %}</a>
                                         </div><!-- End .form-footer -->
                                     </form>
                                     <div class="form-choice">
-                                        <p class="text-center">or sign in with</p>
+                                        <p class="text-center">{% trans 'ou se connecter avec' %}</p>
                                         <div class="row">
                                             <div class="col-sm-6 mx-auto">
                                                 <a href="{% url 'google_login' %}" class="btn btn-login btn-g">
                                                     <i class="icon-google"></i>
-                                                    Login With Google
+                                                    {% trans 'Se Connecter Avec Google' %}
                                                 </a>
                                             </div><!-- End .col-6 -->
 
@@ -1002,15 +1019,15 @@
                                             {{ field }}
 
                                             {% if field.id_for_label == 'id_username' %}
-                                            <div class="invalid-feedback">Ce nom d'utilisateur existe deja</div>
+                                            <div class="invalid-feedback">{% trans "Ce nom d'utilisateur existe deja" %}</div>
                                             {% endif %}
 
                                             {% if field.id_for_label == 'id_contact' %}
-                                            <div class="invalid-feedback"><h6 class="text-danger" >Entrer un contact valide</h6></div>
+                                            <div class="invalid-feedback"><h6 class="text-danger" >{% trans 'Entrer un contact valide' %}</h6></div>
                                             {% endif %}
 
                                             {% if field.id_for_label == 'id_email' %}
-                                            <div class="invalid-feedback"><h6 class="text-danger" >Cet email existe deja</h6></div>
+                                            <div class="invalid-feedback"><h6 class="text-danger" >{% trans 'Cet email existe deja' %}</h6></div>
                                             {% endif %}
                                         </div>
                                         {% endfor %}
@@ -1029,17 +1046,17 @@
 
                                             <div class="custom-control custom-checkbox">
                                                 <input type="checkbox" class="custom-control-input" id="register-policy" required>
-                                                <label class="custom-control-label" for="register-policy">I agree to the <a href="#">privacy policy</a> *</label>
+                                                <label class="custom-control-label" for="register-policy">{% trans "Je suis d'accord avec" %}<a href="#">{% trans "la politique de confidentialité" %}</a> *</label>
                                             </div><!-- End .custom-checkbox -->
                                         </div><!-- End .form-footer -->
                                     </form>
                                     <div class="form-choice">
-                                        <p class="text-center">or sign in with</p>
+                                        <p class="text-center">{% trans 'ou se connecter avec' %}</p>
                                         <div class="row">
                                             <div class="col-sm-6 mx-auto">
                                                 <a href="#" class="btn btn-login btn-g">
                                                     <i class="icon-google"></i>
-                                                    Login With Google
+                                                    {% trans 'Se Connecter Avec Google' %}
                                                 </a>
                                             </div><!-- End .col-6 -->
 
@@ -1069,11 +1086,11 @@
                                 <div class="tab-pane fade show active" id="forgot" role="tabpanel" aria-labelledby="signin-tab">
                                    <form action="#"  method="post" id="forgot_form">
                                         {% csrf_token %}
-                                        <h3 class="text-center text-success" >Mot de passe oublié</h3>
+                                        <h3 class="text-center text-success" >{% trans 'Mot de passe oublié' %}</h3>
                                         <div class="form-group has-error">
                                           <label for="email"><h5>Email</h5></label>
                                           <input type="email" class="form-control" name="email" id="email" placeholder="you@email.com" title="enter your email.">
-                                          <div class="invalid-feedback"><h6 class="text-danger" >L'email entre n'est pas enregistre</h6></div>
+                                          <div class="invalid-feedback"><h6 class="text-danger" >{% trans "L'email entre n'est pas enregistre" %}</h6></div>
                                         </div>
 
 
@@ -1081,7 +1098,7 @@
 
                                         <div class="form-footer">
                                             <button type="submit" class="btn btn-outline-success-2 btn-success">
-                                                <span>VALIDER</span>
+                                                <span>{% trans 'VALIDER' %}</span>
                                                 <i class="icon-long-arrow-right"></i>
                                             </button>
 
@@ -1111,7 +1128,7 @@
                         <div class="banner-content text-center">
                             <img src="{% static 'assets_home/images/popup/newsletter/logo.png' %}" class="logo" alt="logo" width="60" height="15">
                             <h2 class="banner-title">get <span>25<light>%</light></span> off</h2>
-                            <p>Subscribe to the Molla eCommerce newsletter to receive timely updates from your favorite products.</p>
+                            <p>{% trans 'Abonnez-vous à la newsletter Molla eCommerce pour recevoir des mises à jour en temps opportun de vos produits préférés' %}</p>
                             <form action="#">
                                 <div class="input-group input-group-round">
                                     <input type="email" class="form-control form-control-white" placeholder="Your Email Address" aria-label="Email Adress" required>
@@ -1122,7 +1139,7 @@
                             </form>
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="register-policy-2" required>
-                                <label class="custom-control-label" for="register-policy-2">Do not show this popup again</label>
+                                <label class="custom-control-label" for="register-policy-2">{% trans 'Ne plus afficher cette fenêtre contextuelle' %}</label>
                             </div><!-- End .custom-checkbox -->
                         </div>
                     </div>
@@ -1147,6 +1164,7 @@
     <script src="{% static 'assets_home/js/nouislider.min.js' %}"></script>
     <script src="{% static 'assets_home/js/wNumb.js' %}"></script>
     <script src="{% static 'assets_home/js/slide.js' %}"></script>
+    <script src="{% static 'assets_home/css/intlTelInput.js' %}"></script>
 
     <script src="{% static 'assets_home/css/sweetalert.min.js' %}"></script>
 
@@ -1155,10 +1173,34 @@
     <script src="{% static 'assets_home/js/main.js' %}"></script>
     <script type="text/javascript">
 
+        //import intlTelInput from 'intl-tel-input';
+
+        const input = document.querySelector("#id_contact");
+        window.intlTelInput(input, {
+            separateDialCode: true
+        });
 
 
+        function Translate(langue){
 
+            $.ajax({
+                url:"{% url 'translate' %}",
+                data: {'language': langue.target.value},
 
+                success: function(response){
+                    window.location.reload() ;
+                    if(langue.target.value=='en'){
+                        const $select = document.querySelector('#mySelect');
+                        $select.value = 'en' ;
+                    }
+                },
+
+                error: function(response){
+
+                }
+            }) ;
+
+        }
 
 
 

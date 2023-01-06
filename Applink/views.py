@@ -4,6 +4,9 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from rest_framework.authentication import authenticate, TokenAuthentication
+from django.utils.translation import gettext
+from django.utils import translation
+
 
 from EShopGTI.settings import SITE_HOSTNAME
 from ProdApp.serializer import ProduitSerializer
@@ -495,6 +498,17 @@ def contact_register(request):
         else:
             return Response(contact_serializer.errors, status=400)
 
-
+@api_view(['GET'])
+def translate(request):
+    if 'language' in request.GET and request.GET['language']:
+        language = request.GET['language']
+        if language in ['fr', 'en']:
+            if language == 'fr':
+                translation.activate(language)
+                request.session['language'] = 'Français'
+            if language == 'en':
+                translation.activate(language)
+                request.session['language'] = 'English'
+    return Response(status=200)
 
 # Create your views here.

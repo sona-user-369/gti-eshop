@@ -1,6 +1,7 @@
 {% extends 'home/index22.html' %}
 
 {% load static %}
+{% load i18n %}
 
 {% block title %}
     <title>GTI-Produits</title>
@@ -11,7 +12,7 @@
             {% if not query_not_match %}
         	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
         		<div class="container">
-        			<h1 class="page-title">Grid 3 Columns<span>Boutique</span></h1>
+        			<h1 class="page-title">Grid 3 Columns<span>{% trans 'Boutique' %}</span></h1>
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
             <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
@@ -31,17 +32,17 @@
                 			<div class="toolbox">
                 				<div class="toolbox-left">
                 					<div class="toolbox-info">
-                						Showing <span>9 of 56</span> Products
+                						{% trans 'Affiche' %} <span>9 de 56</span> {% trans 'Produits' %}
                 					</div><!-- End .toolbox-info -->
                 				</div><!-- End .toolbox-left -->
 
                 				<div class="toolbox-right">
                 					<div class="toolbox-sort">
-                						<label for="sortby">Sort by:</label>
+                						<label for="sortby">{% trans 'Trier par:' %}</label>
                 						<div class="select-custom">
 											<select name="sortby" id="sortby" class="form-control">
-												<option value="popularity" selected="selected">Most Popular</option>
-												<option value="rating">Most Rated</option>
+												<option value="popularity" selected="selected">{% trans 'Plus populaire' %}</option>
+												<option value="rating">{% trans 'Most Rated' %}</option>
 												<option value="date">Date</option>
 											</select>
 										</div>
@@ -105,7 +106,7 @@
                                                 </a>
 
                                                 <div class="product-action-vertical">
-                                                    <a href="#" onclick="addWishlist('{{ produit.produit.pk }}'); return false;" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                                    <a href="#" onclick="addWishlist('{{ produit.produit.pk }}'); return false;" class="btn-product-icon btn-wishlist btn-expandable"><span>{% trans 'ajouter aux favoris' %}</span></a>
                                                 </div><!-- End .product-action-vertical -->
                                             </figure><!-- End .product-media -->
 
@@ -158,8 +159,8 @@
 
 
                                                 <div class="product-action">
-                                                    <a href="#"   onclick="addCart( '{{ produit.produit.pk }}' ); return false;" class="btn-product btn-cart" title="Add to cart"></a>
-                                                    <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"></a>
+                                                    <a href="#"   onclick="addCart( '{{ produit.produit.pk }}' ); return false;" class="btn-product btn-cart" title="Add to cart">{% trans 'Ajouter au panier' %}</a>
+
                                                 </div><!-- End .product-action -->
                                             </div><!-- End .product-footer -->
                                         </div><!-- End .product -->
@@ -411,7 +412,7 @@
                 			<div class="sidebar sidebar-shop">
                 				<div class="widget widget-clean">
                 					<label>Filters:</label>
-                					<a href="#" class="sidebar-filter-clear">Clean All</a>
+                					<a href="#" class="sidebar-filter-clear">{% trans 'Efacer tout' %}</a>
                 				</div><!-- End .widget widget-clean -->
 
                 				<div class="widget widget-collapsible">
@@ -563,7 +564,7 @@
         						<div class="widget widget-collapsible">
     								<h3 class="widget-title">
 									    <a data-toggle="collapse" href="#widget-5" role="button" aria-expanded="true" aria-controls="widget-5">
-									        Price
+									        {% trans 'Prix' %}
 									    </a>
 									</h3><!-- End .widget-title -->
 
@@ -571,7 +572,7 @@
 										<div class="widget-body">
                                             <div class="filter-price">
                                                 <div class="filter-price-text">
-                                                    Price Range:
+                                                    {% trans 'Echelle des prix:' %}
                                                     <span id="filter-price-range"></span>
                                                 </div><!-- End .filter-price-text -->
 
@@ -589,9 +590,9 @@
             <div class="error-content text-center" style="background-image: url(assets/images/backgrounds/error-bg.jpg)">
             	<div class="container">
             		<h1 class="error-title">Error 404</h1><!-- End .error-title -->
-            		<p>Le produit recherché n'existe pas.</p>
+            		<p>{% trans "Le produit recherché n'existe pas." %}</p>
             		<a href="{% url 'home'  %}" class="btn btn-outline-primary-2 btn-minwidth-lg">
-            			<span>Retour à la page d'acceuil</span>
+            			<span>{% trans "Retour à la page d'acceuil" %}</span>
             			<i class="icon-long-arrow-right"></i>
             		</a>
             	</div><!-- End .container -->
