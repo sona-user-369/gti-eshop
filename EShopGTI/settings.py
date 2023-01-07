@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-3el(z+62@bpyp^k+$gm0v#m^8fi3ptm+)ukl-8-vv8dzq2o&%2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com', 'donadavak.pythonanywhere.com']
 
 
 # Application definition
@@ -96,6 +96,17 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME':   'donadavak$DataGTI',
+#         'USER':   'donadavak',
+#         'PASSWORD':  'Dona60800530',
+#         'HOST':   'donadavak.mysql.pythonanywhere-services.com',
+#         'PORT':  '3306',
+#     }
+# }
+
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
@@ -148,7 +159,7 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 SITE_HOSTNAME = '127.0.0.1:8000'
-
+#SITE_HOSTNAME = 'donadavak.pythonanywhere.com'
 
 TOKEN_EXPIRED_AFTER_SECONDS = 300
 

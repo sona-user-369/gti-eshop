@@ -26,10 +26,12 @@ def verify_user(object):
     if "token" in object.session:
         print('Token')
         response = requests.get(url, headers={'Authorization': 'Token ' + object.session["token"]})
+        response.encoding = 'utf-8'
 
     else:
         print('Not Token')
         response = requests.get(url)
+        response.encoding = 'utf-8'
     if response.status_code != 200:
 
         data = {'user': None,
@@ -303,11 +305,11 @@ def select_languages(object):
     if 'language' in object.session:
         if object.session['language'] == 'Français':
             second_language = 'English'
-            all_language = {'selected':object.session['language'], 'second':second_language}
+            all_language = {'selected': object.session['language'], 'second': second_language}
         else:
             second_language = 'Français'
-            all_language = {'selected':object.session['language'], 'second':second_language}
+            all_language = {'selected': object.session['language'], 'second': second_language}
     else:
-        all_language = {'selected':'Français', 'second':'English'}
+        all_language = {'selected': 'Français', 'second': 'English'}
 
     return all_language

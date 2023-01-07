@@ -30,7 +30,7 @@ from .models import *
 def home(request):
     Register = RegisterForm()
     Login = LoginForm()
-    categories = get_categorie(request)
+    #categories = get_categorie(request)
     languages = select_languages(request)
 
     # Getting recents products
@@ -54,7 +54,7 @@ def home(request):
                'wishlist_count': wishlist_count,
                'cart_product': cart_product,
                'total': total,
-               'categories': categories,
+               #'categories': categories,
                'recent': recent_products,
                'best_sellers': best_seller_products,
                'languages': languages,
