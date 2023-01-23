@@ -3,6 +3,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, HttpResponse, redirect
 from django.urls import reverse
 from elasticsearch_dsl.query import Q
+import telegram
 
 from Applink.serializer import UserRegisterSerializer
 from django.contrib.sites.shortcuts import get_current_site
@@ -19,6 +20,7 @@ from django.forms.models import model_to_dict
 import uuid
 
 from EShopGTI import settings
+from EShopGTI.settings import MEDIA_URL
 from ProdApp.document import DocumentProduit
 from .Manage import *
 import requests
@@ -30,7 +32,7 @@ from .models import *
 def home(request):
     Register = RegisterForm()
     Login = LoginForm()
-    #categories = get_categorie(request)
+    categories = get_categorie(request)
     languages = select_languages(request)
 
     # Getting recents products
@@ -40,7 +42,7 @@ def home(request):
     best_seller_products = get_best_seller(6)
 
     # Getting all
-    # all_categorie = Categorie.objects.all()
+    all_categorie = Categorie.objects.all()
 
     user = verify_user(request)["user"]
     cart_count = verify_user(request)["cart_total"]
@@ -54,13 +56,37 @@ def home(request):
                'wishlist_count': wishlist_count,
                'cart_product': cart_product,
                'total': total,
-               #'categories': categories,
+               'categories': categories,
                'recent': recent_products,
                'best_sellers': best_seller_products,
                'languages': languages,
                }
 
     return render(request, 'home/index22.html', context)
+
+
+def build_absolute_uri(request, url):
+    site = get_current_site(request)
+    return f"{site.scheme}://{site.domain}{reverse(url)}"
+
+
+def share_message_telegram(request, image_url):
+    bot = telegram.Bot(token='5874242082:AAH_aAKOHmzdIUNVfQ_qTqL88PnxtxPgmlw')
+
+    chat_id = '5669217982'
+
+    text = 'Hello check this out'
+    path = str(request.path)
+    url = path.replace('/telegram_send//', '')
+    print(url)
+    site = get_current_site(request)
+    print(site)
+    with open(url, 'rb') as image:
+        bot.send_photo(chat_id=chat_id, photo=image, caption=text)
+
+
+
+    return redirect('home')
 
 
 def activate(request, uidb64, token):
@@ -98,6 +124,7 @@ def activate_forgout(request, uidb64, token):
 
 
 def forgout_pass(request):
+    languages = select_languages(request)
     forgot_form = ForgotForm()
     try:
         session = request.session["link_is_clicked"]
@@ -109,7 +136,7 @@ def forgout_pass(request):
     else:
         request.session["link_is_clicked"] = 0
 
-    return render(request, 'home/forgotPassword.html', {'ForgotForm': forgot_form})
+    return render(request, 'home/forgotPassword.html', {'ForgotForm': forgot_form,'languages': languages})
 
 
 #####Logout User
@@ -196,6 +223,8 @@ def product(request, id):
     wishlist_count = verify_user(request)["wishlist_total"]
     cart_product = verify_user(request)["cart_product"]
     total = verify_user(request)["total"]
+    languages = select_languages(request)
+
     context = {'Register': Register,
                'Login': Login,
                'Review': Review,
@@ -209,6 +238,7 @@ def product(request, id):
                'avis': avis_more,
                'avis_count': len(avis_more),
                'note': note,
+               'languages': languages,
                }
 
     return render(request, 'home/product.html', context)
@@ -224,6 +254,7 @@ def cart(request):
     wishlist_product = verify_user(request)["wishlist_product"]
     cart_product = verify_user(request)["cart_product"]
     total = verify_user(request)["total"]
+    languages = select_languages(request)
 
     context = {'Register': Register,
                'Login': Login,
@@ -232,6 +263,7 @@ def cart(request):
                'wishlist_count': wishlist_count,
                'cart_product': cart_product,
                'total': total,
+               'languages': languages,
 
                }
 
@@ -255,6 +287,7 @@ def wishlist(request):
     wishlist_product = verify_user(request)["wishlist_product"]
     cart_product = verify_user(request)["cart_product"]
     total = verify_user(request)["total"]
+    languages = select_languages(request)
     context = {'Register': Register,
                'Login': Login,
                'username': user,
@@ -262,7 +295,8 @@ def wishlist(request):
                'wishlist_count': wishlist_count,
                'cart_product': cart_product,
                'wishlist_product': wishlist_product,
-               'total': total
+               'total': total,
+               'languages': languages,
                }
     if not user:
         return redirect('home')
@@ -271,6 +305,7 @@ def wishlist(request):
 
 
 def category(request):
+    languages = select_languages(request)
     product = Produit.objects.filter(is_archive=False)
     categorie = Categorie.objects.all()
     categorie_products = []
@@ -355,7 +390,9 @@ def category(request):
                'total': total,
                'categorie': categorie_products,
                'page_obj': page_obj,
-               'query_not_match': query_not_match
+               'query_not_match': query_not_match,
+               'languages': languages,
+               'total_products': len(product)
                }
 
     return render(request, 'home/category.html', context)
@@ -420,6 +457,7 @@ def search_product(request):
     wishlist_product = verify_user(request)["wishlist_product"]
     cart_product = verify_user(request)["cart_product"]
     total = verify_user(request)["total"]
+    languages = select_languages(request)
 
     context = {'Register': Register,
                'Login': Login,
@@ -431,13 +469,36 @@ def search_product(request):
                'product': product_info,
                'total': total,
                'categorie': categorie_products,
-               'page_obj': page_obj
+               'page_obj': page_obj,
+               'languages': languages,
                }
 
     return render(request, 'home/category.html', context)
 
 
 def about(request):
+    Register = RegisterForm()
+    Login = LoginForm()
+
+    user = verify_user(request)["user"]
+    cart_count = verify_user(request)["cart_total"]
+    wishlist_count = verify_user(request)["wishlist_total"]
+    wishlist_product = verify_user(request)["wishlist_product"]
+    cart_product = verify_user(request)["cart_product"]
+    total = verify_user(request)["total"]
+    languages = select_languages(request)
+
+    context = {'Register': Register,
+               'Login': Login,
+               'username': user,
+               'cart_count': cart_count,
+               'wishlist_count': wishlist_count,
+               'cart_product': cart_product,
+               'wishlist_product': wishlist_product,
+               'total': total,
+               'languages': languages,
+               }
+
     return render(request, 'home/about2.html')
 
 
@@ -450,6 +511,7 @@ def contact(request):
     wishlist_count = verify_user(request)["wishlist_total"]
     cart_product = verify_user(request)["cart_product"]
     total = verify_user(request)["total"]
+    languages = select_languages(request)
     context = {'Register': Register,
                'Login': Login,
                'ContactEnter': ContactEnter,
@@ -458,6 +520,7 @@ def contact(request):
                'wishlist_count': wishlist_count,
                'cart_product': cart_product,
                'total': total,
+               'languages': languages,
                }
 
     return render(request, 'home/contact.html', context)
@@ -477,7 +540,29 @@ def profil(request):
         return redirect('home')
     UpForm = UpdateForm(user)
 
-    return render(request, 'home/OtherProfil.html', {"user": user, "UpForm": UpForm})
+    Register = RegisterForm()
+    Login = LoginForm()
+
+    cart_count = verify_user(request)["cart_total"]
+    wishlist_count = verify_user(request)["wishlist_total"]
+    wishlist_product = verify_user(request)["wishlist_product"]
+    cart_product = verify_user(request)["cart_product"]
+    total = verify_user(request)["total"]
+    languages = select_languages(request)
+
+    context = {'Register': Register,
+               'Login': Login,
+               'UpForm': UpForm,
+               'username': user,
+               'cart_count': cart_count,
+               'wishlist_count': wishlist_count,
+               'cart_product': cart_product,
+               'wishlist_product': wishlist_product,
+               'total': total,
+               'languages': languages,
+               }
+
+    return render(request, 'home/OtherProfil.html', context)
 
 
 def update_user(request):
@@ -574,8 +659,30 @@ def google_login(request):
 
 def fill(request):
     FillForm = RegisterForm(request.session["google"])
+    Register = RegisterForm()
+    Login = LoginForm()
 
-    return render(request, 'home/Fillup.html', {'FillForm': FillForm})
+    user = verify_user(request)["user"]
+    cart_count = verify_user(request)["cart_total"]
+    wishlist_count = verify_user(request)["wishlist_total"]
+    wishlist_product = verify_user(request)["wishlist_product"]
+    cart_product = verify_user(request)["cart_product"]
+    total = verify_user(request)["total"]
+    languages = select_languages(request)
+
+    context = {'Register': Register,
+               'Login': Login,
+               'FillForm': FillForm,
+               'username': user,
+               'cart_count': cart_count,
+               'wishlist_count': wishlist_count,
+               'cart_product': cart_product,
+               'wishlist_product': wishlist_product,
+               'total': total,
+               'languages': languages,
+               }
+
+    return render(request, 'home/Fillup.html', context)
 
 
 def password_change(request):
@@ -583,8 +690,30 @@ def password_change(request):
     if not user:
         return redirect('home')
     PasswordForm = ChangeForm()
+    Register = RegisterForm()
+    Login = LoginForm()
 
-    return render(request, 'home/PasswordChange.html', {"ChangeForm": PasswordForm, "user": user})
+
+    cart_count = verify_user(request)["cart_total"]
+    wishlist_count = verify_user(request)["wishlist_total"]
+    wishlist_product = verify_user(request)["wishlist_product"]
+    cart_product = verify_user(request)["cart_product"]
+    total = verify_user(request)["total"]
+    languages = select_languages(request)
+
+    context = {'Register': Register,
+               'Login': Login,
+               'PasswordForm' : PasswordForm,
+               'username': user,
+               'cart_count': cart_count,
+               'wishlist_count': wishlist_count,
+               'cart_product': cart_product,
+               'wishlist_product': wishlist_product,
+               'total': total,
+               'languages': languages,
+               }
+
+    return render(request, 'home/PasswordChange.html', context)
 
 
 def invoice_order(request):
@@ -600,6 +729,8 @@ def invoice_order(request):
     invoice = get_invoice_or_none(request)
     Register = RegisterForm()
     Login = LoginForm()
+    languages = select_languages(request)
+
     context = {'Register': Register,
                'Login': Login,
                'username': user,
@@ -609,9 +740,9 @@ def invoice_order(request):
                'wishlist_product': wishlist_product,
                'total': total,
                'invoice': invoice,
+               'languages' : languages,
                }
     print(invoice)
-
     return render(request, 'home/invoice.html', context)
 
 
@@ -628,6 +759,7 @@ def shipping(request):
     cart_product = verify_user(request)["cart_product"]
     total = verify_user(request)["total"]
     ship_form = ShipForm()
+    languages = select_languages(request)
     context = {'ShipForm': ship_form,
                'username': user,
                'cart_count': cart_count,
@@ -636,6 +768,7 @@ def shipping(request):
                'wishlist_product': wishlist_product,
                'product': product,
                'total': total,
+               'languages': languages
                }
 
     return render(request, 'home/shipping.html', context)

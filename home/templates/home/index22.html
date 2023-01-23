@@ -2,7 +2,7 @@
 {% load rest_framework %}
 {% load static %}
 {% load i18n %}
-<html>
+<html style="">
 
 <!-- molla/index22.html  22 Nov 2019 10:01:54 GMT -->
 <head>
@@ -12,7 +12,10 @@
 	<meta charset="UTF-8" lang="fr-FR">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% block meta_tags %}
 
+
+    {% endblock %}
     <meta name="keywords" content="HTML5 Template">
     <meta name="description" content="Molla - Bootstrap eCommerce Template">
     <meta name="author" content="p-themes">
@@ -20,8 +23,8 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'assets_home/images/icons/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'assets_home/images/icons/gti-logo.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'assets_home/images/icons/gti-logo.png' %}">
-    <link rel="manifest" href="static/assets/images/icons/site.html">
-    <link rel="mask-icon" href="{% static 'assets_home/images/icons/gti-logo.png' %}" color="#666666">
+    <link rel="manifest" href="{% static 'assets_home/images/icons/site.html' %}">
+    <link rel="mask-icon" href="{% static 'assets_home/images/icons/safari-pinned-tab.svg' %}" color="#666666">
     <link rel="shortcut icon" href="{% static 'assets_home/images/icons/gti-logo.png' %}">
     <meta name="apple-mobile-web-app-title" content="Molla">
     <meta name="application-name" content="Molla">
@@ -43,28 +46,56 @@
 
     {% block style %}
     <style>
+    html , body {
+     position: fixed;
+     height: 100%;
+     overflow-x: hidden;
+    }
 
+    body , html{
+      margin: 0;
+      width: 100vw;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+
+}
     </style>
 
     {% endblock %}
 
 </head>
-<body>
+<body style="">
 
-    <div class="page-wrapper">
+    <div class="page-wrapper" style="">
         <header class="header header-22">
             <div class="header-middle">
                 <div class="container">
-
                     <div class="header-left">
                         <button class="mobile-menu-toggler">
                             <span class="sr-only">Toggle mobile menu</span>
                             <i class="icon-bars"></i>
                         </button>
+                        <div class="" style="margin-right:10px;">
+                            <select onchange="Translate(event);" id="mySelect">
+                                {% if languages.second == 'Français' %}
+                                <option value="fr">{{ languages.second }}</option>
+                                {% else %}
+                                <option value="en">{{ languages.second }}</option>
+                                {% endif %}
 
+                                {% if languages.selected == 'English' %}
+                                <option value="en" selected >{{ languages.selected }}</option>
+                                {% else %}
+                                <option value="fr" selected >{{ languages.selected }}</option>
+                                {% endif %}
+                            </select>
+                        </div>
                         <a href="index.html" class="logo">
                             <img src="{% static 'assets_home/images/demos/demo-22/gti-logo.png' %}" alt="Molla Logo" width="85" height="5">
                         </a>
+
                     </div><!-- End .header-left -->
 
                     <div class="header-center">
@@ -81,18 +112,18 @@
                         </div><!-- End .header-search -->
                     </div>
 
-                    <div class="header-right" style="margin-right:30px;">
-
-                        <a href="{% url 'wishlist' %}" class="wishlist-link">
-                            <i class="icon-heart-o" id="id_wishlist"></i>
-                            {% if wishlist_count %}
-                            <span class="wishlist-count" id="id_wishlist_count">{{ wishlist_count }}</span>
-                            {% else %}
-                            <span class="wishlist-count" id="id_wishlist_count">0</span>
-                            {% endif %}
-                        </a>
-
-                        <div class="dropdown cssart-dropdown">
+                    <div class="header-right" style="">
+                        <div class="dropdown cart-dropdown">
+                            <a href="{% url 'wishlist' %}" class="wishlist-link dropdown-toggle">
+                                <i class="icon-heart-o" id="id_wishlist"></i>
+                                {% if wishlist_count %}
+                                <span class="wishlist-count" id="id_wishlist_count">{{ wishlist_count }}</span>
+                                {% else %}
+                                <span class="wishlist-count" id="id_wishlist_count">0</span>
+                                {% endif %}
+                            </a>
+                        </div>
+                        <div class="dropdown cart-dropdown">
                             <a href="{% url 'cart' %}" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
                                 <i class="icon-shopping-cart" id="id_cart"></i>
                                 {% if cart_count %}
@@ -276,7 +307,7 @@
                                         }
                                     }
                                 }'>
-                                <div class="intro-slide banner-lg" style="background-image: url({% static 'assets/images/demos/demo-22/slider/slide-1.jpg' %});">
+                                <div class="intro-slide banner-lg" style="background-image: url({% static 'assets_home/images/demos/demo-22/slider/slide-1.jpg' %});">
                                     <div class="intro">
                                         <div class="title">
                                             <a>{% trans 'Accord du jour'%}</a>
@@ -290,7 +321,7 @@
                                     </div>
                                 </div><!-- End .intro-slide -->
 
-                                <div class="intro-slide banner-lg" style="background-image: url({% static 'assets/images/demos/demo-22/slider/slide-2.jpg' %});">
+                                <div class="intro-slide banner-lg" style="background-image: url({% static 'assets_home/images/demos/demo-22/slider/slide-2.jpg' %});">
                                     <div class="intro">
                                         <div class="title">
                                             <a>{% trans 'autorisation' %}</a>
@@ -312,7 +343,7 @@
                         </div><!-- End .intro-slider-container -->
                     </div>
                     <div class="col-lg-4 banner">
-                        <div class="col-12" style="background-image: url({% static 'assets/images/demos/demo-22/slider/banner-1.jpg' %})">
+                        <div class="col-12" style="background-image: url({% static 'assets_home/images/demos/demo-22/slider/banner-1.jpg' %})">
                             <div class="intro">
                                 <div class="title">
                                     <h3>{% trans 'Nouvelles arrivages' %}</h3>
@@ -325,7 +356,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12" style="background-image: url({% static 'assets/images/demos/demo-22/slider/banner-2.jpg' %})">
+                        <div class="col-12" style="background-image: url({% static 'assets_home/images/demos/demo-22/slider/banner-2.jpg' %})">
                             <div class="intro">
                                 <div class="title">
                                     <h2>{% trans 'extérieure' %}</h2>
@@ -338,10 +369,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12" style="background-image: url({% static 'assets/images/demos/demo-22/slider/banner-3.jpg' %})">
+                        <div class="col-12" style="background-image: url({% static 'assets_home/images/demos/demo-22/slider/banner-3.jpg' %})">
                             <div class="intro">
                                 <div  class="title">
-                                    <h3 class="highlight">{% trans 'économiser 20%' %}</h3><h3>{% trans 'ou plus' %}</h3>
+                                    <h3 class="highlight">{% trans 'économiser 20%' %}</h3><h3>&nbsp;{% trans 'ou plus' %}</h3>
                                 </div>
                                 <div class="content">
                                     <h3>{% trans 'offres & économies' %}</h3>
@@ -519,7 +550,6 @@
 
                                                     <div class="product-action">
                                                         <a href="#" onclick="addCart( '{{ produit.produit.pk }}' ); return false;" class="btn-product btn-cart" title="Add to cart"><span>{% trans 'ajouter au panier' %}</span></a>
-
                                                     </div><!-- End .product-action -->
                                                 </div><!-- End .product-footer -->
                                             </div><!-- End .product -->
@@ -611,7 +641,7 @@
                 </div><!-- End .container -->
             </div>
 
-            <div class="newsletter" style="background-image: url({% static 'assets/images/demos/demo-22/newsLetter/background.jpg' %});">
+            <div class="newsletter" style="background-image: url({% static 'assets_home/images/demos/demo-22/newsLetter/background.jpg' %});">
                 <div class="container">
                     <div class="subscribe text-center">
                         <div class="intro">
@@ -774,7 +804,7 @@
             </div>
 
             <div class="container bannerad">
-                <div class="banner-lg"  style="background-image: url({% static 'assets/images/demos/demo-22/bannerad/background.jpg' %});">
+                <div class="banner-lg"  style="background-image: url({% static 'assets_home/images/demos/demo-22/bannerad/background.jpg' %});">
                     <div class="price">
                         <h3 class="highlight">{% trans 'A partir de' %}</h3><h3>$39</h3><sup class="highlight">,99</sup>
                     </div>
@@ -816,11 +846,11 @@
                                 <h4 class="widget-title">{% trans 'Liens utiles' %}</h4><!-- End .widget-title -->
 
                                 <ul class="widget-list">
-                                    <li><a href="about.html">{% trans 'A propos de GTI' %}</a></li>
+                                    <li><a href="{% url 'about' %}">{% trans 'A propos de GTI' %}</a></li>
                                     <li><a href="#">{% trans 'Comment acheter à GTI' %}</a></li>
-                                    <li><a href="faq.html">FAQ</a></li>
-                                    <li><a href="contact.html">{% trans 'Contacter nous' %}</a></li>
-                                    <li><a href="login.html">{% trans 'Se connecter' %}</a></li>
+                                    <li><a href="{% url 'contact' %}">FAQ</a></li>
+                                    <li><a href="{% url 'contact' %}">{% trans 'Contacter nous' %}</a></li>
+                                    <li><a href="#signin-modal"  data-toggle="modal">{% trans 'Se connecter' %}</a></li>
                                 </ul><!-- End .widget-list -->
                             </div><!-- End .widget -->
                         </div><!-- End .col-sm-6 col-lg-3 -->
@@ -842,32 +872,17 @@
 
                         <div class="col-sm-6 col-lg-3">
                             <div class="widget">
-                                <h4 class="widget-title">{% trans 'Mon compte' %}</h4><!-- End .widget-title -->
+                                <h4 class="{% url 'my_profil' %}">{% trans 'Mon compte' %}</h4><!-- End .widget-title -->
 
                                 <ul class="widget-list">
-                                    <li><a href="#">{% trans 'Se connecter' %}</a></li>
-                                    <li><a href="cart.html">{% trans 'Voir le panier' %}</a></li>
-                                    <li><a href="#">{% trans 'Ma liste de favoris' %}</a></li>
-                                    <li><a href="#">{% trans 'Suivre ma commande' %}</a></li>
-                                    <li><a href="#">{% trans 'Aide' %}</a></li>
+                                    <li><a href="#signin-modal" data-toggle="modal">{% trans 'Se connecter' %}</a></li>
+                                    <li><a href="{% url 'cart' %}">{% trans 'Voir le panier' %}</a></li>
+                                    <li><a href="{% url 'wishlist' %}">{% trans 'Ma liste de favoris' %}</a></li>
+                                    <li><a href="{% url  'invoice' %}">{% trans 'Suivre ma commande' %}</a></li>
+                                    <li><a href="{% url 'contact' %}">{% trans 'Aide' %}</a></li>
                                 </ul><!-- End .widget-list -->
                             </div><!-- End .widget -->
                         </div><!-- End .col-sm-6 col-lg-3 -->
-                        <div class="" style="margin-left:1050px;">
-                            <select onchange="Translate(event);" id="mySelect">
-                                {% if languages.second == 'Français' %}
-                                <option value="fr">{{ languages.second }}</option>
-                                {% else %}
-                                <option value="en">{{ languages.second }}</option>
-                                {% endif %}
-
-                                {% if languages.selected == 'English' %}
-                                <option value="en" selected >{{ languages.selected }}</option>
-                                {% else %}
-                                <option value="fr" selected >{{ languages.selected }}</option>
-                                {% endif %}
-                            </select>
-                    </div>
                     </div><!-- End .row -->
                 </div><!-- End .container -->
             </div><!-- End .footer-middle -->
@@ -1119,7 +1134,7 @@
     </div><!-- End .modal -->
 
 
-    {% if not username %}
+
     <div class="container newsletter-popup-container mfp-hide" id="newsletter-popup-form">
         <div class="row justify-content-center">
             <div class="col-10">
@@ -1150,7 +1165,7 @@
             </div>
         </div>
     </div>
-    {% endif %}
+
  	<!-- Plugins JS File -->
 
     <script src="{% static 'assets_home/js/jquery.min.js' %}"></script>

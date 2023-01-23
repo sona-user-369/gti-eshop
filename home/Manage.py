@@ -222,7 +222,6 @@ class ExtendedDecoder(JSONDecoder):
 
 def get_product_quantity(_dict):
     """use for key sort a list of dict. It returns the quantity of product"""
-
     return _dict['quantite']
 
 

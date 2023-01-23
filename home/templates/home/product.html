@@ -2,8 +2,14 @@
 
 {% load static %}
 {% block title %}
+{% load i18n %}
     <title>GTI-Produit</title>
 {% endblock %}
+
+{% block meta_tags %}
+<meta property="og:image" content="{{ produit.image1.url }}">
+{% endblock %}
+
 {% block style %}
 
 <style>
@@ -187,6 +193,10 @@
 
                                         <div class="social-icons social-icons-sm">
                                             <span class="social-label">Share:</span>
+                                            {% load social_share %}
+                                            <a href="https://api.whatsapp.com/send?text={{ request.build_absolute_uri }}&photo={{ produit.image1.url }}" class="social-icon" title="Whatsapp"><i class="icon-whatsapp"></i></a>
+                                            <a href="https://telegram.me/share/url?url={{ request.build_absolute_uri }}&text=Bonjour&file={{ produit.image1.url }}" class="social-icon" target="_blank"><i class="icon-telegram"></i></a>
+                                            <a href="https://api.telegram.org/bot5874242082:AAH_aAKOHmzdIUNVfQ_qTqL88PnxtxPgmlw/sendPhoto?photo={{ produit.image1.url }}&chat_id=5669217982" class="social-icon" target="_blank"><i class="icon-telegram"></i></a>
                                             <a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
                                             <a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
                                             <a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
@@ -311,7 +321,7 @@
 
                                         <div class="reply">
                                             <div class="heading">
-                                                <h3 class="title">{% trans 'Laisser une réponse %}'</h3><!-- End .title -->
+                                                <h3 class="title">{% trans 'Laisser une réponse' %}</h3><!-- End .title -->
                                                 <p class="title-desc">{% trans 'Votre adresse email ne sera pas publiée. Les champs requis sont indiqués * ' %} </p>
                                             </div><!-- End .heading -->
 
