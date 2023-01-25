@@ -23,30 +23,31 @@ class ProfilSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'email', 'contact')
 
     def validate_contact(self, data):
-        try :
+        try:
             int(data)
             convert_contact = 1
-        except :
+        except:
             convert_contact = 0
 
-        if not convert_contact :
+        if not convert_contact:
             raise serializers.ValidationError("Entrer un contact valide")
 
         return data
 
+
 class FillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Utilisateurs
-        fields = ('first_name', 'last_name', 'email','password', 'contact')
+        fields = ('first_name', 'last_name', 'email', 'password', 'contact')
 
     def validate_contact(self, data):
-        try :
+        try:
             int(data)
             convert_contact = 1
-        except :
+        except:
             convert_contact = 0
 
-        if not convert_contact :
+        if not convert_contact:
             raise serializers.ValidationError("Entrer un contact valide")
 
         return data
@@ -55,13 +56,14 @@ class FillSerializer(serializers.ModelSerializer):
 class ForgotPasswordSerializer(serializers.ModelSerializer):
     class Meta:
         model = Utilisateurs
-        fields =('email',)
+        fields = ('email',)
 
     def validate_email(self, data):
         contain_email = Utilisateurs.objects.filter(email=data)
-        if len(contain_email) !=1 :
+        if len(contain_email) != 1:
             raise serializers.ValidationError("L'email entre néxiste pas")
         return data
+
 
 class SubscribeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -69,11 +71,11 @@ class SubscribeSerializer(serializers.ModelSerializer):
         fields = ('email',)
 
 
-
 class ChangeSerializer(serializers.Serializer):
     password = serializers.CharField()
     Newpassword = serializers.CharField()
     Confpassword = serializers.CharField()
+
 
 class ForgotSerializer(serializers.Serializer):
     password = serializers.CharField()
@@ -83,38 +85,28 @@ class ForgotSerializer(serializers.Serializer):
         new = data["password"]
         conf = data["confpassword"]
 
-        if new != conf :
+        if new != conf:
             return serializers.ValidationError("Les mots de passe ne se correspondent pas")
 
         return data
 
 
-
-
-
-
-
-
-
-
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Utilisateurs
-        fields = ('first_name','last_name', 'email', 'password','contact')
-
+        fields = ('first_name', 'last_name', 'email', 'password', 'contact')
 
     def validate_contact(self, data):
-        try :
+        try:
             int(data)
             convert_contact = 1
-        except :
+        except:
             convert_contact = 0
 
-        if not convert_contact :
+        if not convert_contact:
             raise serializers.ValidationError("Entrer un contact valide")
 
         return data
-
 
     def validate_email(self, data):
         contain_email = Utilisateurs.objects.filter(email=data)
@@ -123,14 +115,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return data
 
 
-
-
-
-
-
-
-class UserLoginSerialiser(serializers.ModelSerializer) :
-    class Meta :
+class UserLoginSerialiser(serializers.ModelSerializer):
+    class Meta:
         model = Utilisateurs
         fields = ('email', 'password')
 
@@ -138,25 +124,21 @@ class UserLoginSerialiser(serializers.ModelSerializer) :
         global contain_email
         contain_email = Utilisateurs.objects.filter(email=data)
 
-
-        if len(contain_email) != 1 :
+        if len(contain_email) != 1:
             raise serializers.ValidationError("Le mot de passe ou l'email est incorrect")
-        else :
+        else:
             for user in contain_email:
                 if user.is_active == 0:
                     raise serializers.ValidationError("Le mot de passe ou l'email est incorrect")
 
-
-
         return data
-
 
     def validate_password(self, data):
         if len(contain_email) != 1:
             raise serializers.ValidationError("Le mot de passe ou l'email est incorrect")
-        else :
+        else:
             user = contain_email
-        if user is not None :
+        if user is not None:
             for util in user:
 
                 if not check_password(data, str(util.password)) and util.password != data:
@@ -164,20 +146,20 @@ class UserLoginSerialiser(serializers.ModelSerializer) :
 
         return data
 
+
 class ContactSerilalizer(serializers.ModelSerializer):
     class Meta:
         model = Contact
         fields = ('name', 'email', 'phone', 'subject', 'message')
 
-
     def validate_phone(self, data):
-        try :
+        try:
             int(data)
             convert_contact = 1
-        except :
+        except:
             convert_contact = 0
 
-        if not convert_contact :
+        if not convert_contact:
             raise serializers.ValidationError("Entrer un contact valide")
 
         return data
