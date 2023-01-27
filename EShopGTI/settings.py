@@ -10,14 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
-
 from pathlib import Path
 import os
 import dj_database_url
 from django.utils.translation import gettext_lazy as _
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -29,7 +28,6 @@ SECRET_KEY = 'django-insecure-3el(z+62@bpyp^k+$gm0v#m^8fi3ptm+)ukl-8-vv8dzq2o&%2
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -82,18 +80,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'EShopGTI.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':   'DataGTI',
-        'USER':   'root',
-        'PASSWORD':  '',
-        'HOST':   '127.0.0.1',
-        'PORT':  '3306',
+        'NAME': 'DataGTI',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
     }
 }
 
@@ -108,8 +105,8 @@ DATABASES = {
 #     }
 # }
 
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
+# db_from_env = dj_database_url.config(conn_max_age=500)
+# DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -130,16 +127,16 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTHENTICATION_BACKENDS = (
-        'django.contrib.auth.backends.ModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
 
-    )
+)
 
-#REST_FRAMEWORK = {
+# REST_FRAMEWORK = {
 #    'DEFAULT_PARSER_CLASSES' : (
- #       'rest_framework.parsers.JSONParser',
-  #      'rest_framework.parsers.MultiPartParser'
-  #  )
-#}
+#       'rest_framework.parsers.JSONParser',
+#      'rest_framework.parsers.MultiPartParser'
+#  )
+# }
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -153,14 +150,13 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-
 SITE_ID = 2
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 SITE_HOSTNAME = '127.0.0.1:8000'
-#SITE_HOSTNAME = 'donadavak.pythonanywhere.com'
+# SITE_HOSTNAME = 'donadavak.pythonanywhere.com'
 
 TOKEN_EXPIRED_AFTER_SECONDS = 300
 
@@ -202,33 +198,32 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'home.Utilisateurs'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-#EMAIL_HOST = 'smtp.gmail.com'
-#EMAIL_USE_TLS = True
-#EMAIL_PORT = 587
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_USE_TLS = True
+# EMAIL_PORT = 587
 EMAIL_HOST_USER = "my@login"
 EMAIL_HOST_PASSWORD = "mypassword"
 
-
-#Google auth
+# Google auth
 GP_CLIENT_ID = '336527412683-1cod44ef0l3l2ra6ild3mhjb9kssmq84.apps.googleusercontent.com'
 GP_CLIENT_SECRET = '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'
 
-#MailChimp Log
+# MailChimp Log
 MAILCHIMP_API_KEY = "b54259e23f5bc7ef762fb3a520164793"
-MAILCHIMP_DATA_CENTER ="us21"
+MAILCHIMP_DATA_CENTER = "us21"
 MAILCHIMP_EMAIL_LIST_ID = "d25b0ebae7"
-#EMAIL_USE_TLS = True
+# EMAIL_USE_TLS = True
 
-#MEDIA TOOLS
+# MEDIA TOOLS
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'images')
 MEDIA_URL = '/images/'
 
-ELASTICSEARCH_DSL={
+ELASTICSEARCH_DSL = {
     'default': {
         'hosts': '127.0.0.1:9200'
     },
 }
 
 WHITENOISE_USE_FINDERS = True
-#STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

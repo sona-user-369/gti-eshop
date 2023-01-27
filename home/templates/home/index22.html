@@ -92,7 +92,7 @@
                                 {% endif %}
                             </select>
                         </div>
-                        <a href="index.html" class="logo">
+                        <a href="#" class="logo">
                             <img src="{% static 'assets_home/images/demos/demo-22/gti-logo.png' %}" alt="Molla Logo" width="85" height="5">
                         </a>
 
@@ -168,7 +168,7 @@
 
                                 <div class="dropdown-cart-action">
                                     <a href="{% url 'cart' %}" class="btn btn-success">{% trans 'Voir Panier' %}</a>
-                                    <a href="#" onclick="gotToShip() ; return false ;" class="btn btn-outline-success"><span>{% trans 'Commander' %}</span><i class="icon-long-arrow-right"></i></a>
+                                    <a href="#" onclick="goToShip() ; return false ;" class="btn btn-outline-success"><span>{% trans 'Commander' %}</span><i class="icon-long-arrow-right"></i></a>
                                 </div><!-- End .dropdown-cart-total -->
                             </div><!-- End .dropdown-menu -->
                             {% endif %}
@@ -665,15 +665,15 @@
             <div class="container banner-container">
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-6 banner-lg">
-                        <a href="category.html">
+                        <a href="{% url 'category' %}">
                             <img src="{% static 'assets_home/images/demos/demo-22/banner/banner-1.jpg' %}">
                         </a>
                         <div class="banner-content">
                             <div class="title">
-                                <a href="category.html">{% trans "économiser jusqu'à 30%" %}</a>
+                                <a href="">{% trans "économiser jusqu'à 30%" %}</a>
                             </div>
                             <div class="content">
-                                <a href="category.html">
+                                <a href="{% url 'category' %}">
                                     <h3 class="highlight">{% trans 'Les marques premium' %}</h3>
                                     <h4>{% trans 'pour les travaux les plus difficiles' %}</h4>
                                 </a>
@@ -685,15 +685,15 @@
                     </div>
 
                     <div class="col-lg-6 col-md-6 col-sm-6 banner-lg">
-                        <a href="category.html">
+                        <a href="{% url 'category' %}">
                             <img src="{% static 'assets_home/images/demos/demo-22/banner/banner-2.jpg' %}">
                         </a>
                         <div class="banner-content">
                             <div class="title">
-                                <a href="category.html">{% trans 'Meilleures ventes en outils' %}</a>
+                                <a href="{% url 'category' %}">{% trans 'Meilleures ventes en outils' %}</a>
                             </div>
                             <div class="content">
-                                <a href="category.html">
+                                <a href="{% url 'category' %}">
                                     <h3>{% trans 'outils professionnels' %}</h3>
                                     <h4 class="highlight">{% trans 'Économisez sur les meilleures ventes' %}</h4>
                                 </a>
@@ -889,7 +889,7 @@
 
             <div class="footer-bottom">
                 <div class="container">
-                    <p class="footer-copyright">{% trans  'Copyright © 2019 Green Tech Innovation. Tout droits réservés' %}</p><!-- End .footer-copyright -->
+                    <p class="footer-copyright">{% trans  'Copyright © ' %} {{copywrite_year}} {% trans 'Green Tech Innovation. Tout droits réservés' %}</p><!-- End .footer-copyright -->
                     <figure class="footer-payments">
                         <img src="{% static 'assets_home/images/payments.png' %}" alt="Payment methods" width="272" height="20">
                     </figure><!-- End .footer-payments -->
@@ -1029,13 +1029,11 @@
                                     <form action="#" method="post" class="" id="register_form">
                                         {% csrf_token %}
                                         {% for field in Register %}
-                                        <div class="form-group has-error">
+                                        <div class="form-group">
                                             {{field.label_tag}}
                                             {{ field }}
 
-                                            {% if field.id_for_label == 'id_username' %}
-                                            <div class="invalid-feedback">{% trans "Ce nom d'utilisateur existe deja" %}</div>
-                                            {% endif %}
+
 
                                             {% if field.id_for_label == 'id_contact' %}
                                             <div class="invalid-feedback"><h6 class="text-danger" >{% trans 'Entrer un contact valide' %}</h6></div>
@@ -1376,52 +1374,50 @@
             // catch the form's submit event
             $('#register_form').submit(function () {
                 // create an AJAX call
-                donne = {'data' : $(this).serialize() , 'superuser' : 0 , 'add': 0} ;
+                var ele = document.querySelector('.iti__selected-dial-code');
+                //alert(ele.innerHTML);
+                donne = {'data' : $(this).serialize() , 'superuser' : 0 , 'add': 0, 'dial-code': ele.innerHTML} ;
+
                 $.ajax({
                     data: donne , // get the form data
                     type: $(this).attr('method'), // GET or POST
                     url: "{% url 'register' %}",
                     // on success
                     success: function (response) {
-                        if($('#mova')){
-                        $('#mova').remove();
-                        }
 
-                        if($('#movb')){
-                        $('#movb').remove();
-                        }
-
-                        if($('#movc')){
-                        $('#movc').remove();
-                        }
                         $('input[type="email"]#id_email').removeClass("is-invalid") ;
-                        $('input[type="email"]#id_email').addClass("is-ivalid") ;
-                        document.getElementById('register_form').reset();
+                        $('input[type="email"]#id_email').addClass("is-valid") ;
 
-                        //alert(response.username);
+                        document.getElementById('id_contact').classList.remove('is-invalid');
+                        document.getElementById('id_contact').classList.add('is-valid');
+
+                        document.getElementById('register_form').reset();
+                        
                         swal('Email envoyé', 'Verifier votre email pour confirmer votre inscription', 'success');
                     },
                     // on error
                     error: function (response) {
                         // alert the error if any error occured
 
-                        $('#mova').remove();
-                        $('#movb').remove();
-                        $('#movc').remove();
+
 
                         if(response.responseJSON.email){
                         $('input[type="email"]#id_email').addClass("is-invalid") ;
+                        }else{
+                        $('input[type="email"]#id_email').removeClass("is-invalid") ;
                         }
 
                         if(response.responseJSON.contact){
                         document.getElementById('id_contact').classList.add('is-invalid');
+                        }else{
+                        document.getElementById('id_contact').classList.remove('is-invalid');
                         }
 
 
 
 
-                        alert(response.responseJSON.email);
-                        console.log(response.responseJSON.contact)
+
+                        console.log(response.responseJSON.contact) ;
                     }
                 });
                 return false;
@@ -1577,6 +1573,64 @@
         window.onload = function() {
             inactivityTime();
         }
+
+        function goToShip(){
+		var all_radio = document.getElementsByName('shipping') ;
+		var ship_option = 'No Option' ;
+
+		for (var i=0 ; i< all_radio.length ; i++){
+			if(all_radio[i].checked){
+				if ( all_radio[i].id == 'free-shipping' ){
+					 ship_option = 'Free Shipping' ;
+				}else{
+
+					if(all_radio[i].id == 'standard-shipping'){
+
+						ship_option = 'Standard Shipping' ;
+
+					}else{
+
+						ship_option = 'Express Shipping' ;
+
+					}
+
+				}
+
+			}
+		}
+
+		$.ajax({
+			url: "{% url 'verify_connection' %}",
+
+			success: function(response){
+				$.ajax({
+					url: "{% url 'save_ship_option' %}",
+					data : {'shipping_option' : ship_option },
+
+					success: function(response) {
+						location.href = "{% url 'shipping' %}" ;
+					},
+
+					error: function(response){
+							var name = '' ;
+						for(var i=0; i< response.length ; i++){
+							name += ' '+response[i] ;
+						}
+						swal("Désolé", 'les produits' + name + ' sont en rupture de stock', 'warning') ;
+
+					}
+
+				});
+			},
+
+			error: function(response){
+				document.location.href = "{% url 'home' %}";
+			}
+		});
+
+
+	}
+
     </script>
     {% block javascript %}
     <script>

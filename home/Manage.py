@@ -1,5 +1,5 @@
 '''Write by Davakan Donatien'''
-
+import datetime
 from json import JSONDecoder
 import requests
 from django.core.serializers.json import DjangoJSONEncoder
@@ -312,3 +312,9 @@ def select_languages(object):
         all_language = {'selected': 'Français', 'second': 'English'}
 
     return all_language
+
+
+def get_copywrite_year():
+    date = datetime.datetime.utcnow()
+    year = date.year
+    return year

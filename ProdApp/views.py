@@ -10,7 +10,7 @@ from django.db import transaction
 from DashBoard.Manage import get_best_sellers_time, stats_customer, stats_revenu, stats_sales, stats_chart
 from EShopGTI.settings import SITE_HOSTNAME
 from home.Manage import verify_user
-from .generate import generate_invoice
+from .generate import generate_invoice, add_logo_to_img
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated
@@ -592,6 +592,11 @@ def add_product(request):
             else:
 
                 product = product_serializer.save()
+                try:
+                    add_logo_to_img(product.image1.url)
+                except IsADirectoryError:
+                    pass
+
                 data = 'http://' + SITE_HOSTNAME + '/product/' + str(product.pk)
                 product_code = qrcode.make(data)
                 id_of_product = str(product.pk)
@@ -818,7 +823,7 @@ def save_shipping_option(request):
         get_user_object = Utilisateurs.objects.get(email=get_user['email'])
         get_cart_object = Panier.objects.get(utilisateur=get_user_object)
         for product in get_cart_object.produit_set.all():
-            quantity_in_cart = PanierProduit.objects.get(panier=get_cart_object, produit=product).quantite
+            quantity_in_cart = PanierProduit.objects.get(panier=get_cart_object, product=product).quantite
             product_quantite = product.stock
             if product_quantite < quantity_in_cart:
                 products_cannot_by.append(product.nom)

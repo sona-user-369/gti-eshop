@@ -23,8 +23,9 @@ class ProfilSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'email', 'contact')
 
     def validate_contact(self, data):
+        data_remove_bracket = data.replace('+', '')
         try:
-            int(data)
+            int(data_remove_bracket)
             convert_contact = 1
         except:
             convert_contact = 0
@@ -41,8 +42,9 @@ class FillSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'email', 'password', 'contact')
 
     def validate_contact(self, data):
+        data_remove_bracket = data.replace('+', '')
         try:
-            int(data)
+            int(data_remove_bracket)
             convert_contact = 1
         except:
             convert_contact = 0
@@ -97,8 +99,12 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'email', 'password', 'contact')
 
     def validate_contact(self, data):
+        print(data)
+
+        data_remove_bracket = data.replace('+', '')
+
         try:
-            int(data)
+            int(data_remove_bracket)
             convert_contact = 1
         except:
             convert_contact = 0
@@ -153,8 +159,9 @@ class ContactSerilalizer(serializers.ModelSerializer):
         fields = ('name', 'email', 'phone', 'subject', 'message')
 
     def validate_phone(self, data):
+        data_remove_bracket = data.replace('+', '')
         try:
-            int(data)
+            int(data_remove_bracket)
             convert_contact = 1
         except:
             convert_contact = 0

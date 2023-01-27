@@ -34,6 +34,7 @@ def home(request):
     Login = LoginForm()
     categories = get_categorie(request)
     languages = select_languages(request)
+    copywrite_year = get_copywrite_year()
 
     # Getting recents products
     recent_products = get_recent_products()
@@ -60,6 +61,7 @@ def home(request):
                'recent': recent_products,
                'best_sellers': best_seller_products,
                'languages': languages,
+               'copywrite_year' : copywrite_year,
                }
 
     return render(request, 'home/index22.html', context)
@@ -124,6 +126,7 @@ def activate_forgout(request, uidb64, token):
 
 
 def forgout_pass(request):
+    copywrite_year = get_copywrite_year()
     languages = select_languages(request)
     forgot_form = ForgotForm()
     try:
@@ -136,7 +139,7 @@ def forgout_pass(request):
     else:
         request.session["link_is_clicked"] = 0
 
-    return render(request, 'home/forgotPassword.html', {'ForgotForm': forgot_form,'languages': languages})
+    return render(request, 'home/forgotPassword.html', {'ForgotForm': forgot_form,'languages': languages,'copywrite_year': copywrite_year})
 
 
 #####Logout User
@@ -154,6 +157,7 @@ def delete_user(request):
 
 
 def product(request, id):
+    copywrite_year = get_copywrite_year()
     id_produit = str(id)
     id_produit = id_produit.replace('-', '')
     produit = Produit.objects.get(pk=id_produit)
@@ -239,6 +243,7 @@ def product(request, id):
                'avis_count': len(avis_more),
                'note': note,
                'languages': languages,
+               'copywrite_year': copywrite_year,
                }
 
     return render(request, 'home/product.html', context)
@@ -255,6 +260,7 @@ def cart(request):
     cart_product = verify_user(request)["cart_product"]
     total = verify_user(request)["total"]
     languages = select_languages(request)
+    copywrite_year = get_copywrite_year()
 
     context = {'Register': Register,
                'Login': Login,
@@ -264,6 +270,7 @@ def cart(request):
                'cart_product': cart_product,
                'total': total,
                'languages': languages,
+               'copywrite_year': copywrite_year,
 
                }
 
@@ -278,6 +285,7 @@ def test(request):
 
 
 def wishlist(request):
+    copywrite_year = get_copywrite_year()
     Register = RegisterForm()
     Login = LoginForm()
 
@@ -297,6 +305,7 @@ def wishlist(request):
                'wishlist_product': wishlist_product,
                'total': total,
                'languages': languages,
+               'copywrite_year': copywrite_year,
                }
     if not user:
         return redirect('home')
@@ -305,6 +314,7 @@ def wishlist(request):
 
 
 def category(request):
+    copywrite_year = get_copywrite_year()
     languages = select_languages(request)
     product = Produit.objects.filter(is_archive=False)
     categorie = Categorie.objects.all()
@@ -392,7 +402,8 @@ def category(request):
                'page_obj': page_obj,
                'query_not_match': query_not_match,
                'languages': languages,
-               'total_products': len(product)
+               'total_products': len(product),
+               'copywrite_year': copywrite_year
                }
 
     return render(request, 'home/category.html', context)
@@ -410,6 +421,7 @@ def retrieve_categorie(request, id):
 
 
 def search_product(request):
+    copywrite_year = get_copywrite_year()
     categorie = Categorie.objects.all()
     categorie_products = []
     product_info = []
@@ -471,6 +483,7 @@ def search_product(request):
                'categorie': categorie_products,
                'page_obj': page_obj,
                'languages': languages,
+               'copywrite_year': copywrite_year
                }
 
     return render(request, 'home/category.html', context)
@@ -479,7 +492,7 @@ def search_product(request):
 def about(request):
     Register = RegisterForm()
     Login = LoginForm()
-
+    copywrite_year = get_copywrite_year()
     user = verify_user(request)["user"]
     cart_count = verify_user(request)["cart_total"]
     wishlist_count = verify_user(request)["wishlist_total"]
@@ -497,9 +510,10 @@ def about(request):
                'wishlist_product': wishlist_product,
                'total': total,
                'languages': languages,
+               'copywrite_year': copywrite_year
                }
 
-    return render(request, 'home/about2.html')
+    return render(request, 'home/about2.html', context)
 
 
 def contact(request):
@@ -512,6 +526,7 @@ def contact(request):
     cart_product = verify_user(request)["cart_product"]
     total = verify_user(request)["total"]
     languages = select_languages(request)
+    copywrite_year = get_copywrite_year()
     context = {'Register': Register,
                'Login': Login,
                'ContactEnter': ContactEnter,
@@ -521,6 +536,7 @@ def contact(request):
                'cart_product': cart_product,
                'total': total,
                'languages': languages,
+               'copywrite_year': copywrite_year
                }
 
     return render(request, 'home/contact.html', context)
@@ -549,6 +565,7 @@ def profil(request):
     cart_product = verify_user(request)["cart_product"]
     total = verify_user(request)["total"]
     languages = select_languages(request)
+    copywrite_year = get_copywrite_year()
 
     context = {'Register': Register,
                'Login': Login,
@@ -560,6 +577,7 @@ def profil(request):
                'wishlist_product': wishlist_product,
                'total': total,
                'languages': languages,
+               'copywrite_year': copywrite_year,
                }
 
     return render(request, 'home/OtherProfil.html', context)
@@ -661,6 +679,7 @@ def fill(request):
     FillForm = RegisterForm(request.session["google"])
     Register = RegisterForm()
     Login = LoginForm()
+    copywrite_year = get_copywrite_year()
 
     user = verify_user(request)["user"]
     cart_count = verify_user(request)["cart_total"]
@@ -680,12 +699,14 @@ def fill(request):
                'wishlist_product': wishlist_product,
                'total': total,
                'languages': languages,
+               'copywrite_year': copywrite_year,
                }
 
     return render(request, 'home/Fillup.html', context)
 
 
 def password_change(request):
+    copywrite_year = get_copywrite_year()
     user = verify_user(request)["user"]
     if not user:
         return redirect('home')
@@ -711,6 +732,7 @@ def password_change(request):
                'wishlist_product': wishlist_product,
                'total': total,
                'languages': languages,
+               'copywrite_year': copywrite_year
                }
 
     return render(request, 'home/PasswordChange.html', context)
@@ -730,6 +752,7 @@ def invoice_order(request):
     Register = RegisterForm()
     Login = LoginForm()
     languages = select_languages(request)
+    copywrite_year = get_copywrite_year()
 
     context = {'Register': Register,
                'Login': Login,
@@ -741,6 +764,7 @@ def invoice_order(request):
                'total': total,
                'invoice': invoice,
                'languages' : languages,
+               'copywrite_year': copywrite_year,
                }
     print(invoice)
     return render(request, 'home/invoice.html', context)
@@ -760,6 +784,8 @@ def shipping(request):
     total = verify_user(request)["total"]
     ship_form = ShipForm()
     languages = select_languages(request)
+    copywrite_year = get_copywrite_year()
+
     context = {'ShipForm': ship_form,
                'username': user,
                'cart_count': cart_count,
@@ -768,7 +794,8 @@ def shipping(request):
                'wishlist_product': wishlist_product,
                'product': product,
                'total': total,
-               'languages': languages
+               'languages': languages,
+               'copywrite_year': copywrite_year
                }
 
     return render(request, 'home/shipping.html', context)

@@ -49,7 +49,7 @@ def registerUser(request):
                     'last_name': liste[1],
                     'email': format_email,
                     'password': liste[3],
-                    'contact': liste[4],
+                    'contact': request.data['dial-code']+liste[4],
                     }
         RegisterSerialiser = UserRegisterSerializer(data=data_got)
         if RegisterSerialiser.is_valid() :

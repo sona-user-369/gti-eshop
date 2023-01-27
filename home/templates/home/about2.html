@@ -1,6 +1,7 @@
 {% extends 'home/index22.html' %}
 
 {% load static %}
+{% load i18n %}
 
 {% block title %}
     <title>GTI-A propos</title>
@@ -31,9 +32,9 @@
                             <div class="about-text text-center mt-3">
                                 <h2 class="title text-center mb-2">Who We Are</h2><!-- End .title text-center mb-2 -->
                                 <p>Sed pretium, ligula sollicitudin laoreet viverra, tortor libero sodales leo, eget blandit nunc tortor eu nibh. Suspendisse potenti. Sed egestas, ante et vulputate volutpat, uctus metus libero eu augue. Morbi purus libero, faucibus adipiscing, commodo quis, gravida id, est. Sed lectus. Praesent elementum hendrerit tortor. Sed semper lorem at felis. </p>
-                                <img src="assets/images/about/about-2/signature.png" alt="signature" class="mx-auto mb-5">
+                                <img src="{% static 'assets_home/images/about/about-2/signature.png' %}" alt="signature" class="mx-auto mb-5">
 
-                                <img src="assets/images/about/about-2/img-1.jpg" alt="image" class="mx-auto mb-6">
+                                <img src="{% static 'assets_home/images/about/about-2/img-1.jpg' %}" alt="image" class="mx-auto mb-6">
                             </div><!-- End .about-text -->
                         </div><!-- End .col-lg-10 offset-1 -->
                     </div><!-- End .row -->

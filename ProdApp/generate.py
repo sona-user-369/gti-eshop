@@ -2,6 +2,10 @@
 import os
 
 from reportlab.pdfgen import canvas
+import os
+from PIL import (Image,
+                 ImageFont,
+                 ImageDraw)
 
 def generate_invoice(pattern):
 
@@ -136,3 +140,30 @@ data_invoice = {'id': 'cpm1',
             }
 
 #print(type(generate_invoice(data_invoice)))
+
+def add_logo_to_img(file_path):
+
+    LOGO_FILENAME = 'images/logo.png'
+    logoIm = Image.open(LOGO_FILENAME).convert("RGBA")
+    default_font_size = 10
+    # text = ''
+    # text_width, text_height = ImageFont.truetype(r'C:\Windows\Fonts\IMPACT.TTF').getsize(text)
+    file = Image.open(file_path)
+    width, height = file.size
+
+    font = ImageFont.truetype('images/IMPACT.TTF', 15)
+
+    sLogo = logoIm.resize((int(width / 9), int(height / 9)))
+    sLogoWidth, sLogoHeight = sLogo.size
+
+    # Add the logo.
+    for i in range(sLogoHeight, sLogoHeight + 200, sLogoHeight):
+        file.paste(sLogo, (width - i, height - sLogoHeight), sLogo)
+
+    draw = ImageDraw.Draw(file)
+    draw.text((10, 10), 'Green Tech Innovation ©', font=font, fill=(128, 128, 128))
+
+    file.save(file_path)
+
+
+
