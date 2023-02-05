@@ -371,10 +371,10 @@
             $('#form_product').submit(function () {
                 // create an AJAX call
 
-                $.ajax({
-                      url: "{% url 'verify_connection' %}",
+                // $.ajax({
+                //       url: "{% url 'verify_connection' %}",
 
-                      success: function(response){
+                //       success: function(response){
 
                           $.ajax({
                             data: new FormData(this) , // get the form data
@@ -416,15 +416,15 @@
                             }
                         });
 
-                      },
+                //       },
 
-                      error: function(response){
+                //       error: function(response){
 
-                        document.location.href = "{% url 'login_admin' %}" ;
+                //         document.location.href = "{% url 'login_admin' %}" ;
 
-                      }
+                //       }
 
-                });
+                // });
 
 
                 return false;

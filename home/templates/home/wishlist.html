@@ -26,7 +26,7 @@
 
             <div class="page-content">
             	<div class="container">
-					{% if wishlist_product %}
+					{% if wishlist_count != 0 %}
 					<table class="table table-wishlist table-mobile">
 						<thead>
 							<tr>
@@ -39,26 +39,26 @@
 						</thead>
 
 						<tbody>
-							{% for p in wishlist_product.products %}
-							<tr id="row{{ p.produit.pk }}">
+							{% for p in wishlist_product %}
+							<tr id="row{{ p.id }}">
 								<td class="product-col">
 									<div class="product">
 										<figure class="product-media">
 											<a href="#">
-												<img src="{{ p.produit.fields.image1 }}" alt="Product image">
+												<img src="{{ p.image }}" alt="Product image">
 											</a>
 										</figure>
 
 										<h3 class="product-title">
-											<a href="#">{{ p.produit.fields.nom }}</a>
+											<a href="#">{{ p.nom }}</a>
 										</h3><!-- End .product-title -->
 									</div><!-- End .product -->
 								</td>
-								<td class="price-col">${{ p.produit.fields.prix }}</td>
+								<td class="price-col">${{ p.prix }}</td>
 								{% if p.in_stock %}
 								<td class="stock-col"><span class="in-stock">In stock</span></td>
 								<td class="action-col">
-									<button onclick="addCart('{{p.produit.pk}}');" class="btn btn-block btn-outline-primary-2"><i class="icon-cart-plus"></i>Add to Cart</button>
+									<button onclick="addCartCookie('{{p.id}}');" class="btn btn-block btn-outline-primary-2"><i class="icon-cart-plus"></i>Add to Cart</button>
 								</td>
 								{% else %}
 								<td class="stock-col"><span class="out-of-stock">Out of stock</span></td>
@@ -66,14 +66,14 @@
 									<button  class="btn btn-block btn-outline-primary-2 disabled">Add to Cart</button>
 								</td>
 								{% endif %}
-								<td class="remove-col"><button onclick="deleteWishlist('{{ p.produit.pk }}' , 'row'+'{{ p.produit.pk }}');" class="btn-remove"><i class="icon-close"></i></button></td>
+								<td class="remove-col"><button onclick="deleteWishlistCookie('{{ p.id }}' , 'row'+'{{ p.id }}');" class="btn-remove"><i class="icon-close"></i></button></td>
 							</tr>
 							{% endfor %}
 
 						</tbody>
 					</table><!-- End .table table-wishlist -->
 					{% else %}
-					<div><h1>Veuillez vous connecter d'abord</h1></div>
+					<div><h1 class="text-center">Votre liste de favoris est vide</h1></div>
 					{% endif %}
 	            	<div class="wishlist-share">
 	            		<div class="social-icons social-icons-sm mb-2">
@@ -94,36 +94,79 @@
 
 {% block javascript %}
 <script type="text/javascript">
-	function addCart(prod){
 
-			$.ajax({
-				url: "{% url 'verify_connection' %}",
+	function addCartCookie(prod){
 
-				success: function( response ){
-					$.ajax({
-						url: "{% url 'add_cart' %}",
-						data:{"id_produit": prod},
-						//type: "POST",
-						success: function( response ){
-							document.getElementById('id_cart_count').innerHTML = response.cart_number ;
-							swal("Ajout au panier!", "Le produit a été bien ajouté au panier!", "success");
+
+                    $.ajax({
+                        url: "{% url 'add_cart_cookie' %}",
+                        data:{"id_produit": prod},
+                        //type: "POST",
+                        success: function( response ){
+                            document.getElementById('id_cart_count').innerHTML = response.cart_number ;
+                            swal("Ajout au panier!", "Le produit a été bien ajouté au panier!", "success");
+
+                        },
+
+                        error: function( response ){
+
+                        }
+
+                    });
+
+
+                    $.ajax({
+						url: "{% url 'verify_connection' %}",
+
+						success: function(response){
+
+							$.ajax({
+								url : "{% url 'update_to_cart_object' %}" ,
+
+								success: function(response){
+
+
+								},
+								error: function(response){
+
+
+								}
+
+							});
 
 						},
+						error: function(response){
 
-						error: function( response ){
+						}
+					});
+
+                    $.ajax({
+						url: "{% url 'verify_connection' %}",
+
+						success: function(response){
+
+							$.ajax({
+								url : "{% url 'update_to_cart_object' %}" ,
+
+								success: function(response){
+
+
+								},
+								error: function(response){
+
+
+								}
+
+							});
+
+						},
+						error: function(response){
 
 						}
 
-					});
-
-				},
-
-				error: function( response ){
-					window.location.reload();
-				}
+					}) ;
 
 
-			});
 
 
 
@@ -170,6 +213,55 @@
 
 
 		}
+
+		function deleteWishlistCookie(prod, id_row){
+
+						$.ajax({
+							url: "{% url 'delete_wishlist_cookie' %}",
+							data:{"id_produit": prod},
+							//type: "POST",
+							success: function( response ){
+
+								document.getElementById('id_wishlist_count').innerHTML = response.wishlist_number ;
+								document.getElementById(id_row).remove();
+								swal("Supprimé!", "Le produit a été bien supprimé de la liste!", "success");
+
+							},
+
+							error: function( response ){
+
+							}
+
+						});
+
+						$.ajax({
+						url: "{% url 'verify_connection' %}",
+
+						success: function(response){
+
+							$.ajax({
+								url : "{% url 'update_to_cart_object' %}" ,
+
+								success: function(response){
+
+
+								},
+								error: function(response){
+
+
+								}
+
+							});
+
+						},
+						error: function(response){
+
+						}
+					});
+
+
+		}
+
 
 
 </script>

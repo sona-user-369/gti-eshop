@@ -25,7 +25,7 @@ urlpatterns = [
     path('', include('home.urls')),
     #path('accounts/', include('allauth.urls')),
     path('link/', include('Applink.urls')),
-    path('extlink/', include('ProdApp.urls')),
+    path('extlink/', include('ProdApp.urls'), ),
     path('administrator/', include('DashBoard.urls')),
 ]
 

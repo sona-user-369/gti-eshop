@@ -107,6 +107,11 @@
 
   <script>
 
+    const input = document.querySelector("#id_contact");
+        window.intlTelInput(input, {
+            separateDialCode: true
+        });
+
     $(document).ready(function () {
             // catch the form's submit event
             $('#register_admin_form').submit(function () {

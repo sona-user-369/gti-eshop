@@ -7,6 +7,7 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name= 'home'),
+    path('', views.flickr_callback, name='flirk'),
     path('all_product', views.category, name="category"),
     path('product/<id>', views.product, name='product'),
     path('about', views.about, name="about"),

@@ -7,7 +7,7 @@ from .Manage import *
 from dateutil.relativedelta import relativedelta
 
 # Create your views here.
-@decorator_dashboard
+# @decorator_dashboard
 def dashboard(request):
     user = verify_user(request)["user"]
     recent_sales_day = get_recent_sales()[2]
@@ -34,7 +34,8 @@ def dashboard(request):
 
 def page_register(request):
     user = verify_user(request)["user"]
-
+    if user is not None:
+        return redirect('dash')
     register_admin_form = RegisterForm()
 
     context = {'register_form': register_admin_form,
@@ -46,7 +47,8 @@ def page_register(request):
 
 def page_login(request):
     user = verify_user(request)["user"]
-
+    if user is not None:
+        return redirect('dash')
     login_admin_form = LoginForm()
 
     context = {'login_form': login_admin_form,
@@ -72,7 +74,7 @@ def page_profile(request):
 
     return render(request, 'DashBoard/users-profile.html', context)
 
-@decorator_dashboard_ext
+# @decorator_dashboard_ext
 def dashboard_tables(request, intitule):
     user = verify_user(request)["user"]
     context = {}
@@ -134,7 +136,7 @@ def dashboard_tables(request, intitule):
 
     return render(request, 'DashBoard/tables-data.html', context)
 
-@decorator_dashboard_ext
+# @decorator_dashboard_ext
 def dashboard_forms(request, intitule):
     user = verify_user(request)["user"]
     context = {}
@@ -176,7 +178,7 @@ def dashboard_forms(request, intitule):
 
     return render(request, 'DashBoard/forms-data.html', context)
 
-@decorator_dashboard_ext
+# @decorator_dashboard_ext
 def dashboard_forms_update(request, intitule, id):
     user = verify_user(request)["user"]
     context = {}
@@ -226,3 +228,4 @@ def dashboard_forms_update(request, intitule, id):
         return render(request, 'DashBoard/forms-update-data.html', context)
 
     return render(request, 'DashBoard/forms-update-data.html', context)
+

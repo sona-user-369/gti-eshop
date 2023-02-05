@@ -38,6 +38,14 @@ urlpatterns =[
     path('get_revenue', stats_best_revenu, name='get_revenue'),
     path('get_customer', stats_best_customer, name='get_customer'),
     path('get_chart', stats_chart_api, name='get_chart'),
+    path('addcartcookie', add_cart_cookie, name='add_cart_cookie'),
+    path('deletecartcookie', delete_cart_cookie, name='delete_cart_cookie'),
+    path('update_cart_cookie', update_cart_cookie, name='update_cart_cookie'),
+    path('update_to_cart_object', update_to_cart_object, name='update_to_cart_object'),
+    path('add_wishlist_cookie', add_wishlist_cookie, name='add_wishlist_cookie'),
+    path('delete_wishlist_cookie', delete_wishlist_cookie, name='delete_wishlist_cookie'),
+    path('update_to_wishlist_object', update_to_wishlist_object, name='update_to_wishlist_object'),
+    # path('flickr_callback', flickr_callback, name='flickr_callback'),
 
 
 

@@ -7,17 +7,17 @@
     <section class="section">
       {% if type == 'user' %}
       <div class="col-12">
-              <div class="card recent-sales overflow-auto">
+              <div class="card recent-sales overflow-auto" style="margin-left:60px; margin-right:60px;">
 
 
 
-                <div class="card-body">
+                <div class="card-body" >
                   <h5 class="card-title">Utilisateurs <span>| Today</span></h5>
 
-                  <table class="table table-borderless datatable">
+                  <table class="table table-borderless datatable" style="">
                     <thead>
                       <tr>
-                        <th scope="col">#</th>
+
                         <th scope="col">Nom</th>
                         <th scope="col">Prenom</th>
                         <th scope="col">Email</th>
@@ -25,14 +25,14 @@
                         <th scope="col">Super-Utilisateur</th>
                         <th scope="col">Derniere connexion</th>
                         <th scope="col">Date de création</th>
-                        <th scope="col" >Action</th>
+<!--                        <th scope="col" >Action</th>-->
 
                       </tr>
                     </thead>
                     <tbody>
                     {% for field  in table %}
                       <tr>
-                        <th scope="row"><a href="{% url 'dash_forms_update' intitule='user' id=field.user_pk %}">{{ field.user_pk }}</a></th>
+
                         <td>{{ field.user_data.last_name }}</td>
                         <td>{{ field.user_data.first_name }}</td>
                         <td><a href="#" >{{ field.user_data.email }}</a></td>
@@ -40,7 +40,7 @@
                         <td>{{ field.user_data.is_superuser }}</td>
                         <td>{{ field.user_data.last_login }}</td>
                         <td>{{ field.user_data.date_joined }}</td>
-                        <td scope=""><button onclick="deleteUser('{{ field.user_pk }}') ;" class="btn btn-danger" >Supprimer</button></td>
+<!--                        <td scope=""><button onclick="deleteUser('{{ field.user_pk }}') ;" class="btn btn-danger" disabled>Supprimer</button></td>-->
 
 
                       </tr>
@@ -67,12 +67,12 @@
 
 
                 <div class="card-body">
-                  <h5 class="card-title">Utilisateurs <span>| Today</span></h5>
+                  <h5 class="card-title">Categorie <span>| Today</span></h5>
 
                   <table class="table table-borderless datatable">
                     <thead>
                       <tr>
-                        <th scope="col">#</th>
+
                         <th scope="col">Nom</th>
                         <th scope="col">Image</th>
                         <th scope="col">Sous-categorie</th>
@@ -84,17 +84,28 @@
                     <tbody>
                     {% for field  in table %}
 
-                        {% if field.first_sous_categorie %}
+
                           <tr>
-                            <th rowspan="{{ field.len_sous_categorie }}" scope="row"><a href="{% url 'dash_forms_update' intitule='categorie' id=field.categorie_pk %}">{{ field.categorie_pk }}</a></th>
-                            <td rowspan="{{ field.len_sous_categorie }}">{{ field.categorie_data.nom }}</td>
-                            <td rowspan="{{ field.len_sous_categorie }}"><img style="height:100px; width: 100px ;" alt="Categorie Image" src="{{ field.categorie_image }}"></td>
-                            <td>{{ first_sous_categorie.nom }}</td>
+
+                            <td rowspan=""><a href="{% url 'dash_forms_update' intitule='categorie' id=field.categorie_pk %}">{{ field.categorie_data.nom }}</td>
+                            <td rowspan=""><img style="height:100px; width: 100px ;" alt="Categorie Image" src="{{ field.categorie_image }}"></td>
+                            <td>
+                              <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Sous-Categorie
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                  {% for sous_categorie in field.its_sous_categories %}
+                                  <button class="dropdown-item" type="button">{{ sous_categorie.nom }}</button>
+                                 {% endfor %}
+                                </div>
+                              </div>
+                            </td>
 
                             {% if field.have_product == 1 %}
-                            <td rowspan="{{ field.len_sous_categorie }}"  scope=""><button onclick="deleteCategorie('{{ field.categorie_pk }}') ;" class="btn btn-danger" disabled>Supprimer</button></td>
+                            <td rowspan=""  scope=""><button onclick="deleteCategorie('{{ field.categorie_pk }}') ;" class="btn btn-danger" disabled>Supprimer</button></td>
                             {% else %}
-                            <td rowspan="{{ field.len_sous_categorie }}"  scope=""><button onclick="deleteCategorie('{{ field.categorie_pk }}') ;" class="btn btn-danger" >Supprimer</button></td>
+                            <td rowspan=""  scope=""><button onclick="deleteCategorie('{{ field.categorie_pk }}') ;" class="btn btn-danger" >Supprimer</button></td>
                             {% endif %}
 
 
@@ -102,41 +113,8 @@
 
 
                           </tr>
-                          {% for field_ext in field.its_sous_categorie_ext %}
-                            <tr>
-                              <td>{{ field_ext.nom }}</td>
-                            </tr>
-                          {% endfor %}
-                        {% else %}
-                          <tr>
-                            <th  scope="row"><a href="{% url 'dash_forms_update' intitule='categorie' id=field.categorie_pk %}">{{ field.categorie_pk }}</a></th>
-                            <td>{{ field.categorie_data.nom }}</td>
-                            <td><img style="height:100px; width: 100px ;" alt="Categorie Image" src="{{ field.categorie_image }}"></td>
-
-                            {% if field.len_sous_categorie == 0 %}
-
-                              <td>None</td>
 
 
-                            {% else %}
-                              {% for field_sous_categorie in field.its_sous_categorie %}
-
-                                <td>{{ field_sous_categorie.nom }}</td>
-                              {% endfor %}
-                            {% endif %}
-
-                            {% if field.have_product == 1%}
-                            <td scope=""  ><button  onclick="deleteCategorie('{{ field.categorie_pk }}') ;" class="btn btn-danger" disabled>Supprimer</button></td>
-                            {% else %}
-                            <td scope=""  ><button  onclick="deleteCategorie('{{ field.categorie_pk }}') ;" class="btn btn-danger" >Supprimer</button></td>
-                            {% endif %}
-                        {% endif %}
-
-
-
-
-
-                          </tr>
                     {% endfor %}
 
                     </tbody>
@@ -166,7 +144,7 @@
                   <table class="table table-borderless datatable">
                     <thead>
                       <tr>
-                        <th scope="col">#</th>
+
                         <th scope="col">Nom</th>
                         <th scope="col">Categorie</th>
                         <th scope="col" >Action</th>
@@ -176,8 +154,8 @@
                     <tbody>
                     {% for field  in table %}
                       <tr>
-                        <th scope="row"><a href="{% url 'dash_forms_update' intitule='sous_categorie' id=field.sousCategorie_pk %}">{{ field.sousCategorie_pk }}</a></th>
-                        <td>{{ field.sousCategorie_data.nom }}</td>
+
+                        <td><a href="{% url 'dash_forms_update' intitule='sous_categorie' id=field.sousCategorie_pk %}">{{ field.sousCategorie_data.nom }}</td>
                         <td>{{ field.categorie }}</td>
                         {% if field.have_product %}
                         <td scope=""><button onclick="deleteSousCategorie('{{ field.sousCategorie_pk }}') ;" class="btn btn-danger" >Supprimer</button></td>
@@ -215,7 +193,7 @@
                   <table class="table table-borderless datatable">
                     <thead>
                       <tr>
-                        <th scope="col">#</th>
+
                         <th scope="col">Code</th>
                         <th scope="col">Image1</th>
                         <th scope="col">Nom</th>
@@ -233,10 +211,10 @@
                     {% for field  in table %}
                       <tr>
 
-                        <th scope="row"><a href="{% url 'dash_forms_update' intitule='product' id=field.product_pk %}">{{ field.product_pk }}</a></th>
+
                         <td><a href="{% url 'download_qr' id=field.product_pk %}"><img style="height:100px ; width:100px" alt="CODE QR" src="{{ field.product_qr}}"></a></td>
                         <td><img style="height:100px ; width:100px" src="{{ field.product_data.image1 }}"></td>
-                        <td>{{ field.product_data.nom }}</td>
+                        <td><a href="{% url 'dash_forms_update' intitule='product' id=field.product_pk %}">{{ field.product_data.nom }}</td>
                         <td>{{ field.product_data.date_de_stock }}</td>
                         <td>{{ field.product_data.stock }}</td>
                         <td>{{ field.product_data.description_longue }}</td>
@@ -323,7 +301,7 @@
       {% if type == 'commande' %}
 
         <div class="col-12">
-              <div class="card recent-sales overflow-auto">
+              <div class="card recent-sales overflow-auto" style="margin-left:60px; margin-right:60px;">
 
 
 
@@ -333,15 +311,15 @@
                   <table class="table table-borderless datatable">
                     <thead>
                       <tr>
-                        <th scope="col">#</th>
+
                         <th scope="col">Utilisateur</th>
                         <th scope="col">Date Commande</th>
                         <th scope="col">Livraison</th>
                         <th scope="col">Date Livraison</th>
                         <th scope="col">Status Livraison</th>
                         <th scope="col">Status Commande</th>
-                        <th scope="col">Produit</th>
-                        <th scope="col">Quantite</th>
+                        <th scope="col">Produits et Quantite</th>
+
                         <th scope="col">Option</th>
                         <th scope="col">Total</th>
                         <th scope="col">Action1</th>
@@ -355,100 +333,61 @@
                     <tbody>
                     {% for field  in table %}
 
-                        {% if field.first_product %}
+
                           <tr>
-                            <th rowspan="{{ field.len_products }}" scope="row"><a href="#">{{ field.commande_pk }}</a></th>
-                            <td rowspan="{{ field.len_products }}">{{ field.commande_user }}</td>
-                            <td rowspan="{{ field.len_products }}">{{ field.commande_data.date_commande }}</td>
-                            <td rowspan="{{ field.len_products }}">{{ field.commande_livraison }}</td>
-                            <td rowspan="{{ field.len_products }}">{{ field.commande_data.date_livraison }}</td>
+
+                            <td rowspan="">{{ field.commande_user }}</td>
+                            <td rowspan="">{{ field.commande_data.date_commande }}</td>
+                            <td rowspan="">{{ field.commande_livraison }}</td>
+                            <td rowspan="">{{ field.commande_data.date_livraison }}</td>
                             {% if field.commande_data.livree == 1 %}
-                              <td rowspan="{{ field.len_products }}"><span class="badge bg-success">Livré</span></td>
+                              <td rowspan=""><span class="badge bg-success">Livré</span></td>
                             {% else %}
-                              <td rowspan="{{ field.len_products }}"><span class="badge bg-warning">Non Livré</span></td>
+                              <td rowspan=""><span class="badge bg-warning">Non Livré</span></td>
                             {% endif %}
 
                             {% if field.commande_data.valide == 1 %}
-                              <td rowspan="{{ field.len_products }}"><span class="badge bg-success">Approuvé</span></td>
+                              <td rowspan=""><span class="badge bg-success">Approuvé</span></td>
                             {% else %}
                               {% if field.commande_data.valide == 0 and field.commande_data.pending == 0 %}
-                                <td rowspan="{{ field.len_products }}"><span class="badge bg-danger">Rejeté</span></td>
+                                <td rowspan=""><span class="badge bg-danger">Rejeté</span></td>
                               {% else %}
-                                <td rowspan="{{ field.len_products }}"><span class="badge bg-warning">En cours</span></td>
+                                <td rowspan=""><span class="badge bg-warning">En cours</span></td>
                               {% endif %}
                             {% endif %}
-                            <td>{{ field.first_product.nom }}</td>
-                            <td>{{ field.first_product.quantite }}</td>
-                            <td rowspan="{{ field.len_products }}">{{ field.commande_data.ship_option }}</td>
-                            <td rowspan="{{ field.len_products }}">{{ field.commande_data.prix_total }}</td>
+                            <td>
+                             <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Produits et Quantite
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                  {% for product in field.its_products %}
+                                  <button class="dropdown-item" type="button">{{ product.nom }}  <b>{{ product.quantite }}</b></button>
+                                 {% endfor %}
+                                </div>
+                              </div>
+                            </td>
+
+                            <td rowspan="">{{ field.commande_data.ship_option }}</td>
+                            <td rowspan="">{{ field.commande_data.prix_total }}</td>
 
 
-                            <td rowspan="{{ field.len_products }}" scope=""><button onclick="deleteCommande('{{ field.commande_pk }}') ;" class="btn btn-danger" >Supprimer</button></td>
-                            <td rowspan="{{ field.len_products }}" scope=""><button class="btn btn-success" onclick="validateCommande('{{ field.commande_pk }}') ;" >Valider</button></td>
-                            <td rowspan="{{ field.len_products }}" scope=""><button class="btn btn-success" onclick="livrateCommande('{{ field.commande_pk }}') ;" >Marquer Livré</button></td>
+                            <td rowspan="" scope=""><button onclick="deleteCommande('{{ field.commande_pk }}') ;" class="btn btn-danger" >Supprimer</button></td>
+                            <td rowspan="" scope=""><button class="btn btn-success" onclick="validateCommande('{{ field.commande_pk }}') ;" >Valider</button></td>
+                            <td rowspan="" scope=""><button class="btn btn-success" onclick="livrateCommande('{{ field.commande_pk }}') ;" >Marquer Livré</button></td>
 
 
 
 
 
                           </tr>
-                          {% for field_ext in field.its_products_ext %}
-                            <tr>
-                              <td>{{ field_ext.nom }}</td>
-                              <td>{{ field_ext.quantite }}</td>
-                            </tr>
-                          {% endfor %}
-                        {% else %}
-                          <tr>
-                            <th  scope="row"><a href="#">{{ field.commande_pk }}</a></th>
-                            <td>{{ field.commande_user }}</td>
-                            <td>{{ field.commande_data.date_commande }}</td>
-                            <td>{{ field.commande_livraison }}</td>
-                            <td>{{ field.commande_data.date_livraison }}</td>
-                            {% if field.commande_data.livree == 1 %}
-                              <td><span class="badge bg-success">Livré</span></td>
-                            {% else %}
-                              <td><span class="badge bg-warning">Non Livré</span></td>
-                            {% endif %}
-
-                            {% if field.commande_data.valide == 1 %}
-                              <td><span class="badge bg-success">Approuvé</span></td>
-                            {% else %}
-                              {% if field.commande_data.valide == 0 and field.commande_data.pending == 0 %}
-                                <td><span class="badge bg-danger">Rejeté</span></td>
-                              {% else %}
-                                <td><span class="badge bg-warning">En cours</span></td>
-                              {% endif %}
-                            {% endif %}
-
-                            {% if field.len_products == 0 %}
-
-                              <td>None</td>
-                              <td>None</td>
-
-
-                            {% else %}
-                              {% for field_product in field.its_products %}
-
-                                <td>{{ field_product.product.nom }}</td>
-                                <td>{{ field_product.quantite }}</td>
-                              {% endfor %}
-                            {% endif %}
-                            <td rowspan="{{ field.len_products }}">{{ field.commande_data.ship_option }}</td>
-                            <td rowspan="{{ field.len_products }}">{{ field.commande_data.prix_total }}</td>
-                            <td scope=""><button class="btn btn-danger" onclick="deleteCommande('{{ field.commande_pk }}') ;" >Supprimer</button></td>
-                            <td scope=""><button class="btn btn-success" onclick="validateCommande('{{ field.commande_pk }}') ;" >Valider</button></td>
-                            <td scope=""><button class="btn btn-success"  onclick="livrateCommande('{{ field.commande_pk }}') ;" >Marquer Livré</button></td>
-
-                        {% endif %}
 
 
 
 
 
-                          </tr>
-                    {% endfor %}
 
+                  {% endfor %}
                     </tbody>
                   </table>
 

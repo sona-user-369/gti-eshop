@@ -1,13 +1,16 @@
 import json
 import re
 
+import flickrapi
 from django.http import FileResponse
 from django.forms import model_to_dict
 from django.shortcuts import render, redirect
 from django.core.files import File
 from django.db import transaction
 
-from DashBoard.Manage import get_best_sellers_time, stats_customer, stats_revenu, stats_sales, stats_chart
+from DashBoard.Manage import get_best_sellers_time, stats_customer, stats_revenu, stats_sales, stats_chart, \
+    FlickrAPICustom
+from EShopGTI import settings
 from EShopGTI.settings import SITE_HOSTNAME
 from home.Manage import verify_user
 from .generate import generate_invoice, add_logo_to_img
@@ -42,6 +45,136 @@ def Produit_all(request):
 
 # @api_view(["GET",])
 # def product_retrieve(request):
+# cart = {'user': None, 'produit_set':[{'id': 'product_pk','nom': 'product_name', 'prix':'10' 'quantite': '3' }]}
+@api_view(['GET'])
+def add_cart_cookie(request):
+    if request.session.get('cart') is None:
+        request.session['cart'] = '{"produit_set": []}'
+
+    cart = json.loads(request.session.get('cart'))
+    id_produit = str(request.GET['id_produit'])
+    id_produit = id_produit.replace('-', '')
+    produit = Produit.objects.get(pk=id_produit)
+    produit_set = cart['produit_set']
+    products_ids = []
+
+    for product in produit_set:
+        products_ids.append(product['id'])
+
+    if str(produit.pk) in products_ids:
+        produit_set_copy = produit_set.copy()
+        product_dict = produit_set_copy.pop(products_ids.index(str(produit.pk)))
+        product_quantite = product_dict['quantite']
+        if request.GET.get('quantite'):
+            quantite = request.GET['quantite']
+            updated_produit = {'id': str(produit.pk), 'nom': produit.nom, 'image': produit.image1.url,
+                               'prix': produit.prix,
+                               'quantite': int(quantite) + int(product_quantite)}
+            updated_produit.update({'subtotal': updated_produit['prix'] * updated_produit['quantite']})
+            produit_set_copy.append(updated_produit)
+            cart.update({'produit_set': produit_set_copy})
+        else:
+            updated_produit = {'id': str(produit.pk), 'nom': produit.nom, 'image': produit.image1.url,
+                               'prix': produit.prix,
+                               'quantite': int(product_quantite) + 1}
+            updated_produit.update({'subtotal': updated_produit['prix'] * updated_produit['quantite']})
+            produit_set_copy.append(updated_produit)
+            cart.update({'produit_set': produit_set_copy})
+    else:
+        if request.GET.get('quantite'):
+            added_product = {'id': str(produit.pk), 'nom': produit.nom, 'image': produit.image1.url,
+                             'prix': produit.prix,
+                             'quantite': int(request.GET['quantite'])}
+            added_product.update({'subtotal': added_product['prix'] * added_product['quantite']})
+            produit_set.append(added_product)
+            cart.update({'produit_set': produit_set})
+        else:
+            added_product = {'id': str(produit.pk), 'nom': produit.nom, 'image': produit.image1.url,
+                             'prix': produit.prix,
+                             'quantite': 1}
+            added_product.update({'subtotal': added_product['prix'] * added_product['quantite']})
+            produit_set.append(added_product)
+            cart.update({'produit_set': produit_set})
+
+    request.session['cart'] = json.dumps(cart)
+    cart_number = len(cart['produit_set'])
+    request.session['cart_count'] = cart_number
+    print(request.session['cart'])
+    return Response({'cart_number': cart_number}, status=200)
+
+
+@api_view(['GET'])
+def delete_cart_cookie(request):
+    produit = Produit.objects.get(pk=request.GET['id_produit'])
+    cart = json.loads(request.session['cart'])
+    produit_set: list = cart['produit_set']
+    products_ids = []
+
+    for product in produit_set:
+        products_ids.append(product['id'])
+
+    produit_set_copy = produit_set.copy()
+    produit_set_copy.pop(products_ids.index(str(produit.pk)))
+    cart.update({'produit_set': produit_set_copy})
+    request.session['cart'] = json.dumps(cart)
+
+    cart_number = len(cart['produit_set'])
+
+    return Response({'cart_number': cart_number})
+
+
+@api_view(['GET'])
+def update_cart_cookie(request):
+    cart: dict = json.loads(request.session['cart'])
+    produit_set = cart['produit_set']
+    list_update = request.GET
+    print(request.GET)
+    products_ids = []
+
+    for product in produit_set:
+        products_ids.append(product['id'])
+
+    for key in list_update:
+        for cle, valeur in json.loads(key).items():
+            print(valeur)
+            val_1 = valeur['id'].replace('-', '')
+            val_2 = int(valeur['qte'])
+
+            produit = Produit.objects.get(pk=val_1)
+            produit_set_copy = produit_set.copy()
+            produit_set_copy.pop(products_ids.index(str(produit.pk)))
+            updated_produit = {'id': str(produit.pk), 'nom': produit.nom, 'prix': produit.prix,
+                               'quantite': val_2}
+            updated_produit.update({'subtotal': updated_produit['prix'] * updated_produit['quantite']})
+            produit_set_copy.append(updated_produit)
+            cart.update({'produit_set': produit_set_copy})
+
+    request.session['cart'] = json.dumps(cart)
+
+    return Response(status=200)
+
+
+@api_view(['GET'])
+def update_to_cart_object(request):
+    cart_cookie = json.loads(request.session['cart'])
+    user = Utilisateurs.objects.get(pk=request.session["user_primary"])
+    cart, _ = Panier.objects.get_or_create(utilisateur=user)
+    cart.save()
+    produit_set = cart_cookie['produit_set']
+    for produit_str in produit_set:
+        produit = Produit.objects.get(pk=produit_str['id'])
+        if produit in cart.produit_set.all():
+            product_in_cart = PanierProduit.objects.get(panier=cart, product=produit)
+            product_in_cart.__dict__.update({"quantite": produit_str['quantite']})
+            product_in_cart.save()
+        else:
+            produit.panier.add(cart)
+            produit.save()
+            pr_insave = PanierProduit.objects.get(panier=cart, product=produit)
+            pr_insave.__dict__.update({"quantite": produit_str['quantite']})
+            pr_insave.save()
+
+    return Response(status=200)
 
 
 @csrf_exempt
@@ -125,6 +258,79 @@ def Update_to_cart(request):
 
             produit_in_cart.save()
 
+    return Response(status=200)
+
+
+@api_view(['GET'])
+def add_wishlist_cookie(request):
+    if request.session.get('wishlist') is None:
+        request.session['wishlist'] = '{"produit_set": []}'
+
+    wishlist: dict = json.loads(request.session.get('wishlist'))
+    id_produit = str(request.GET['id_produit'])
+    id_produit = id_produit.replace('-', '')
+    produit = Produit.objects.get(pk=id_produit)
+    produit_set: list = wishlist['produit_set']
+    products_ids = []
+
+    for product in produit_set:
+        products_ids.append(product['id'])
+
+    print(products_ids)
+
+    if str(produit.pk) in products_ids:
+        return Response(status=400)
+    else:
+        added_product = {'id': str(produit.pk), 'nom': produit.nom, 'image': produit.image1.url, 'prix': produit.prix,
+                         'in_stock': True if int(produit.stock) > 0 else False
+                         }
+
+        produit_set.append(added_product)
+        print(produit_set)
+
+    wishlist.update({'produit_set': produit_set})
+
+    request.session['wishlist'] = json.dumps(wishlist)
+    wishlist_number = len(wishlist['produit_set'])
+
+    request.session["wishlist_count"] = wishlist_number
+    print(wishlist)
+
+    return Response({"wishlist_number": wishlist_number}, status=200)
+
+
+@api_view(['GET'])
+def delete_wishlist_cookie(request):
+    produit = Produit.objects.get(pk=request.GET['id_produit'])
+    wishlist = json.loads(request.session['wishlist'])
+    produit_set = wishlist['produit_set']
+    products_ids = []
+
+    for product in produit_set:
+        products_ids.append(product['id'])
+
+    produit_set_copy = produit_set.copy()
+    produit_set_copy.pop(products_ids.index(str(produit.pk)))
+    wishlist.update({'produit_set': produit_set_copy})
+    request.session['cart'] = json.dumps(wishlist)
+
+    wishlist_number = len(wishlist['produit_set'])
+
+    return Response({"wishlist_number": wishlist_number}, status=200)
+
+
+@api_view(['GET'])
+def update_to_wishlist_object(request):
+    wishlist_cookie = json.loads(request.session['wishlist'])
+    user = Utilisateurs.objects.get(pk=request.session["user_primary"])
+    wishlist, _ = Favoris.objects.get_or_create(utilisateur=user)
+    wishlist.save()
+    produit_set = wishlist_cookie['produit_set']
+    for produit_str in produit_set:
+        produit = Produit.objects.get(pk=produit_str['id'])
+
+        produit.favoris.add(wishlist)
+        produit.save()
     return Response(status=200)
 
 
@@ -264,7 +470,7 @@ def command_instance(request, user):
                            'total': total_commande,
                            'valide': valide,
                            'pending': pending,
-                           'ship_option': commande.ship_option}
+                           'ship_option': commande_instance.ship_option}
 
         return Response(invoice_details, status=200)
     else:
@@ -368,8 +574,12 @@ def get_all_products(request):
             except:
                 qr_code = None
 
+            model_dict = product_searializer.data
+            date_stock = product.date_de_stock
+            date_stock_time = date_stock.strftime("%Y-%m-%d %H:%M:%S") if date_stock is not None else date_stock
+            model_dict.update({'date_de_stock': date_stock_time})
             data_product.append(
-                {'product_pk': product.pk, 'product_qr': qr_code, 'product_data': product_searializer.data,
+                {'product_pk': product.pk, 'product_qr': qr_code, 'product_data': model_dict,
                  'product_categorie': product.categorie.nom})
 
     return Response({'products': data_product}, status=200)
@@ -394,11 +604,11 @@ def get_all_categorie(request):
         else:
             data_categorie_sous_categorie = []
 
-        if len(data_categorie_sous_categorie) >= 2:
-            first_sous_categorie = data_categorie_sous_categorie[0]
-            data_categorie_sous_categorie_ext = data_categorie_sous_categorie
-            data_categorie_sous_categorie_ext.pop(0)
-            data_categorie_sous_categorie_other = data_categorie_sous_categorie_ext
+        # if len(data_categorie_sous_categorie) >= 2:
+        #     first_sous_categorie = data_categorie_sous_categorie[0]
+        #     data_categorie_sous_categorie_ext = data_categorie_sous_categorie
+        #     data_categorie_sous_categorie_ext.pop(0)
+        #     data_categorie_sous_categorie_other = data_categorie_sous_categorie_ext
 
         try:
             image = categorie.image.url
@@ -492,16 +702,23 @@ def get_all_commandes(request):
         else:
             pass
 
-        if len(data_commande_product) > 1:
-            first_product = data_commande_product[0]
-            data_commande_product_ext = data_commande_product.copy()
-            data_commande_product_ext.pop(0)
-            data_commande_product_other = data_commande_product_ext
+        # if len(data_commande_product) > 1:
+        #     first_product = data_commande_product[0]
+        #     data_commande_product_ext = data_commande_product.copy()
+        #     data_commande_product_ext.pop(0)
+        #     data_commande_product_other = data_commande_product_ext
 
         print(first_product)
         if commande_serializer.is_valid():
+            model_dict = commande_serializer.data
+            date_commande = commande.date_commande
+            date_livraison = commande.date_livraison
+            model_dict.update({'date_commande': date_commande.strftime(
+                "%Y-%m-%d %H:%M:%S") if date_commande is not None else date_commande,
+                               'date_livraison': date_livraison.strftime(
+                                   "%Y-%m-%d %H:%M:%S") if date_livraison is not None else date_livraison})
             data_commande.append({'commande_pk': commande.pk,
-                                  'commande_data': commande_serializer.data,
+                                  'commande_data': model_dict,
                                   'its_products': data_commande_product,
                                   'len_products': len(data_commande_product),
                                   'first_product': first_product,
@@ -590,8 +807,40 @@ def add_product(request):
             if get_field_sous_categorie is not None and get_field_sous_categorie not in got_category_mactch:
                 return Response({'category_not_exist': 1}, status=400)
             else:
+                flickr = FlickrAPICustom(
+                    settings.FLICKR_API_KEY,
+                    settings.FLICKR_SECRET_KEY,
+                   )
+                request.session['token_flickr'] = '72157720872652582-41d1253623d7cbf4'
+                if request.session.get('token_flickr') is not None:
+                    flickr = FlickrAPICustom(
+                        settings.FLICKR_API_KEY,
+                        settings.FLICKR_SECRET_KEY,
+                        token=request.session.get('token_flickr'))
+                else:
+                # (token, frob) = flickr.get_token_part_one(perms='write')
+                    flickr.authenticate_via_browser(perms='write')
+                # if not token: raw_input("Press ENTER after you authorized this program")
+                # flickr.get_token_part_two((token, frob))
+
+                response = flickr.upload(image_file=request.data['image1'], title=request.data['nom'], filename=request.data['nom'])
+
+                photo_id = response.get('photoid')
+                photo = flickr.photos.getInfo(photo_id=photo_id)
+                extension_photo = photo.get("photo").get("originalformat")
+                url = "https://farm{farm_id}.staticflickr.com/{server_id}/{id}_{secret}.{extension}".format(
+                    farm_id=photo.get("photo").get("farm"),
+                    server_id=photo.get("photo").get("server"),
+                    id=photo.get("photo").get("id"),
+                    secret=photo.get("photo").get("secret"),
+                    extension=extension_photo,
+                )
 
                 product = product_serializer.save()
+
+                image = Image.objects.create(title=request.data['nom'], flickr_id=photo_id, source=url, produit=product)
+                image.save()
+
                 try:
                     add_logo_to_img(product.image1.url)
                 except IsADirectoryError:
@@ -611,7 +860,8 @@ def add_product(request):
             return Response(product_serializer.data, status=200)
         else:
             return Response(product_serializer.errors, status=400)
-
+    else:
+        return Response(status=401)
 
 @api_view(['GET', 'POST'])
 def add_categorie(request):
@@ -828,7 +1078,7 @@ def save_shipping_option(request):
             if product_quantite < quantity_in_cart:
                 products_cannot_by.append(product.nom)
         if len(products_cannot_by) != 0:
-            return Response(products_cannot_by, status=400)
+            return Response({'product_cannot': products_cannot_by}, status=400)
         else:
             shipping_option = request.GET['shipping_option']
             request.session['shipping_option'] = shipping_option
@@ -839,15 +1089,18 @@ def save_shipping_option(request):
 @api_view(['GET'])
 def best_sellers_time(request):
     data = []
-    time = request.GET['time']
-    if time == 'day':
-        data = get_best_sellers_time()[0]
-    if time == 'month':
-        data = get_best_sellers_time()[1]
-    if time == 'year':
-        data = get_best_sellers_time()[2]
+    if request.GET.get('time') is not None:
+        time = request.GET['time']
+        if time == 'day':
+            data = get_best_sellers_time()[0]
+        if time == 'month':
+            data = get_best_sellers_time()[1]
+        if time == 'year':
+            data = get_best_sellers_time()[2]
 
-    return Response(data, status=200)
+        return Response(data, status=200)
+    else:
+        return Response(status=400)
 
 
 @api_view(['GET'])
@@ -931,3 +1184,51 @@ def stats_chart_api(request):
         data = {'data': [sales, rev, cust], 'intervals': stats_chart()[5]}
 
     return Response(data, status=200)
+
+
+# @api_view([''])
+# def upload_image(request):
+#     if request.method == 'POST':
+#         # Récupération des données de l'image à télécharger
+#         title = request.POST.get('title')
+#         description = request.POST.get('description')
+#         image = request.FILES.get('image')
+#
+#         # Initialisation de l'API Flickr
+#         flickr = flickrapi.FlickrAPI('YOUR_API_KEY', 'YOUR_API_SECRET')
+#
+#         # Téléchargement de l'image sur Flickr
+#         response = flickr.upload(image_file=image, title=title, description=description)
+#
+#         photo_id = response.get('photoid')
+#         photo = flickr.photos.getInfo(photo_id=photo_id)
+#         extension_photo = photo.get("photo").get("originalformat")
+#         url = "https://farm{farm_id}.staticflickr.com/{server_id}/{id}_{secret}.{extension}".format(
+#             farm_id=photo.get("photo").get("farm"),
+#             server_id=photo.get("photo").get("server"),
+#             id=photo.get("photo").get("id"),
+#             secret=photo.get("photo").get("secret"),
+#             extension=extension_photo,
+#         )
+#
+#         Image.objects.create(title=title, flickr_id=photo_id, source=url,)
+#
+#         # Affichage de la confirmation de téléchargement
+#         return render(request, 'upload_success.html')
+#
+#     return render(request, 'upload_image.html')
+# @api_view(['GET'])
+# def flickr_callback(request):
+#     if request.session.get('token_flickr') is not None:
+#         f = flickrapi.FlickrAPI(
+#             settings.FLICKR_API_KEY,
+#             settings.FLICKR_SECRET_KEY,
+#             store_token=False)
+#         frob = None
+#         token = None
+#         try:
+#             print(request.GET)
+#             request.session['token_flickr'] = token
+#         except Exception:
+#             pass
+#     return Response(status=200)

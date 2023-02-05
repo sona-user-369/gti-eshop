@@ -22,5 +22,6 @@ urlpatterns = [
     path('delete_users_admin', delete_on_user, name='delete_user'),
     path('contact_enter', contact_register, name='contact_enter'),
     path('translate', translate, name='translate'),
+    path('phone_verification',phone_verification, name='phone_verification')
 
 ]

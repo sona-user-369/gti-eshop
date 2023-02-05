@@ -21,7 +21,7 @@
 
               <div class="card mb-3">
 
-                <div class="card-body">
+                <div class="card-body" id="card_body">
 
                   <div class="pt-4 pb-2">
                     <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
@@ -58,9 +58,9 @@
                         </div>
                       {% endif %}
 
-                    <div>
+                    
 
-                </div>
+                 
                     {% endfor %}
 
                     <div class="col-12">
@@ -73,10 +73,39 @@
                       <button class="btn btn-primary w-100" type="submit">Login</button>
                     </div>
                     <div class="col-12">
-                      <p class="small mb-0">Don't have account? <a href="pages-register.html">Create an account</a></p>
+                      <p class="small mb-0">Don't have account? <a href="{% url 'register_admin' %}">Create an account</a></p>
                     </div>
                   </form>
 
+                </div>
+                <div class="card-body" id="card_body_ext">
+                  <div class="pt-4 pb-2">
+                    <h5 class="card-title text-center pb-0 fs-4">Phone Verification</h5>
+                    <p class="text-center small" id="para_otp"></p>
+                  </div>
+
+                  <form class="row g-3 " id="phone_admin_form" method="post">
+                    {% csrf_token %}
+
+
+                   <div class="col-12 has-error">
+                      <label for="id_otp" class="form-label">Votre OTP Verification</label>
+                      <input type="text" name="otp" class="form-control" id="id_otp" required>
+                      <div class="invalid-feedback">Le code OTP entre est invalide!</div>
+                   </div>
+
+                   
+
+
+
+
+                    <div class="col-12">
+                      <button class="btn btn-primary w-100" type="submit">Envoyer</button>
+                    </div>
+
+                  </form>
+
+                
                 </div>
               </div>
 
@@ -103,7 +132,9 @@
 
 {% block script %}
 <script>
+  $('#card_body_ext').hide();
   $(document).ready(function() {
+
       $('#login_admin_form').submit(function () {
                 // create an AJAX call
                 donne = {'data': $(this).serialize() , 'verify_superuser': 1 } ;
@@ -115,12 +146,17 @@
                     success: function (response) {
                         $('input[type="email"]#id__email').val('');
                         $('input[type="password"]#id__password').val('');
-                        window.location.reload();
+                        //window.location.reload();
                         if($('#mover')){
                         $('#mover').remove();
                         }
+                        
+                        $('#card_body_ext').show();
+                        $('#card_body').hide();
+                        card_body = document.getElementById('card_body') ;
+                        para_otp.innerHTML = 'Veillez saisir le code envoye sur le numero' + response.phone_number 
 
-                        location.href = "{% url 'dash' %}" ;
+                        //location.href = "{% url 'dash' %}" ;
                     },
                     // on error
                     error: function (response) {
@@ -147,8 +183,41 @@
                     }
                 });
                 return false;
+      });
+
+      $('#phone_admin_form').submit(function () {
+
+            $.ajax({
+              data : $(this).serialize(), 
+              type: $(this).attr('method'), // GET or POST
+              url: "{% url 'phone_verification' %}",
+
+              success: function(response){
+                alert('cool') ;
+                window.location.href = "{% url 'dash' %}" ;
+
+              },
+
+              error: function(response){
+                alert('cool') ;
+                if(response.responseJSON.code_invalid){
+                  document.getElementById('id_otp').classList.add('is-invalid');
+                }
+
+                if(response.responseJSON.expired_code){
+                  window.location.reload() ;
+
+                }
+
+              }
+
             });
-      }) ;
+
+            return false ;
+
+      });
+
+  });
 
 </script>
 

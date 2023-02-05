@@ -74,6 +74,7 @@ def get_invoice_or_none(object):
                 data = None
             return data
         else:
+            print('nnnnnnnnnnnnn')
             return None
     else:
         return None
@@ -318,3 +319,44 @@ def get_copywrite_year():
     date = datetime.datetime.utcnow()
     year = date.year
     return year
+
+
+def set_cookie(object):
+    if 'cart' not in object.COOKIES:
+        object.COOKIES['cart'] = ''
+
+
+def upload_sense_data(object):
+    # user = verify_user(request)["user"]
+    cart = object.session.get('cart')
+    cart = json.loads(cart) if cart is not None else None
+    wishlist = object.session.get('wishlist')
+    wishlist = json.loads(wishlist) if wishlist is not None else None
+    user = verify_user(object)["user"]
+    cart_count = len(cart['produit_set']) if cart is not None else 0
+    # cart_count = verify_user(request)["cart_total"]
+    wishlist_count = len(wishlist['produit_set']) if wishlist is not None else 0
+    wishlist_product = wishlist['produit_set'] if wishlist is not None else []
+    cart_product = cart['produit_set'] if cart is not None else []
+    print(cart_product)
+    # cart_product = verify_user(request)["cart_product"]
+    total = 0
+    if cart is not None:
+        for p in cart['produit_set']:
+            total += p['quantite'] * p['prix']
+    # total = verify_user(request)["total"]
+    languages = select_languages(object)
+    copywrite_year = get_copywrite_year()
+
+    data = {
+        'user': user,
+        'cart_count': cart_count,
+        'wishlist_count': wishlist_count,
+        'cart_product': cart_product,
+        'wishlist_product': wishlist_product,
+        'total': total,
+        'languages': languages,
+        'copywrite_year': copywrite_year
+
+    }
+    return data

@@ -27,7 +27,7 @@
             <div class="page-content">
             	<div class="cart">
 	                <div class="container">
-						{% if cart_product %}
+						{% if cart_count != 0 %}
 	                	<div class="row">
 	                		<div class="col-lg-9">
 	                			<table class="table table-cart table-mobile">
@@ -42,29 +42,29 @@
 									</thead>
 
 									<tbody>
-										{% for p in cart_product.product_list %}
-											<tr id="row{{ p.produit.pk }}" >
+										{% for p in cart_product %}
+											<tr id="row{{ p.id }}" >
 											<td class="product-col">
 												<div class="product">
 													<figure class="product-media">
 														<a href="#">
-															<img src="{{ p.produit.fields.image1 }}" alt="Product image">
+															<img src="{{ p.image }}" alt="Product image">
 														</a>
 													</figure>
 
 													<h3 class="product-title">
-														<a href="#">{{ p.produit.fields.nom }}</a>
+														<a href="#">{{ p.nom }}</a>
 													</h3><!-- End .product-title -->
 												</div><!-- End .product -->
 											</td>
-											<td class="price-col" id="mma{{ p.produit.pk}}">${{ p.produit.fields.prix }}</td>
+											<td class="price-col" id="mma{{ p.id}}">${{ p.prix }}</td>
 											<td class="quantity-col">
                                                 <div class="cart-product-quantity">
-                                                    <input type="number" class="form-control" id="{{ p.produit.pk }}" onchange="document.getElementById('toto'+'{{ p.produit.pk }}').innerHTML='$'+ parseInt(this.value)*parseInt(String(getElementById('mma'+ '{{ p.produit.pk }}').innerHTML).replace('$', ''));" name="id_quantity_input" value="{{ p.quantite }}" min="1" max="10" step="1" data-decimals="0" required>
+                                                    <input type="number" class="form-control" id="{{ p.id }}" onchange="document.getElementById('toto'+'{{ p.id }}').innerHTML='$'+ parseInt(this.value)*parseInt(String(getElementById('mma'+ '{{ p.id }}').innerHTML).replace('$', ''));" name="id_quantity_input" value="{{ p.quantite }}" min="1" max="10" step="1" data-decimals="0" required>
                                                 </div><!-- End .cart-product-quantity -->
                                             </td>
-											<td class="total-col" id="toto{{ p.produit.pk }}" name="total_cart">${{ p.total }}</td>
-											<td class="remove-col"><button onclick="deleteCart('{{ p.produit.pk }}', 'row'+'{{ p.produit.pk }}')" class="btn-remove"><i class="icon-close"></i></button></td>
+											<td class="total-col" id="toto{{ p.id }}" name="total_cart">${{ p.subtotal }}</td>
+											<td class="remove-col"><button onclick="deleteCartCookie('{{ p.id }}', 'row'+'{{ p.id }}')" class="btn-remove"><i class="icon-close"></i></button></td>
 										</tr>
 										{% endfor %}
 
@@ -83,7 +83,7 @@
 			            				</form>
 			            			</div><!-- End .cart-discount -->
 
-			            			<button  class="btn btn-outline-dark-2" onclick="updateCart();"><span>{% trans 'METTRE A JOUR PANIER' %}</span><i class="icon-refresh"></i></button>
+			            			<button  class="btn btn-outline-dark-2" onclick="updateCartCookie();"><span>{% trans 'METTRE A JOUR PANIER' %}</span><i class="icon-refresh"></i></button>
 		            			</div><!-- End .cart-bottom -->
 	                		</div><!-- End .col-lg-9 -->
 	                		<aside class="col-lg-3">
@@ -150,7 +150,7 @@
 	                		</aside><!-- End .col-lg-3 -->
 	                	</div><!-- End .row -->
 						{% else %}
-						<div><h1>{% trans 'Aucun produit dans votre panier' %}</h1></div>
+						<div><h1 class="text-center" >{% trans 'Aucun produit dans votre panier' %}</h1></div>
 						{% endif %}
 	                </div><!-- End .container -->
                 </div><!-- End .cart -->
@@ -192,6 +192,22 @@
 			url: "{% url 'verify_connection' %}",
 
 			success: function(response){
+
+
+				$.ajax({
+			        url: "{% url 'update_to_cart_object' %}",
+
+			        success : function(response){
+
+			        },
+
+			        error: function(response){
+
+			        }
+			    });
+
+
+
 				$.ajax({
 					url: "{% url 'save_ship_option' %}",
 					data : {'shipping_option' : ship_option },
@@ -278,6 +294,78 @@
     }
 
 
+	function deleteCartCookie(prod, id_row){
+
+
+
+					$.ajax({
+						url: "{% url 'delete_cart_cookie' %}",
+						data:{"id_produit": prod},
+						//type: "POST",
+						success: function( response ){
+
+							document.getElementById('id_cart_count').innerHTML = response.cart_number ;
+
+							document.getElementById(id_row).remove();
+							var total_row = document.getElementsByName('total_cart');
+							var total_len = total_row.length ;
+							var s = 0 ;
+							for (var i =0 ; i<total_len; i++){
+
+								s += parseInt(String(total_row[i].innerHTML).replace('$', '')) ;
+
+							}
+
+							document.getElementById('all_total').innerHTML = '$' + s ;
+							document.getElementById('all__total').innerHTML = '$' + s ;
+
+
+							//window.location.reload();
+							swal("Supprimé!", "Le produit a été bien supprimé!", "success");
+
+						},
+
+						error: function( response ){
+
+						}
+
+					});
+
+
+					$.ajax({
+						url: "{% url 'verify_connection' %}",
+
+						success: function(response){
+
+							$.ajax({
+								url : "{% url 'update_to_cart_object' %}" ,
+
+								success: function(response){
+
+
+								},
+								error: function(response){
+
+
+								}
+
+							});
+
+						},
+						error: function(response){
+
+						}
+					})
+
+
+
+
+
+
+    }
+
+
+
     function updateCart(){
 
 
@@ -344,6 +432,81 @@
 
 
 
+
+
+    }
+
+
+	function updateCartCookie(){
+
+
+
+				var row = document.getElementsByName('id_quantity_input');
+
+				var len = row.length ;
+				var values = {};
+
+				for(var i=0; i<len ; i++){
+
+					values['produit'+String(i)] = {'id' : row[i].id, 'qte' :  row[i].value}
+
+
+				}
+
+
+				$.ajax({
+						url: "{% url 'update_cart_cookie' %}",
+						data: JSON.stringify(values),
+						//type: "POST",
+						success: function( response ){
+
+
+							var total_row = document.getElementsByName('total_cart');
+							var total_len = total_row.length
+							var s = 0 ;
+							for (var i =0 ; i<total_len; i++){
+
+								s += parseInt(String(total_row[i].innerHTML).replace('$', '')) ;
+
+							}
+
+							document.getElementById('all_total').innerHTML = '$' + s ;
+							document.getElementById('all__total').innerHTML = '$' + s ;
+							//window.location.reload();
+							swal("Mise à jour!", "Votre panier a été bien mise à jour!", "success");
+
+						},
+
+						error: function( response ){
+
+						}
+
+				});
+
+				$.ajax({
+						url: "{% url 'verify_connection' %}",
+
+						success: function(response){
+
+							$.ajax({
+								url : "{% url 'update_to_cart_object' %}" ,
+
+								success: function(response){
+
+
+								},
+								error: function(response){
+
+
+								}
+
+							});
+
+						},
+						error: function(response){
+
+						}
+				});
 
 
     }

@@ -1,3 +1,6 @@
+import json
+
+import flickrapi
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import render, HttpResponse, redirect
@@ -19,6 +22,7 @@ from rest_framework.authtoken.models import Token
 from django.forms.models import model_to_dict
 import uuid
 
+from DashBoard.Manage import FlickrAPICustom
 from EShopGTI import settings
 from EShopGTI.settings import MEDIA_URL
 from ProdApp.document import DocumentProduit
@@ -30,38 +34,34 @@ from .models import *
 
 
 def home(request):
+    request.session['cart'] = '{"produit_set": []}'
+    request.session['wishlist'] = '{"produit_set" : []}'
+
     Register = RegisterForm()
     Login = LoginForm()
     categories = get_categorie(request)
-    languages = select_languages(request)
-    copywrite_year = get_copywrite_year()
 
     # Getting recents products
     recent_products = get_recent_products()
 
-    # Getting best selling products
+    # Getting best-selling products
     best_seller_products = get_best_seller(6)
 
     # Getting all
     all_categorie = Categorie.objects.all()
 
-    user = verify_user(request)["user"]
-    cart_count = verify_user(request)["cart_total"]
-    wishlist_count = verify_user(request)["wishlist_total"]
-    cart_product = verify_user(request)["cart_product"]
-    total = verify_user(request)["total"]
     context = {'Register': Register,
                'Login': Login,
-               'username': user,
-               'cart_count': cart_count,
-               'wishlist_count': wishlist_count,
-               'cart_product': cart_product,
-               'total': total,
+               'username': upload_sense_data(request)['user'],
+               'cart_count': upload_sense_data(request)['cart_count'],
+               'wishlist_count': upload_sense_data(request)['wishlist_count'],
+               'cart_product': upload_sense_data(request)['cart_product'],
+               'total': upload_sense_data(request)['total'],
                'categories': categories,
                'recent': recent_products,
                'best_sellers': best_seller_products,
-               'languages': languages,
-               'copywrite_year' : copywrite_year,
+               'languages': upload_sense_data(request)['languages'],
+               'copywrite_year': upload_sense_data(request)['copywrite_year'],
                }
 
     return render(request, 'home/index22.html', context)
@@ -85,8 +85,6 @@ def share_message_telegram(request, image_url):
     print(site)
     with open(url, 'rb') as image:
         bot.send_photo(chat_id=chat_id, photo=image, caption=text)
-
-
 
     return redirect('home')
 
@@ -126,8 +124,6 @@ def activate_forgout(request, uidb64, token):
 
 
 def forgout_pass(request):
-    copywrite_year = get_copywrite_year()
-    languages = select_languages(request)
     forgot_form = ForgotForm()
     try:
         session = request.session["link_is_clicked"]
@@ -139,7 +135,11 @@ def forgout_pass(request):
     else:
         request.session["link_is_clicked"] = 0
 
-    return render(request, 'home/forgotPassword.html', {'ForgotForm': forgot_form,'languages': languages,'copywrite_year': copywrite_year})
+    return render(request, 'home/forgotPassword.html',
+                  {'ForgotForm': forgot_form,
+                   'languages': upload_sense_data(request)['languages'],
+                   'copywrite_year': upload_sense_data(request)['copywrite_year']
+                   })
 
 
 #####Logout User
@@ -157,7 +157,6 @@ def delete_user(request):
 
 
 def product(request, id):
-    copywrite_year = get_copywrite_year()
     id_produit = str(id)
     id_produit = id_produit.replace('-', '')
     produit = Produit.objects.get(pk=id_produit)
@@ -222,28 +221,22 @@ def product(request, id):
     Register = RegisterForm()
     Login = LoginForm()
     Review = ReviewForm()
-    user = verify_user(request)["user"]
-    cart_count = verify_user(request)["cart_total"]
-    wishlist_count = verify_user(request)["wishlist_total"]
-    cart_product = verify_user(request)["cart_product"]
-    total = verify_user(request)["total"]
-    languages = select_languages(request)
 
     context = {'Register': Register,
                'Login': Login,
                'Review': Review,
-               'username': user,
-               'cart_count': cart_count,
-               'wishlist_count': wishlist_count,
-               'cart_product': cart_product,
-               'total': total,
+               'username': upload_sense_data(request)['user'],
+               'cart_count': upload_sense_data(request)['cart_count'],
+               'wishlist_count': upload_sense_data(request)['wishlist_count'],
+               'cart_product': upload_sense_data(request)['cart_product'],
+               'total': upload_sense_data(request)['total'],
                'produit': produit,
                'four_product': four_same_product,
                'avis': avis_more,
                'avis_count': len(avis_more),
                'note': note,
-               'languages': languages,
-               'copywrite_year': copywrite_year,
+               'languages': upload_sense_data(request)['languages'],
+               'copywrite_year': upload_sense_data(request)['copywrite_year'],
                }
 
     return render(request, 'home/product.html', context)
@@ -253,29 +246,22 @@ def cart(request):
     Register = RegisterForm()
     Login = LoginForm()
 
-    user = verify_user(request)["user"]
-    cart_count = verify_user(request)["cart_total"]
-    wishlist_count = verify_user(request)["wishlist_total"]
-    wishlist_product = verify_user(request)["wishlist_product"]
-    cart_product = verify_user(request)["cart_product"]
-    total = verify_user(request)["total"]
-    languages = select_languages(request)
-    copywrite_year = get_copywrite_year()
+    # user = verify_user(request)["user"]
+
 
     context = {'Register': Register,
                'Login': Login,
-               'username': user,
-               'cart_count': cart_count,
-               'wishlist_count': wishlist_count,
-               'cart_product': cart_product,
-               'total': total,
-               'languages': languages,
-               'copywrite_year': copywrite_year,
-
+               'username': upload_sense_data(request)['user'],
+               'cart_count': upload_sense_data(request)['cart_count'],
+               'wishlist_count': upload_sense_data(request)['wishlist_count'],
+               'cart_product': upload_sense_data(request)['cart_product'],
+               'total': upload_sense_data(request)['total'],
+               'languages': upload_sense_data(request)['languages'],
+               'copywrite_year': upload_sense_data(request)['copywrite_year'],
                }
 
-    if not user:
-        return redirect('home')
+    # if not user:
+    #     return redirect('home')
 
     return render(request, 'home/cart.html', context)
 
@@ -285,42 +271,36 @@ def test(request):
 
 
 def wishlist(request):
-    copywrite_year = get_copywrite_year()
     Register = RegisterForm()
     Login = LoginForm()
 
-    user = verify_user(request)["user"]
-    cart_count = verify_user(request)["cart_total"]
-    wishlist_count = verify_user(request)["wishlist_total"]
-    wishlist_product = verify_user(request)["wishlist_product"]
-    cart_product = verify_user(request)["cart_product"]
-    total = verify_user(request)["total"]
-    languages = select_languages(request)
+    all_categorie = Categorie.objects.all()
+
     context = {'Register': Register,
                'Login': Login,
-               'username': user,
-               'cart_count': cart_count,
-               'wishlist_count': wishlist_count,
-               'cart_product': cart_product,
-               'wishlist_product': wishlist_product,
-               'total': total,
-               'languages': languages,
-               'copywrite_year': copywrite_year,
+               'username': upload_sense_data(request)['user'],
+               'cart_count': upload_sense_data(request)['cart_count'],
+               'wishlist_count': upload_sense_data(request)['wishlist_count'],
+               'cart_product': upload_sense_data(request)['cart_product'],
+               'wishlist_product': upload_sense_data(request)['wishlist_product'],
+               'total': upload_sense_data(request)['total'],
+               'languages': upload_sense_data(request)['languages'],
+               'copywrite_year': upload_sense_data(request)['copywrite_year'],
                }
-    if not user:
-        return redirect('home')
+    # if not user:
+    #     return redirect('home')
 
     return render(request, 'home/wishlist.html', context)
 
 
 def category(request):
-    copywrite_year = get_copywrite_year()
-    languages = select_languages(request)
+
     product = Produit.objects.filter(is_archive=False)
     categorie = Categorie.objects.all()
     categorie_products = []
     product_info = []
     query_not_match = 0
+    set_cookie(request)
     try:
         session = request.session['search_phrase']
     except:
@@ -382,28 +362,23 @@ def category(request):
     Register = RegisterForm()
     Login = LoginForm()
 
-    user = verify_user(request)["user"]
-    cart_count = verify_user(request)["cart_total"]
-    wishlist_count = verify_user(request)["wishlist_total"]
-    wishlist_product = verify_user(request)["wishlist_product"]
-    cart_product = verify_user(request)["cart_product"]
-    total = verify_user(request)["total"]
+
 
     context = {'Register': Register,
                'Login': Login,
-               'username': user,
-               'cart_count': cart_count,
-               'wishlist_count': wishlist_count,
-               'cart_product': cart_product,
-               'wishlist_product': wishlist_product,
+               'username': upload_sense_data(request)['user'],
+               'cart_count': upload_sense_data(request)['cart_count'],
+               'wishlist_count': upload_sense_data(request)['wishlist_count'],
+               'cart_product': upload_sense_data(request)['cart_product'],
+               'wishlist_product': upload_sense_data(request)['wishlist_product'],
                'product': product_info,
-               'total': total,
+               'total': upload_sense_data(request)['total'],
                'categorie': categorie_products,
                'page_obj': page_obj,
                'query_not_match': query_not_match,
-               'languages': languages,
+               'languages': upload_sense_data(request)['languages'],
                'total_products': len(product),
-               'copywrite_year': copywrite_year
+               'copywrite_year': upload_sense_data(request)['copywrite_year']
                }
 
     return render(request, 'home/category.html', context)
@@ -421,7 +396,6 @@ def retrieve_categorie(request, id):
 
 
 def search_product(request):
-    copywrite_year = get_copywrite_year()
     categorie = Categorie.objects.all()
     categorie_products = []
     product_info = []
@@ -463,27 +437,21 @@ def search_product(request):
     Register = RegisterForm()
     Login = LoginForm()
 
-    user = verify_user(request)["user"]
-    cart_count = verify_user(request)["cart_total"]
-    wishlist_count = verify_user(request)["wishlist_total"]
-    wishlist_product = verify_user(request)["wishlist_product"]
-    cart_product = verify_user(request)["cart_product"]
-    total = verify_user(request)["total"]
-    languages = select_languages(request)
+
 
     context = {'Register': Register,
                'Login': Login,
-               'username': user,
-               'cart_count': cart_count,
-               'wishlist_count': wishlist_count,
-               'cart_product': cart_product,
-               'wishlist_product': wishlist_product,
+               'username': upload_sense_data(request)['user'],
+               'cart_count': upload_sense_data['cart_count'],
+               'wishlist_count': upload_sense_data(request)['wishlist_count'],
+               'cart_product': upload_sense_data(request)['cart_product'],
+               'wishlist_product': upload_sense_data(request)['wishlist_product'],
                'product': product_info,
-               'total': total,
+               'total': upload_sense_data(request)['total'],
                'categorie': categorie_products,
                'page_obj': page_obj,
-               'languages': languages,
-               'copywrite_year': copywrite_year
+               'languages': upload_sense_data(request)['languages'],
+               'copywrite_year': upload_sense_data(request)['copywrite_year']
                }
 
     return render(request, 'home/category.html', context)
@@ -714,7 +682,6 @@ def password_change(request):
     Register = RegisterForm()
     Login = LoginForm()
 
-
     cart_count = verify_user(request)["cart_total"]
     wishlist_count = verify_user(request)["wishlist_total"]
     wishlist_product = verify_user(request)["wishlist_product"]
@@ -724,7 +691,7 @@ def password_change(request):
 
     context = {'Register': Register,
                'Login': Login,
-               'PasswordForm' : PasswordForm,
+               'PasswordForm': PasswordForm,
                'username': user,
                'cart_count': cart_count,
                'wishlist_count': wishlist_count,
@@ -763,10 +730,11 @@ def invoice_order(request):
                'wishlist_product': wishlist_product,
                'total': total,
                'invoice': invoice,
-               'languages' : languages,
+               'languages': languages,
                'copywrite_year': copywrite_year,
                }
     print(invoice)
+    print('ccccccccccccc')
     return render(request, 'home/invoice.html', context)
 
 
@@ -799,4 +767,19 @@ def shipping(request):
                }
 
     return render(request, 'home/shipping.html', context)
+
+def flickr_callback(request):
+    if request.session.get('token_flickr') is not None:
+        f = FlickrAPICustom(
+            settings.FLICKR_API_KEY,
+            settings.FLICKR_SECRET_KEY,
+            store_token=False)
+        frob = None
+        token = None
+        try:
+            print(request.GET)
+            request.session['token_flickr'] = token
+        except Exception:
+            pass
+    return redirect('dash')
 # Create your views here.

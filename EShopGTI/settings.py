@@ -84,14 +84,14 @@ WSGI_APPLICATION = 'EShopGTI.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'DataGTI',
-    #     'USER': 'root',
-    #     'PASSWORD': '',
-    #     'HOST': '127.0.0.1',
-    #     'PORT': '3306',
-    # }
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'DataGTI',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+    }
 }
 
 # DATABASES = {
@@ -188,7 +188,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static/"),
 )
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build' , 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -225,5 +225,12 @@ ELASTICSEARCH_DSL = {
     },
 }
 
+ACCOUNT_SECURITY_API_KEY = '66bedb9ffed1c6912dea6b3bc17c2615'
+ACCOUNT_SID = 'AC70033e3d1a914cd20a4b84f457251db9'
 WHITENOISE_USE_FINDERS = True
+
+# FLICKR API INTEGRATION
+FLICKR_API_KEY = 'eb067822b5c320ab38dd2448402ad328'
+FLICKR_SECRET_KEY = 'c755cbe8f56b8c1f'
+
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

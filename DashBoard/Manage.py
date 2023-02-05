@@ -1,8 +1,10 @@
 import requests
+import six
 from dateutil.relativedelta import relativedelta
 from django.contrib.sites.shortcuts import get_current_site
 from django.forms import model_to_dict
 from django.shortcuts import redirect
+from django.urls import reverse
 from django.utils import timezone
 
 from Applink.serializer import UserSerializer
@@ -10,6 +12,7 @@ from EShopGTI.settings import SITE_HOSTNAME
 from ProdApp.serializer import ProduitSerializer
 from home.Manage import verify_user, get_product_quantity
 from home.models import Commandes, CommandeProduit, Utilisateurs
+from flickrapi.core import FlickrAPI, authenticator
 
 
 def get_tables(object):
@@ -664,4 +667,21 @@ def stats_chart():
         [str(time) for time in year_intervals]]
     return final_total
 
+
 # def stats_chart():
+
+class FlickrAPICustom(FlickrAPI):
+
+    @authenticator
+    def authenticate_via_browser(self, perms='read'):
+        if isinstance(perms, six.binary_type):
+            perms = six.u(perms)
+
+        self.flickr_oauth.get_request_token(oauth_callback='http://' + SITE_HOSTNAME)
+        self.flickr_oauth.auth_via_browser(perms=perms)
+        token = self.flickr_oauth.get_access_token()
+        print(token)
+        self.token_cache.token = token
+
+    def get_request_token(self, oauth_callback='http://' + SITE_HOSTNAME + 'flickr_callback', ):
+        self.flickr_oauth.get_request_token(oauth_callback=oauth_callback)

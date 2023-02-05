@@ -5,7 +5,6 @@ import uuid
 from django.utils import timezone
 class Utilisateurs(AbstractUser):
 
-
     username = None
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -63,7 +62,7 @@ class Commandes(models.Model):
     valide = models.BooleanField(null=False, blank=True, default=0)
     pending = models.BooleanField(null=False, blank=False, default=1)
     livraison = models.ForeignKey(Livraison, on_delete=models.PROTECT , null=True)
-    date_livraison = models.DateTimeField(null=True, blank=True, default=None)
+    date_livraison = models.DateTimeField(null=True, blank=True, default=None,)
     prix_total = models.PositiveIntegerField(null=False, blank=False,default=0)
     ship_option = models.CharField(null=True,blank=False, max_length=20)
 
@@ -139,9 +138,15 @@ class CommandeProduit(models.Model):
     quantite = models.PositiveIntegerField(null=False, blank=False, default=1)
 
 
+
 class Image(models.Model):
-    source = models.ImageField()
+    title = models.CharField(blank=True, max_length=100)
+    flickr_id = models.IntegerField(default=0)
+    source = models.CharField(max_length=50)
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{}'.format(self.source)
 
     class Meta:
         verbose_name="Photo de produit"

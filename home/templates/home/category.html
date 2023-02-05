@@ -4,7 +4,7 @@
 {% load i18n %}
 
 {% block title %}
-    <title>GTI-Produits</title>
+    <title>GTI-Shop</title>
 {% endblock %}
 {% block main %}
 
@@ -12,7 +12,7 @@
             {% if not query_not_match %}
         	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
         		<div class="container">
-        			<h1 class="page-title">Grid 3 Columns<span>{% trans 'Boutique' %}</span></h1>
+        			<h1 class="page-title">Boutique<span>{% trans 'Nos produits par categorie' %}</span></h1>
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
             <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
@@ -30,6 +30,14 @@
                 	<div class="row">
                         <aside class="col-lg-3 order-lg-first">
                 			<div class="sidebar sidebar-shop">
+                            <form action="#" method="get" id="searchForm">
+                                <div class="header-search-wrapper search-wrapper-wide">
+                                    <label for="q" class="sr-only">Search</label>
+                                    <input type="search" class="form-control" name="search" id="q" placeholder="Rechercher produit ..." required>
+
+                                    <button class="btn btn-success" type="submit"><i class="icon-search"></i></button>
+                                </div><!-- End .header-search-wrapper -->
+                            </form>
                 				<div class="widget widget-clean">
                 					<label>Filters:</label>
                 					<a href="#" class="sidebar-filter-clear">{% trans 'Efacer tout' %}</a>
@@ -207,7 +215,7 @@
                 			<div class="toolbox">
                 				<div class="toolbox-left">
                 					<div class="toolbox-info">
-                						{% trans 'Affiche' %} <span>9 de 56</span> {% trans 'Produits' %}
+
                 					</div><!-- End .toolbox-info -->
                 				</div><!-- End .toolbox-left -->
 
@@ -222,49 +230,7 @@
 											</select>
 										</div>
                 					</div><!-- End .toolbox-sort -->
-                					<div class="toolbox-layout">
-                						<a href="#" class="btn-layout">
-                							<svg width="16" height="10">
-                								<rect x="0" y="0" width="4" height="4" />
-                								<rect x="6" y="0" width="10" height="4" />
-                								<rect x="0" y="6" width="4" height="4" />
-                								<rect x="6" y="6" width="10" height="4" />
-                							</svg>
-                						</a>
 
-                						<a href="#" class="btn-layout">
-                							<svg width="10" height="10">
-                								<rect x="0" y="0" width="4" height="4" />
-                								<rect x="6" y="0" width="4" height="4" />
-                								<rect x="0" y="6" width="4" height="4" />
-                								<rect x="6" y="6" width="4" height="4" />
-                							</svg>
-                						</a>
-
-                						<a href="#" class="btn-layout active">
-                							<svg width="16" height="10">
-                								<rect x="0" y="0" width="4" height="4" />
-                								<rect x="6" y="0" width="4" height="4" />
-                								<rect x="12" y="0" width="4" height="4" />
-                								<rect x="0" y="6" width="4" height="4" />
-                								<rect x="6" y="6" width="4" height="4" />
-                								<rect x="12" y="6" width="4" height="4" />
-                							</svg>
-                						</a>
-
-                						<a href="#" class="btn-layout">
-                							<svg width="22" height="10">
-                								<rect x="0" y="0" width="4" height="4" />
-                								<rect x="6" y="0" width="4" height="4" />
-                								<rect x="12" y="0" width="4" height="4" />
-                								<rect x="18" y="0" width="4" height="4" />
-                								<rect x="0" y="6" width="4" height="4" />
-                								<rect x="6" y="6" width="4" height="4" />
-                								<rect x="12" y="6" width="4" height="4" />
-                								<rect x="18" y="6" width="4" height="4" />
-                							</svg>
-                						</a>
-                					</div><!-- End .toolbox-layout -->
                 				</div><!-- End .toolbox-right -->
                 			</div><!-- End .toolbox -->
 
@@ -281,7 +247,7 @@
                                                 </a>
 
                                                 <div class="product-action-vertical">
-                                                    <a href="#" onclick="addWishlist('{{ produit.produit.pk }}'); return false;" class="btn-product-icon btn-wishlist btn-expandable"><span>{% trans 'ajouter aux favoris' %}</span></a>
+                                                    <a href="#" onclick="addWishlistCookie('{{ produit.produit.pk }}'); return false;" class="btn-product-icon btn-wishlist btn-expandable"><span>{% trans 'ajouter aux favoris' %}</span></a>
                                                 </div><!-- End .product-action-vertical -->
                                             </figure><!-- End .product-media -->
 
@@ -334,7 +300,7 @@
 
 
                                                 <div class="product-action">
-                                                    <a href="#"   onclick="addCart( '{{ produit.produit.pk }}' ); return false;" class="btn-product btn-cart" title="Add to cart">{% trans 'Ajouter au panier' %}</a>
+                                                    <a href="#"   onclick="addCartCookie( '{{ produit.produit.pk }}' ); return false;" class="btn-product btn-cart" title="Add to cart">{% trans 'Ajouter au panier' %}</a>
 
                                                 </div><!-- End .product-action -->
                                             </div><!-- End .product-footer -->
@@ -572,7 +538,7 @@
                                     {% endif %}
 							        <li class="page-item active" aria-current="page"><a class="page-link" href="#">{{ page_obj.number }}</a></li>
 
-							        <li class="page-item-total">of {{ page_obj.paginator.num_pages }}</li>
+							        <li class="page-item-total">de {{ page_obj.paginator.num_pages }}</li>
                                     {% if page_obj.has_next %}
 							        <li class="page-item">
 							            <a class="page-link page-link-next" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
@@ -769,6 +735,83 @@ $.ajax({
 
     }
 
+    function addCartCookie(prod){
+
+
+                    $.ajax({
+                        url: "{% url 'add_cart_cookie' %}",
+                        data:{"id_produit": prod},
+                        //type: "POST",
+                        success: function( response ){
+                            document.getElementById('id_cart_count').innerHTML = response.cart_number ;
+                            swal("Ajout au panier!", "Le produit a été bien ajouté au panier!", "success");
+
+                        },
+
+                        error: function( response ){
+
+                        }
+
+                    });
+
+
+                    $.ajax({
+						url: "{% url 'verify_connection' %}",
+
+						success: function(response){
+
+							$.ajax({
+								url : "{% url 'update_to_cart_object' %}" ,
+
+								success: function(response){
+
+
+								},
+								error: function(response){
+
+
+								}
+
+							});
+
+						},
+						error: function(response){
+
+						}
+					});
+
+                    $.ajax({
+						url: "{% url 'verify_connection' %}",
+
+						success: function(response){
+
+							$.ajax({
+								url : "{% url 'update_to_cart_object' %}" ,
+
+								success: function(response){
+
+
+								},
+								error: function(response){
+
+
+								}
+
+							});
+
+						},
+						error: function(response){
+
+						}
+					}) ;
+
+
+
+
+
+    }
+
+
     function addWishlist(prod){
 
 
@@ -803,6 +846,53 @@ $.ajax({
             });
 
 
+
+
+    }
+
+    function addWishlistCookie(prod){
+
+
+                    $.ajax({
+                        url: "{% url 'add_wishlist_cookie' %}",
+                        data:{"id_produit": prod},
+                        //type: "POST",
+                        success: function( response ){
+                            document.getElementById('id_wishlist_count').innerHTML = response.wishlist_number ;
+                            swal("Ajout aux souhaits!", "Le produit a été bien ajouté aux souhaits!", "success");
+
+                        },
+
+                        error: function( response ){
+                            swal("Attention!", "Ce produit est deja dans vos souhaits", "warning");
+                        }
+
+                    });
+
+                    $.ajax({
+						url: "{% url 'verify_connection' %}",
+
+						success: function(response){
+
+							$.ajax({
+								url : "{% url 'update_to_wishlist_object' %}" ,
+
+								success: function(response){
+
+
+								},
+								error: function(response){
+
+
+								}
+
+							});
+
+						},
+						error: function(response){
+
+						}
+					})
 
 
     }
