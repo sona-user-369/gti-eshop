@@ -2,6 +2,7 @@ import json
 import re
 
 import flickrapi
+import requests
 from django.http import FileResponse
 from django.forms import model_to_dict
 from django.shortcuts import render, redirect
@@ -9,7 +10,7 @@ from django.core.files import File
 from django.db import transaction
 
 from DashBoard.Manage import get_best_sellers_time, stats_customer, stats_revenu, stats_sales, stats_chart, \
-    FlickrAPICustom
+    FlickrAPICustom, get_flickr_token
 from EShopGTI import settings
 from EShopGTI.settings import SITE_HOSTNAME
 from home.Manage import verify_user
@@ -20,10 +21,10 @@ from rest_framework.permissions import IsAuthenticated
 from home.models import *
 from rest_framework.response import Response
 import qrcode
-
 from .document import DocumentProduit
 from .serializer import *
 from elasticsearch_dsl import Q
+
 
 
 @api_view(["GET"])
@@ -807,38 +808,26 @@ def add_product(request):
             if get_field_sous_categorie is not None and get_field_sous_categorie not in got_category_mactch:
                 return Response({'category_not_exist': 1}, status=400)
             else:
-                flickr = FlickrAPICustom(
-                    settings.FLICKR_API_KEY,
-                    settings.FLICKR_SECRET_KEY,
-                   )
-                request.session['token_flickr'] = '72157720872652582-41d1253623d7cbf4'
-                if request.session.get('token_flickr') is not None:
-                    flickr = FlickrAPICustom(
-                        settings.FLICKR_API_KEY,
-                        settings.FLICKR_SECRET_KEY,
-                        token=request.session.get('token_flickr'))
-                else:
-                # (token, frob) = flickr.get_token_part_one(perms='write')
-                    flickr.authenticate_via_browser(perms='write')
-                # if not token: raw_input("Press ENTER after you authorized this program")
-                # flickr.get_token_part_two((token, frob))
 
-                response = flickr.upload(image_file=request.data['image1'], title=request.data['nom'], filename=request.data['nom'])
-
-                photo_id = response.get('photoid')
-                photo = flickr.photos.getInfo(photo_id=photo_id)
-                extension_photo = photo.get("photo").get("originalformat")
-                url = "https://farm{farm_id}.staticflickr.com/{server_id}/{id}_{secret}.{extension}".format(
-                    farm_id=photo.get("photo").get("farm"),
-                    server_id=photo.get("photo").get("server"),
-                    id=photo.get("photo").get("id"),
-                    secret=photo.get("photo").get("secret"),
-                    extension=extension_photo,
-                )
-
+                image = request.data['image1']
+                API_KEY = "Y96ctH5L5NCCCEm5sKPmjKLrK00RQNjqJVANYdjbUyw"
+                headers = {
+                    "Authorization": f"Client-ID {API_KEY}",
+                    'Accept-Version': 'v1'
+                }
+                files = {
+                    "image": image
+                }
+                url = "https://api.unsplash.com/photos"
+                data = {'name': request.data['nom'],'description': ''}
+                print(headers)
+                response = requests.post(url, data=data ,files=files)
+                photo = response.json()
+                print(photo)
+                photo_id = photo['id']
                 product = product_serializer.save()
 
-                image = Image.objects.create(title=request.data['nom'], flickr_id=photo_id, source=url, produit=product)
+                image = Image.objects.create(title=request.data['nom'], flickr_id=photo_id, source=f"https://api.unsplash.com/photos/{photo_id}", produit=product)
                 image.save()
 
                 try:
@@ -862,6 +851,7 @@ def add_product(request):
             return Response(product_serializer.errors, status=400)
     else:
         return Response(status=401)
+
 
 @api_view(['GET', 'POST'])
 def add_categorie(request):
@@ -1184,7 +1174,6 @@ def stats_chart_api(request):
         data = {'data': [sales, rev, cust], 'intervals': stats_chart()[5]}
 
     return Response(data, status=200)
-
 
 # @api_view([''])
 # def upload_image(request):

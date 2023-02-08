@@ -9,7 +9,7 @@ class RegisterForm(ModelForm):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}), label='Email')
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'minlength': '12'}),
                                label='Mot de passe')
-    contact = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', }), label='Téléphone')
+    contact = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrer votre indicatif et saisissez votre numero'}), label='Téléphone')
 
     class Meta:
         model = Utilisateurs

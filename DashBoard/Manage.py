@@ -1,3 +1,6 @@
+import random
+import time
+
 import requests
 import six
 from dateutil.relativedelta import relativedelta
@@ -188,7 +191,7 @@ def get_recent_sales():
             for product in commande.produit_set.all():
                 quantite = CommandeProduit.objects.get(commande=commande, produit=product).quantite
                 products_day.append({'product': product,
-                                     'quantite': quantite})
+                                     'quantite': quantite,})
 
             products_day_copy = products_day.copy()
             products_day_copy.pop(0)
@@ -685,3 +688,16 @@ class FlickrAPICustom(FlickrAPI):
 
     def get_request_token(self, oauth_callback='http://' + SITE_HOSTNAME + 'flickr_callback', ):
         self.flickr_oauth.get_request_token(oauth_callback=oauth_callback)
+
+
+def get_flickr_token(request, API_KEY, API_SECRET):
+
+    # Effectuez la requête API pour obtenir le token d'authentification
+    response = requests.get(
+        f'https://www.flickr.com/services/oauth/request_token?oauth_callback={request.build_absolute_uri()}&oauth_consumer_key={API_KEY}&oauth_signature={API_SECRET}&oauth_signature_method=HMAC-SHA1&oauth_timestamp={time.time()}&oauth_nonce={random.random()}')
+
+    # Analysez la réponse et extraire le token d'authentification
+    token = response.text.split('=')[1]
+
+    # Retournez le token d'authentification
+    return token

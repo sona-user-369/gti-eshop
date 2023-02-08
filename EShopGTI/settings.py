@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 import dj_database_url
 from django.utils.translation import gettext_lazy as _
+from decouple import config
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,10 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-3el(z+62@bpyp^k+$gm0v#m^8fi3ptm+)ukl-8-vv8dzq2o&%2'
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG")
 
 ALLOWED_HOSTS = ['*']
 
@@ -47,6 +49,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_social_share',
+    'unsplash',
+
 ]
 
 MIDDLEWARE = [
@@ -138,17 +142,7 @@ AUTHENTICATION_BACKENDS = (
 #  )
 # }
 
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
-    }
-}
+SOCIALACCOUNT_PROVIDERS = config("SOCIALACCOUNT_PROVIDERS")
 
 SITE_ID = 2
 
@@ -205,11 +199,11 @@ EMAIL_HOST_USER = "my@login"
 EMAIL_HOST_PASSWORD = "mypassword"
 
 # Google auth
-GP_CLIENT_ID = '336527412683-1cod44ef0l3l2ra6ild3mhjb9kssmq84.apps.googleusercontent.com'
-GP_CLIENT_SECRET = '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'
+GP_CLIENT_ID = config("GP_CLIENT_ID")
+GP_CLIENT_SECRET = config("GP_CLIENT_SECRET")
 
-# MailChimp Log
-MAILCHIMP_API_KEY = "b54259e23f5bc7ef762fb3a520164793"
+# MailChimp
+MAILCHIMP_API_KEY = config("MAILCHIMP_API_KEY")
 MAILCHIMP_DATA_CENTER = "us21"
 MAILCHIMP_EMAIL_LIST_ID = "d25b0ebae7"
 # EMAIL_USE_TLS = True
@@ -225,12 +219,19 @@ ELASTICSEARCH_DSL = {
     },
 }
 
-ACCOUNT_SECURITY_API_KEY = '66bedb9ffed1c6912dea6b3bc17c2615'
-ACCOUNT_SID = 'AC70033e3d1a914cd20a4b84f457251db9'
+ACCOUNT_SECURITY_API_KEY = config("ACCOUNT_SECURITY_API_KEY")
+ACCOUNT_SID = config("ACCOUNT_SID")
 WHITENOISE_USE_FINDERS = True
-
 # FLICKR API INTEGRATION
-FLICKR_API_KEY = 'eb067822b5c320ab38dd2448402ad328'
-FLICKR_SECRET_KEY = 'c755cbe8f56b8c1f'
+FLICKR_API_KEY = config("FLICKR_API_KEY")
+FLICKR_SECRET_KEY = config("FLICKR_SECRET_KEY")
+
+# ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+SECURE_CONTENT_TYPE_NOSNIFF = False
+SECURE_BROWSER_XSS_FILTER = False
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+X_FRAME_OPTIONS = 'DENY'
 
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

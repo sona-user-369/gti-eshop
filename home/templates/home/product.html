@@ -8,6 +8,7 @@
 
 {% block meta_tags %}
 <meta property="og:image" content="https://ichef.bbci.co.uk/news/976/cpsprodpb/12A9B/production/_111434467_gettyimages-1143489763.jpg">
+ <meta property="og:url" content="{{ request.build_absolute_uri }}">
 {% endblock %}
 
 {% block style %}
@@ -197,6 +198,7 @@
 
                                           {% post_to_facebook object_or_url "<p style='color: green;'>facebook</p>" %}
                                           {% post_to_linkedin object_or_url %}
+                                            {% post_to_whatsapp object_or_url '' %}
                                           {% post_to_telegram "New Song: " object_or_url %}
                                             <a href="https://api.whatsapp.com/send?text={{ request.build_absolute_uri }}&photo={{ produit.image1.url }}" class="social-icon" title="Whatsapp"><i class="icon-whatsapp"></i></a>
                                             <a href="https://t.me/share/url?url={{ request.build_absolute_uri }}" class="social-icon"><i class="icon-telegram"></i></a>
