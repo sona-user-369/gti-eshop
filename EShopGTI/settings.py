@@ -29,7 +29,7 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG")
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [host.replace("'", '') for host in config('ALLOWED_HOSTS').split(',')]
 
 # Application definition
 
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_social_share',
     'unsplash',
+    'sslserver',
 
 ]
 

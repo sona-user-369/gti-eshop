@@ -10,7 +10,7 @@
 
         <main class="main">
             {% if not query_not_match %}
-        	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        	<div class="page-header text-center" style="background-image: url( {% static 'assets_home/images/page-header-bg.jpg' %})">
         		<div class="container">
         			<h1 class="page-title">Boutique<span>{% trans 'Nos produits par categorie' %}</span></h1>
         		</div><!-- End .container -->
@@ -18,9 +18,9 @@
             <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
                 <div class="container">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Grid 3 Columns</li>
+                        <li class="breadcrumb-item"><a href="index.html">Acceuil</a></li>
+                        <li class="breadcrumb-item"><a href="#">Boutique</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Produits</li>
                     </ol>
                 </div><!-- End .container -->
             </nav><!-- End .breadcrumb-nav -->
@@ -79,45 +79,7 @@
 													<span class="item-count">4</span>
 												</div><!-- End .filter-item -->
 
-												<div class="filter-item">
-													<div class="custom-control custom-checkbox">
-														<input type="checkbox" class="custom-control-input" id="cat-4">
-														<label class="custom-control-label" for="cat-4">Jackets</label>
-													</div><!-- End .custom-checkbox -->
-													<span class="item-count">2</span>
-												</div><!-- End .filter-item -->
 
-												<div class="filter-item">
-													<div class="custom-control custom-checkbox">
-														<input type="checkbox" class="custom-control-input" id="cat-5">
-														<label class="custom-control-label" for="cat-5">Shoes</label>
-													</div><!-- End .custom-checkbox -->
-													<span class="item-count">2</span>
-												</div><!-- End .filter-item -->
-
-												<div class="filter-item">
-													<div class="custom-control custom-checkbox">
-														<input type="checkbox" class="custom-control-input" id="cat-6">
-														<label class="custom-control-label" for="cat-6">Jumpers</label>
-													</div><!-- End .custom-checkbox -->
-													<span class="item-count">1</span>
-												</div><!-- End .filter-item -->
-
-												<div class="filter-item">
-													<div class="custom-control custom-checkbox">
-														<input type="checkbox" class="custom-control-input" id="cat-7">
-														<label class="custom-control-label" for="cat-7">Jeans</label>
-													</div><!-- End .custom-checkbox -->
-													<span class="item-count">1</span>
-												</div><!-- End .filter-item -->
-
-												<div class="filter-item">
-													<div class="custom-control custom-checkbox">
-														<input type="checkbox" class="custom-control-input" id="cat-8">
-														<label class="custom-control-label" for="cat-8">Sportwear</label>
-													</div><!-- End .custom-checkbox -->
-													<span class="item-count">0</span>
-												</div><!-- End .filter-item -->
 											</div><!-- End .filter-items -->
 										</div><!-- End .widget-body -->
 									</div><!-- End .collapse -->
@@ -132,61 +94,7 @@
 									    </a>
 									</h3><!-- End .widget-title -->
 
-									<div class="collapse show" id="widget-4">
-										<div class="widget-body">
-											<div class="filter-items">
-												<div class="filter-item">
-													<div class="custom-control custom-checkbox">
-														<input type="checkbox" class="custom-control-input" id="brand-1">
-														<label class="custom-control-label" for="brand-1">Next</label>
-													</div><!-- End .custom-checkbox -->
-												</div><!-- End .filter-item -->
 
-												<div class="filter-item">
-													<div class="custom-control custom-checkbox">
-														<input type="checkbox" class="custom-control-input" id="brand-2">
-														<label class="custom-control-label" for="brand-2">River Island</label>
-													</div><!-- End .custom-checkbox -->
-												</div><!-- End .filter-item -->
-
-												<div class="filter-item">
-													<div class="custom-control custom-checkbox">
-														<input type="checkbox" class="custom-control-input" id="brand-3">
-														<label class="custom-control-label" for="brand-3">Geox</label>
-													</div><!-- End .custom-checkbox -->
-												</div><!-- End .filter-item -->
-
-												<div class="filter-item">
-													<div class="custom-control custom-checkbox">
-														<input type="checkbox" class="custom-control-input" id="brand-4">
-														<label class="custom-control-label" for="brand-4">New Balance</label>
-													</div><!-- End .custom-checkbox -->
-												</div><!-- End .filter-item -->
-
-												<div class="filter-item">
-													<div class="custom-control custom-checkbox">
-														<input type="checkbox" class="custom-control-input" id="brand-5">
-														<label class="custom-control-label" for="brand-5">UGG</label>
-													</div><!-- End .custom-checkbox -->
-												</div><!-- End .filter-item -->
-
-												<div class="filter-item">
-													<div class="custom-control custom-checkbox">
-														<input type="checkbox" class="custom-control-input" id="brand-6">
-														<label class="custom-control-label" for="brand-6">F&F</label>
-													</div><!-- End .custom-checkbox -->
-												</div><!-- End .filter-item -->
-
-												<div class="filter-item">
-													<div class="custom-control custom-checkbox">
-														<input type="checkbox" class="custom-control-input" id="brand-7">
-														<label class="custom-control-label" for="brand-7">Nike</label>
-													</div><!-- End .custom-checkbox -->
-												</div><!-- End .filter-item -->
-
-											</div><!-- End .filter-items -->
-										</div><!-- End .widget-body -->
-									</div><!-- End .collapse -->
         						</div><!-- End .widget -->
 
         						<div class="widget widget-collapsible">
@@ -221,12 +129,12 @@
 
                 				<div class="toolbox-right">
                 					<div class="toolbox-sort">
-                						<label for="sortby">{% trans 'Trier par:' %}</label>
+                						<label for="sortby_pr">{% trans 'Trier par:' %}</label>
                 						<div class="select-custom">
-											<select name="sortby" id="sortby" class="form-control">
+											<select name="sortby" id="sortby_pr" class="form-control">
 												<option value="popularity" selected="selected">{% trans 'Plus populaire' %}</option>
-												<option value="rating">{% trans 'Most Rated' %}</option>
-												<option value="date">Date</option>
+												<option value="best">{% trans 'Plus acheté' %}</option>
+												<option value="recent">Date</option>
 											</select>
 										</div>
                 					</div><!-- End .toolbox-sort -->
@@ -236,8 +144,8 @@
 
                             <div class="products mb-3">
 
-                                <div class="row justify-content-center display">
-                                    {% for produit in page_obj %}
+                                <div class="row justify-content-center display" id="products_all">
+                                    {% for produit in page_obj_all %}
                                     <div class="col-6 col-md-4 col-lg-4 all_product">
                                         <div class="product product-3 text-center">
                                             <figure class="product-media">
@@ -309,217 +217,160 @@
                                     {% endfor %}
 
 
-                                    <div class="col-6 col-md-4 col-lg-4">
-                                        <div class="product product-3 text-center">
-                                            <figure class="product-media">
-                                                <a href="product.html">
-                                                    <img src="{% static 'assets/images/demos/demo-22/products/product-3.jpg' %}" alt="Product image" class="product-image">
-                                                </a>
 
-                                                <div class="product-action-vertical">
-                                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                                </div><!-- End .product-action-vertical -->
-                                            </figure><!-- End .product-media -->
 
-                                            <div class="product-body">
-                                                <div class="product-cat">
-                                                    <a href="#">Power Tools</a>
-                                                </div><!-- End .product-cat -->
-                                                <h3 class="product-title"><a href="product.html">Makita XSH03Z</a></h3><!-- End .product-title -->
-                                                <div class="product-price">
-                                                    $119.99
-                                                </div><!-- End .product-price -->
-                                            </div><!-- End .product-body -->
 
-                                            <div class="product-footer">
-                                                <div class="ratings-container">
-                                                    <div class="ratings">
-                                                        <div class="ratings-val" style="width: 40%;"></div><!-- End .ratings-val -->
-                                                    </div><!-- End .ratings -->
-                                                    <span class="ratings-text">( 2 Reviews )</span>
-                                                </div><!-- End .rating-container -->
-
-                                                <div class="product-nav product-nav-dots">
-                                                    <a href="#" class="active" style="background: #cc6666;"><span class="sr-only">Color name</span></a>
-                                                    <a href="#" style="background: #ccccff;"><span class="sr-only">Color name</span></a>
-                                                </div><!-- End .product-nav -->
-
-                                                <div class="product-action">
-                                                    <a href="#" class="btn-product btn-cart" title="Add to cart"></a>
-                                                    <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"></a>
-                                                </div><!-- End .product-action -->
-                                            </div><!-- End .product-footer -->
-                                        </div><!-- End .product -->
-                                    </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-
-                                    <div class="col-6 col-md-4 col-lg-4">
+                                </div><!-- End .row -->
+								<div class="row justify-content-center display" id="products_best">
+                                    {% for produit in page_obj_best %}
+                                    <div class="col-6 col-md-4 col-lg-4 all_product">
                                         <div class="product product-3 text-center">
                                             <figure class="product-media">
                                                 <span class="product-label label-sale">Sale</span>
-                                                <span class="product-label label-new">New</span>
-                                                <a href="product.html">
-                                                    <img src="{% static 'assets/images/demos/demo-22/products/product-4.jpg' %}" alt="Product image" class="product-image">
+                                                <a href="{% url 'product' id=produit.produit.pk %}">
+                                                    <img src="{{ produit.produit.image1.url }}" alt="Product image" class="product-image">
                                                 </a>
 
                                                 <div class="product-action-vertical">
-                                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                                    <a href="#" onclick="addWishlistCookie('{{ produit.produit.pk }}'); return false;" class="btn-product-icon btn-wishlist btn-expandable"><span>{% trans 'ajouter aux favoris' %}</span></a>
                                                 </div><!-- End .product-action-vertical -->
                                             </figure><!-- End .product-media -->
 
                                             <div class="product-body">
-                                                <div class="product-cat">
-                                                    <a href="#">Air Tools & Compressors</a>
+                                                <div class="product-cat categorie">
+                                                    <a href="#"><b>{{ produit.produit.categorie }}</b></a>
                                                 </div><!-- End .product-cat -->
-                                                <h3 class="product-title"><a href="product.html">DEWALT DCE511B</a></h3><!-- End .product-title -->
+                                                <h3 class="product-title"><a href="{% url 'product' id=produit.produit.pk %}">{{ produit.produit.nom }}</a></h3><!-- End .product-title -->
                                                 <div class="product-price">
-                                                    <span class="new-price">$100.99</span>
-                                                    <span class="old-price">Was $130.00</span>
+                                                    <span class="new-price">${{ produit.produit.prix }}</span>
+                                                    <span class="old-price">Was $330.00</span>
                                                 </div><!-- End .product-price -->
                                             </div><!-- End .product-body -->
 
                                             <div class="product-footer">
                                                 <div class="ratings-container">
+                                                    {% if produit.note_product == 0 %}
                                                     <div class="ratings">
                                                         <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
                                                     </div><!-- End .ratings -->
-                                                    <span class="ratings-text">( 0 Reviews )</span>
-                                                </div><!-- End .rating-container -->
-
-                                                <div class="product-nav product-nav-dots">
-                                                    <a href="#" class="active" style="background: #ffca51;"><span class="sr-only">Color name</span></a>
-                                                    <a href="#" style="background: #bb8379;"><span class="sr-only">Color name</span></a>
-                                                    <a href="#" style="background: #666666;"><span class="sr-only">Color name</span></a>
-                                                </div><!-- End .product-nav -->
-
-                                                <div class="product-action">
-                                                    <a href="#" class="btn-product btn-cart" title="Add to cart"></a>
-                                                    <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"></a>
-                                                </div><!-- End .product-action -->
-                                            </div><!-- End .product-footer -->
-                                        </div><!-- End .product -->
-                                    </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-
-                                    <div class="col-6 col-md-4 col-lg-4">
-                                        <div class="product product-3 text-center">
-                                            <figure class="product-media">
-                                                <a href="product.html">
-                                                    <img src="{% static 'assets/images/demos/demo-22/products/product-5.jpg' %}" alt="Product image" class="product-image">
-                                                </a>
-
-                                                <div class="product-action-vertical">
-                                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                                </div><!-- End .product-action-vertical -->
-                                            </figure><!-- End .product-media -->
-
-                                            <div class="product-body">
-                                                <div class="product-cat">
-                                                    <a href="#">Hand Tools</a>
-                                                </div><!-- End .product-cat -->
-                                                <h3 class="product-title"><a href="product.html">TEKTON 30603 Fiberglass</a></h3><!-- End .product-title -->
-                                                <div class="product-price">
-                                                    $8.99
-                                                </div><!-- End .product-price -->
-                                            </div><!-- End .product-body -->
-
-                                            <div class="product-footer">
-                                                <div class="ratings-container">
+                                                    {% endif %}
+                                                    {% if produit.note_product == 1 %}
                                                     <div class="ratings">
-                                                        <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
+                                                        <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
                                                     </div><!-- End .ratings -->
-                                                    <span class="ratings-text">( 4 Reviews )</span>
-                                                </div><!-- End .rating-container -->
-
-                                                <div class="product-action">
-                                                    <a href="#" class="btn-product btn-cart" title="Add to cart"></a>
-                                                    <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"></a>
-                                                </div><!-- End .product-action -->
-                                            </div><!-- End .product-footer -->
-                                        </div><!-- End .product -->
-                                    </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-
-                                    <div class="col-6 col-md-4 col-lg-4">
-                                        <div class="product product-3 text-center">
-                                            <figure class="product-media">
-                                                <a href="product.html">
-                                                    <img src="{% static 'assets/images/demos/demo-22/products/product-6.jpg' %}" alt="Product image" class="product-image">
-                                                </a>
-
-                                                <div class="product-action-vertical">
-                                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                                </div><!-- End .product-action-vertical -->
-                                            </figure><!-- End .product-media -->
-
-                                            <div class="product-body">
-                                                <div class="product-cat">
-                                                    <a href="#">Power Tool Accessories</a>
-                                                </div><!-- End .product-cat -->
-                                                <h3 class="product-title"><a href="product.html">DEWALT DCB205 20V</a></h3><!-- End .product-title -->
-                                                <div class="product-price">
-                                                    $69.94
-                                                </div><!-- End .product-price -->
-                                            </div><!-- End .product-body -->
-
-                                            <div class="product-footer">
-                                                <div class="ratings-container">
+                                                    {% endif %}
+                                                    {% if produit.note_product == 2 %}
                                                     <div class="ratings">
-                                                        <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
+                                                        <div class="ratings-val" style="width: 40%;"></div><!-- End .ratings-val -->
                                                     </div><!-- End .ratings -->
-                                                    <span class="ratings-text">( 4 Reviews )</span>
-                                                </div><!-- End .rating-container -->
-
-                                                <div class="product-action">
-                                                    <a href="#" class="btn-product btn-cart" title="Add to cart"></a>
-                                                    <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"></a>
-                                                </div><!-- End .product-action -->
-                                            </div><!-- End .product-footer -->
-                                        </div><!-- End .product -->
-                                    </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-
-                                    <div class="col-6 col-md-4 col-lg-4">
-                                        <div class="product product-3 text-center">
-                                            <figure class="product-media">
-                                                <span class="product-label label-sale">Sale</span>
-                                                <a href="product.html">
-                                                    <img src="{% static 'assets/images/demos/demo-22/products/product-7.jpg' %}" alt="Product image" class="product-image">
-                                                </a>
-
-                                                <div class="product-action-vertical">
-                                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                                </div><!-- End .product-action-vertical -->
-                                            </figure><!-- End .product-media -->
-
-                                            <div class="product-body">
-                                                <div class="product-cat">
-                                                    <a href="#">Power Tools</a>
-                                                </div><!-- End .product-cat -->
-                                                <h3 class="product-title"><a href="product.html">BLACK+DECKER BDEJS600C</a></h3><!-- End .product-title -->
-                                                <div class="product-price">
-                                                    <span class="new-price">$42.99</span>
-                                                    <span class="old-price">Was $67.50</span>
-                                                </div><!-- End .product-price -->
-                                            </div><!-- End .product-body -->
-
-                                            <div class="product-footer">
-                                                <div class="ratings-container">
+                                                    {% endif %}
+                                                    {% if produit.note_product == 3 %}
+                                                    <div class="ratings">
+                                                        <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
+                                                    </div><!-- End .ratings -->
+                                                    {% endif %}
+                                                    {% if produit.note_product == 4 %}
                                                     <div class="ratings">
                                                         <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
                                                     </div><!-- End .ratings -->
-                                                    <span class="ratings-text">( 3 Reviews )</span>
+                                                    {% endif %}
+                                                    {% if produit.note_product == 5 %}
+                                                    <div class="ratings">
+                                                        <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
+                                                    </div><!-- End .ratings -->
+                                                    {% endif %}
+                                                    <span class="ratings-text">( {{ produit.review }} Reviews )</span>
                                                 </div><!-- End .rating-container -->
 
-                                                <div class="product-nav product-nav-dots">
-                                                    <a href="#" class="active" style="background: #78645f;"><span class="sr-only">Color name</span></a>
-                                                    <a href="#" style="background: #b89474;"><span class="sr-only">Color name</span></a>
-                                                    <a href="#" style="background: #666666;"><span class="sr-only">Color name</span></a>
-                                                </div><!-- End .product-nav -->
+
 
                                                 <div class="product-action">
-                                                    <a href="#" class="btn-product btn-cart" title="Add to cart"></a>
-                                                    <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"></a>
+                                                    <a href="#"   onclick="addCartCookie( '{{ produit.produit.pk }}' ); return false;" class="btn-product btn-cart" title="Add to cart">{% trans 'Ajouter au panier' %}</a>
+
                                                 </div><!-- End .product-action -->
                                             </div><!-- End .product-footer -->
                                         </div><!-- End .product -->
                                     </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
+                                    {% endfor %}
+
+
+
+
+
+                                </div><!-- End .row -->
+								<div class="row justify-content-center display" id="products_recent">
+                                    {% for produit in page_obj_recent %}
+                                    <div class="col-6 col-md-4 col-lg-4 all_product">
+                                        <div class="product product-3 text-center">
+                                            <figure class="product-media">
+                                                <span class="product-label label-sale">Sale</span>
+                                                <a href="{% url 'product' id=produit.produit.pk %}">
+                                                    <img src="{{ produit.produit.image1.url }}" alt="Product image" class="product-image">
+                                                </a>
+
+                                                <div class="product-action-vertical">
+                                                    <a href="#" onclick="addWishlistCookie('{{ produit.produit.pk }}'); return false;" class="btn-product-icon btn-wishlist btn-expandable"><span>{% trans 'ajouter aux favoris' %}</span></a>
+                                                </div><!-- End .product-action-vertical -->
+                                            </figure><!-- End .product-media -->
+
+                                            <div class="product-body">
+                                                <div class="product-cat categorie">
+                                                    <a href="#"><b>{{ produit.produit.categorie }}</b></a>
+                                                </div><!-- End .product-cat -->
+                                                <h3 class="product-title"><a href="{% url 'product' id=produit.produit.pk %}">{{ produit.produit.nom }}</a></h3><!-- End .product-title -->
+                                                <div class="product-price">
+                                                    <span class="new-price">${{ produit.produit.prix }}</span>
+                                                    <span class="old-price">Was $330.00</span>
+                                                </div><!-- End .product-price -->
+                                            </div><!-- End .product-body -->
+
+                                            <div class="product-footer">
+                                                <div class="ratings-container">
+                                                    {% if produit.note_product == 0 %}
+                                                    <div class="ratings">
+                                                        <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
+                                                    </div><!-- End .ratings -->
+                                                    {% endif %}
+                                                    {% if produit.note_product == 1 %}
+                                                    <div class="ratings">
+                                                        <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
+                                                    </div><!-- End .ratings -->
+                                                    {% endif %}
+                                                    {% if produit.note_product == 2 %}
+                                                    <div class="ratings">
+                                                        <div class="ratings-val" style="width: 40%;"></div><!-- End .ratings-val -->
+                                                    </div><!-- End .ratings -->
+                                                    {% endif %}
+                                                    {% if produit.note_product == 3 %}
+                                                    <div class="ratings">
+                                                        <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
+                                                    </div><!-- End .ratings -->
+                                                    {% endif %}
+                                                    {% if produit.note_product == 4 %}
+                                                    <div class="ratings">
+                                                        <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
+                                                    </div><!-- End .ratings -->
+                                                    {% endif %}
+                                                    {% if produit.note_product == 5 %}
+                                                    <div class="ratings">
+                                                        <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
+                                                    </div><!-- End .ratings -->
+                                                    {% endif %}
+                                                    <span class="ratings-text">( {{ produit.review }} Reviews )</span>
+                                                </div><!-- End .rating-container -->
+
+
+
+                                                <div class="product-action">
+                                                    <a href="#"   onclick="addCartCookie( '{{ produit.produit.pk }}' ); return false;" class="btn-product btn-cart" title="Add to cart">{% trans 'Ajouter au panier' %}</a>
+
+                                                </div><!-- End .product-action -->
+                                            </div><!-- End .product-footer -->
+                                        </div><!-- End .product -->
+                                    </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
+                                    {% endfor %}
+
+
 
 
 
@@ -528,20 +379,58 @@
                             </div><!-- End .products -->
 
                 			<nav aria-label="Page navigation">
-							    <ul class="pagination justify-content-center">
-                                    {% if  page_obj.has_previous %}
+							    <ul class="pagination justify-content-center" id="pagination_all">
+                                    {% if  page_obj_all.has_previous %}
 							        <li class="page-item disabled">
-							            <a class="page-link page-link-prev" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous" tabindex="-1" aria-disabled="true">
+							            <a class="page-link page-link-prev" href="?page={{ page_obj_all.previous_page_number }}" aria-label="Previous" tabindex="-1" aria-disabled="true">
 							                <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
 							            </a>
 							        </li>
                                     {% endif %}
-							        <li class="page-item active" aria-current="page"><a class="page-link" href="#">{{ page_obj.number }}</a></li>
+							        <li class="page-item active" aria-current="page"><a class="page-link" href="#">{{ page_obj_all.number }}</a></li>
 
-							        <li class="page-item-total">de {{ page_obj.paginator.num_pages }}</li>
-                                    {% if page_obj.has_next %}
+							        <li class="page-item-total">de {{ page_obj_all.paginator.num_pages }}</li>
+                                    {% if page_obj_all.has_next %}
 							        <li class="page-item">
-							            <a class="page-link page-link-next" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+							            <a class="page-link page-link-next" href="?page={{ page_obj_all.next_page_number }}" aria-label="Next">
+							                Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+							            </a>
+							        </li>
+                                    {% endif %}
+							    </ul>
+                                 <ul class="pagination justify-content-center" id="pagination_best">
+                                    {% if  page_obj_best.has_previous %}
+							        <li class="page-item disabled">
+							            <a class="page-link page-link-prev" href="?page={{ page_obj_best.previous_page_number }}" aria-label="Previous" tabindex="-1" aria-disabled="true">
+							                <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
+							            </a>
+							        </li>
+                                    {% endif %}
+							        <li class="page-item active" aria-current="page"><a class="page-link" href="#">{{ page_obj_best.number }}</a></li>
+
+							        <li class="page-item-total">de {{ page_obj_best.paginator.num_pages }}</li>
+                                    {% if page_obj_best.has_next %}
+							        <li class="page-item">
+							            <a class="page-link page-link-next" href="?page={{ page_obj_best.next_page_number }}" aria-label="Next">
+							                Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+							            </a>
+							        </li>
+                                    {% endif %}
+							    </ul>
+                                 <ul class="pagination justify-content-center" id="pagination_recent">
+                                    {% if  page_obj_recent.has_previous %}
+							        <li class="page-item disabled">
+							            <a class="page-link page-link-prev" href="?page={{ page_obj_recent.previous_page_number }}" aria-label="Previous" tabindex="-1" aria-disabled="true">
+							                <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
+							            </a>
+							        </li>
+                                    {% endif %}
+							        <li class="page-item active" aria-current="page"><a class="page-link" href="#">{{ page_obj_recent.number }}</a></li>
+
+							        <li class="page-item-total">de {{ page_obj_recent.paginator.num_pages }}</li>
+                                    {% if page_obj_recent.has_next %}
+							        <li class="page-item">
+							            <a class="page-link page-link-next" href="?page={{ page_obj_recent.next_page_number }}" aria-label="Next">
 							                Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
 							            </a>
 							        </li>
@@ -553,7 +442,7 @@
                 </div><!-- End .container -->
             </div><!-- End .page-content -->
             {% else %}
-            <div class="error-content text-center" style="background-image: url(assets/images/backgrounds/error-bg.jpg)">
+            <div class="error-content text-center" style="background-image: url( {% static 'assets/images/backgrounds/error-bg.jpg' %})">
             	<div class="container">
             		<h1 class="error-title">Error 404</h1><!-- End .error-title -->
             		<p>{% trans "Le produit recherché n'existe pas." %}</p>
@@ -571,6 +460,51 @@
 {% block javascript %}
 <script type="text/javascript">
 
+$('#products_all').show() ;
+$('#pagination_all').show() ;
+
+$('#products_best').hide() ;
+$('#pagination_best').hide() ;
+
+$('#products_recent').hide() ;
+$('#pagination_recent').hide() ;
+
+$('#sortby_pr').change(function() {
+ value = $(this).val() ;
+ if(value == 'popularity'){
+    $('#products_all').show() ;
+    $('#pagination_all').show() ;
+
+    $('#products_best').hide() ;
+    $('#pagination_best').hide() ;
+
+    $('#products_recent').hide() ;
+    $('#pagination_recent').hide() ;
+ }
+
+ if(value == 'best'){
+    $('#products_best').show() ;
+    $('#pagination_best').show() ;
+
+    $('#products_all').hide() ;
+    $('#pagination_all').hide() ;
+
+    $('#products_recent').hide() ;
+    $('#pagination_recent').hide() ;
+ }
+
+ if(value == 'recent'){
+    $('#products_recent').show() ;
+    $('#pagination_recent').show() ;
+
+    $('#products_best').hide() ;
+    $('#pagination_best').hide() ;
+
+    $('#products_all').hide() ;
+    $('#pagination_all').hide() ;
+ }
+
+});
 
     $("input[name='filterStatus']").change( function() {
         if ( $("input[name='filterStatus']:checked").length > 0){
@@ -749,7 +683,7 @@ $.ajax({
                         },
 
                         error: function( response ){
-
+                            swal("Patientez!", "Ce produit est en rupture de stock!", "warning");
                         }
 
                     });

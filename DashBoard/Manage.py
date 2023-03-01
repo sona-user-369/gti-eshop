@@ -689,7 +689,12 @@ class FlickrAPICustom(FlickrAPI):
     def get_request_token(self, oauth_callback='http://' + SITE_HOSTNAME + 'flickr_callback', ):
         self.flickr_oauth.get_request_token(oauth_callback=oauth_callback)
 
+    def get_access_token(self, verifier=None):
+        if verifier is not None:
+            self.flickr_oauth.verifier = verifier
 
+        self.token_cache.token = self.flickr_oauth.get_access_token()
+        return self.token_cache.token
 def get_flickr_token(request, API_KEY, API_SECRET):
 
     # Effectuez la requête API pour obtenir le token d'authentification

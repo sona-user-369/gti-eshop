@@ -24,8 +24,8 @@
                 <div class="card-body" id="card_body">
 
                   <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
-                    <p class="text-center small">Enter your username & password to login</p>
+                    <h5 class="card-title text-center pb-0 fs-4">Se connecter</h5>
+                    <p class="text-center small">Entrer votre email et votre mot de passe pour se connecter</p>
                   </div>
 
                   <form class="row g-3 " id="login_admin_form" method="post">
@@ -66,14 +66,14 @@
                     <div class="col-12">
                       <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
-                        <label class="form-check-label" for="rememberMe">Remember me</label>
+                        <label class="form-check-label" for="rememberMe">Se souvenir de moi</label>
                       </div>
                     </div>
                     <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit">Login</button>
+                      <button class="btn btn-primary w-100" type="submit">Se connecter</button>
                     </div>
                     <div class="col-12">
-                      <p class="small mb-0">Don't have account? <a href="{% url 'register_admin' %}">Create an account</a></p>
+                      <p class="small mb-0">Vous n'avez pas de compte? <a href="{% url 'register_admin' %}">Creer un compte</a></p>
                     </div>
                   </form>
 
@@ -162,14 +162,26 @@
                     error: function (response) {
                         // alert the error if any error occured
 
-                        $('#mover').remove();
-                        if(response.responseJSON.email){
-                        $('#lor_footer').prepend('<div id="mover">' + '<ul>' + '<li class="">' +'<h6 class="text-danger">' + response.responseJSON.email + '</h6>' +'</li>'+'</ul>'+ '</div>');
-                        }else{
-                        $('#lor_footer').prepend('<div id="mover">' + '<ul>' + '<li class="">' +'<h6 class="text-danger">' + response.responseJSON.password + '</h6>' +'</li>'+'</ul>'+ '</div>');
-                        }
 
                         if(response.responseJSON.warning) {
+                            swal("Attention" , "Vous n'etes pas autorise", "error") ;
+                        }else
+                        {
+                          if(response.responseJSON.phone_unverified){
+
+                            swal("Verification echoue" , "Nous avons rencontré une erreur dans la verification de votre numero", "error") ;
+
+                          }else{
+
+                            $('input[type="email"]#id__email').addClass("is-invalid") ;
+                            $('input[type="password"]#id__password').addClass("is-invalid") ;
+
+                          }
+
+
+
+                        }
+                        if(response.responseJSON.phone_unverified) {
                             swal("Attention" , "Vous n'etes pas autorise", "error") ;
                         }else
                         {
@@ -193,13 +205,13 @@
               url: "{% url 'phone_verification' %}",
 
               success: function(response){
-                alert('cool') ;
+
                 window.location.href = "{% url 'dash' %}" ;
 
               },
 
               error: function(response){
-                alert('cool') ;
+
                 if(response.responseJSON.code_invalid){
                   document.getElementById('id_otp').classList.add('is-invalid');
                 }

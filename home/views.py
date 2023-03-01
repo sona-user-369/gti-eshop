@@ -34,8 +34,8 @@ from .models import *
 
 
 def home(request):
-    request.session['cart'] = '{"produit_set": []}'
-    request.session['wishlist'] = '{"produit_set" : []}'
+    # request.session['cart'] = '{"produit_set": []}'
+    # request.session['wishlist'] = '{"produit_set" : []}'
 
     Register = RegisterForm()
     Login = LoginForm()
@@ -248,7 +248,6 @@ def cart(request):
 
     # user = verify_user(request)["user"]
 
-
     context = {'Register': Register,
                'Login': Login,
                'username': upload_sense_data(request)['user'],
@@ -294,13 +293,19 @@ def wishlist(request):
 
 
 def category(request):
-
     product = Produit.objects.filter(is_archive=False)
     categorie = Categorie.objects.all()
     categorie_products = []
     product_info = []
     query_not_match = 0
     set_cookie(request)
+
+    # Getting recents products
+    recent_products = get_recent_products()
+
+    # Getting best-selling products
+    best_seller_products = get_best_seller(6)
+
     try:
         session = request.session['search_phrase']
     except:
@@ -348,10 +353,17 @@ def category(request):
                     pass
                 product_info.append({'produit': p, 'review': len_review, 'note_product': note_for_product})
 
-    paginator = Paginator(product_info, 4)
+    paginator_all = Paginator(product_info, 4)
+    page_number_all = request.GET.get('page')
+    page_obj_all = paginator_all.get_page(page_number_all)
 
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    paginator_best = Paginator(best_seller_products, 4)
+    page_number_best = request.GET.get('page')
+    page_obj_best = paginator_best.get_page(page_number_best)
+
+    paginator_recent = Paginator(recent_products, 4)
+    page_number_recent = request.GET.get('get')
+    page_obj_recent = paginator_recent.get_page(page_number_recent)
 
     for c in categorie:
         try:
@@ -361,8 +373,6 @@ def category(request):
             pass
     Register = RegisterForm()
     Login = LoginForm()
-
-
 
     context = {'Register': Register,
                'Login': Login,
@@ -374,7 +384,9 @@ def category(request):
                'product': product_info,
                'total': upload_sense_data(request)['total'],
                'categorie': categorie_products,
-               'page_obj': page_obj,
+               'page_obj_all': page_obj_all,
+               'page_obj_best': page_obj_best,
+               'page_obj_recent': page_obj_recent,
                'query_not_match': query_not_match,
                'languages': upload_sense_data(request)['languages'],
                'total_products': len(product),
@@ -436,8 +448,6 @@ def search_product(request):
             pass
     Register = RegisterForm()
     Login = LoginForm()
-
-
 
     context = {'Register': Register,
                'Login': Login,
@@ -767,6 +777,7 @@ def shipping(request):
                }
 
     return render(request, 'home/shipping.html', context)
+
 
 def flickr_callback(request):
     if request.session.get('token_flickr') is not None:

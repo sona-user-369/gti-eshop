@@ -42,6 +42,8 @@
     <link rel="stylesheet" href="{% static 'assets_home/css/skins/skin-demo-22.css' %}">
     <link rel="stylesheet" href="{% static 'assets_home/css/demos/demo-22.css' %}">
     <link rel="stylesheet" href="{% static 'assets_home/css/intlTelInput.css' %}">
+    <link rel="stylesheet" href="{% static 'assets_home/css/cookiealert.css' %}" />
+
     <!--<link rel="stylesheet" href="{% static 'assets_home/css/profil.css' %}">-->
 
     {% block style %}
@@ -1034,7 +1036,6 @@
                                             {{ field }}
 
 
-
                                             {% if field.id_for_label == 'id_contact' %}
                                             <div class="invalid-feedback"><h6 class="text-danger" >{% trans 'Entrer un contact valide' %}</h6></div>
                                             {% endif %}
@@ -1106,9 +1107,6 @@
                                           <div class="invalid-feedback"><h6 class="text-danger" >{% trans "L'email entre n'est pas enregistre" %}</h6></div>
                                         </div>
 
-
-
-
                                         <div class="form-footer">
                                             <button type="submit" class="btn btn-outline-success-2 btn-success">
                                                 <span>{% trans 'VALIDER' %}</span>
@@ -1163,6 +1161,18 @@
             </div>
         </div>
     </div>
+    <div class="alert alert-dismissible text-center cookiealert" role="alert">
+
+  <div class="cookiealert-container">
+
+    <b>Aimez vous les cookies?</b> &#x1F36A; Nous utilisons des cookies pour vous assurer la meilleure expérience sur notre site Web. <a href="http://cookiesandyou.com/" target="_blank">Pour en savoir plus</a>
+
+    <button type="button" class="btn btn-primary btn-sm acceptcookies" aria-label="Close">
+        Je suis d'accord
+    </button>
+  </div>
+</div>
+
 
  	<!-- Plugins JS File -->
 
@@ -1180,6 +1190,9 @@
     <script src="{% static 'assets_home/css/intlTelInput.js' %}"></script>
 
     <script src="{% static 'assets_home/css/sweetalert.min.js' %}"></script>
+    <script src="{% static 'assets_home/css/cookiealert.js' %}"></script>
+    <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=63e8f5b6762806001a070209&product=inline-share-buttons&source=platform" async="async"></script>
+
 
 
     <!-- Main JS File -->
@@ -1244,7 +1257,7 @@
                         },
 
                         error: function( response ){
-
+                            swal("Patientez!", "Ce produit est en rupture de stock!", "warning");
                         }
 
                     });
@@ -1372,15 +1385,17 @@
 							var total_len = total_row.length ;
 							var s = 0 ;
 
+
 							for (var i=0 ; i<total_len ; i++){
 
-								s += parseInt(String(total_row[i].innerHTML).replace('=', '')) ;
+								s += parseInt(String(total_row[i].innerHTML).replace('= $', '')) ;
 
 
 
 							}
 
 							document.getElementById('total_cart_price').innerHTML = '$' + s ;
+
 							
 
 
@@ -1467,7 +1482,7 @@
                     success: function (response) {
 
                         document.getElementById('login_form').reset();
-                        window.location.href = "{% url 'home' %}" ;
+                        window.location.reload() ;
                         if($('#mover')){
                         $('#mover').remove();
                         }
@@ -1487,7 +1502,7 @@
 
 
 
-                        console.log(response.responseJSON.contact)
+
                     }
                 });
                 return false;
@@ -1595,7 +1610,7 @@
 
             function resetTimer(){
                 clearTimeout(time);
-                time = setTimeout(logout, 1000*900);
+                time = setTimeout(logout, 1000*1200);
             }
 
 

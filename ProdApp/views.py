@@ -58,50 +58,52 @@ def add_cart_cookie(request):
     produit = Produit.objects.get(pk=id_produit)
     produit_set = cart['produit_set']
     products_ids = []
+    if produit.stock > 0 :
+        for product in produit_set:
+            products_ids.append(product['id'])
 
-    for product in produit_set:
-        products_ids.append(product['id'])
-
-    if str(produit.pk) in products_ids:
-        produit_set_copy = produit_set.copy()
-        product_dict = produit_set_copy.pop(products_ids.index(str(produit.pk)))
-        product_quantite = product_dict['quantite']
-        if request.GET.get('quantite'):
-            quantite = request.GET['quantite']
-            updated_produit = {'id': str(produit.pk), 'nom': produit.nom, 'image': produit.image1.url,
-                               'prix': produit.prix,
-                               'quantite': int(quantite) + int(product_quantite)}
-            updated_produit.update({'subtotal': updated_produit['prix'] * updated_produit['quantite']})
-            produit_set_copy.append(updated_produit)
-            cart.update({'produit_set': produit_set_copy})
+        if str(produit.pk) in products_ids:
+            produit_set_copy = produit_set.copy()
+            product_dict = produit_set_copy.pop(products_ids.index(str(produit.pk)))
+            product_quantite = product_dict['quantite']
+            if request.GET.get('quantite'):
+                quantite = request.GET['quantite']
+                updated_produit = {'id': str(produit.pk), 'nom': produit.nom, 'image': produit.image1.url,
+                                   'prix': produit.prix,
+                                   'quantite': int(quantite) + int(product_quantite)}
+                updated_produit.update({'subtotal': updated_produit['prix'] * updated_produit['quantite']})
+                produit_set_copy.append(updated_produit)
+                cart.update({'produit_set': produit_set_copy})
+            else:
+                updated_produit = {'id': str(produit.pk), 'nom': produit.nom, 'image': produit.image1.url,
+                                   'prix': produit.prix,
+                                   'quantite': int(product_quantite) + 1}
+                updated_produit.update({'subtotal': updated_produit['prix'] * updated_produit['quantite']})
+                produit_set_copy.append(updated_produit)
+                cart.update({'produit_set': produit_set_copy})
         else:
-            updated_produit = {'id': str(produit.pk), 'nom': produit.nom, 'image': produit.image1.url,
-                               'prix': produit.prix,
-                               'quantite': int(product_quantite) + 1}
-            updated_produit.update({'subtotal': updated_produit['prix'] * updated_produit['quantite']})
-            produit_set_copy.append(updated_produit)
-            cart.update({'produit_set': produit_set_copy})
+            if request.GET.get('quantite'):
+                added_product = {'id': str(produit.pk), 'nom': produit.nom, 'image': produit.image1.url,
+                                 'prix': produit.prix,
+                                 'quantite': int(request.GET['quantite'])}
+                added_product.update({'subtotal': added_product['prix'] * added_product['quantite']})
+                produit_set.append(added_product)
+                cart.update({'produit_set': produit_set})
+            else:
+                added_product = {'id': str(produit.pk), 'nom': produit.nom, 'image': produit.image1.url,
+                                 'prix': produit.prix,
+                                 'quantite': 1}
+                added_product.update({'subtotal': added_product['prix'] * added_product['quantite']})
+                produit_set.append(added_product)
+                cart.update({'produit_set': produit_set})
+
+        request.session['cart'] = json.dumps(cart)
+        cart_number = len(cart['produit_set'])
+        request.session['cart_count'] = cart_number
+        print(request.session['cart'])
+        return Response({'cart_number': cart_number}, status=200)
     else:
-        if request.GET.get('quantite'):
-            added_product = {'id': str(produit.pk), 'nom': produit.nom, 'image': produit.image1.url,
-                             'prix': produit.prix,
-                             'quantite': int(request.GET['quantite'])}
-            added_product.update({'subtotal': added_product['prix'] * added_product['quantite']})
-            produit_set.append(added_product)
-            cart.update({'produit_set': produit_set})
-        else:
-            added_product = {'id': str(produit.pk), 'nom': produit.nom, 'image': produit.image1.url,
-                             'prix': produit.prix,
-                             'quantite': 1}
-            added_product.update({'subtotal': added_product['prix'] * added_product['quantite']})
-            produit_set.append(added_product)
-            cart.update({'produit_set': produit_set})
-
-    request.session['cart'] = json.dumps(cart)
-    cart_number = len(cart['produit_set'])
-    request.session['cart_count'] = cart_number
-    print(request.session['cart'])
-    return Response({'cart_number': cart_number}, status=200)
+        return Response(status=400)
 
 
 @api_view(['GET'])
@@ -810,25 +812,31 @@ def add_product(request):
             else:
 
                 image = request.data['image1']
-                API_KEY = "Y96ctH5L5NCCCEm5sKPmjKLrK00RQNjqJVANYdjbUyw"
-                headers = {
-                    "Authorization": f"Client-ID {API_KEY}",
-                    'Accept-Version': 'v1'
-                }
-                files = {
-                    "image": image
-                }
-                url = "https://api.unsplash.com/photos"
-                data = {'name': request.data['nom'],'description': ''}
-                print(headers)
-                response = requests.post(url, data=data ,files=files)
-                photo = response.json()
-                print(photo)
-                photo_id = photo['id']
-                product = product_serializer.save()
+                flickr = FlickrAPICustom(settings.FLICKR_API_KEY, settings.FLICKR_SECRET_KEY, store_token=True)
+                q = flickr.get_access_token(verifier='267207c6b83b0d63')
+                request.session['flickr_token'] = q
 
-                image = Image.objects.create(title=request.data['nom'], flickr_id=photo_id, source=f"https://api.unsplash.com/photos/{photo_id}", produit=product)
-                image.save()
+                token = request.session.get('flickr_token')
+                if token is None:
+                    flickr.authenticate_via_browser(perms='write')
+                else:
+                    flickr = FlickrAPICustom(settings.FLICKR_API_KEY, settings.FLICKR_SECRET_KEY, store_token=True, token=token)
+                    response = flickr.upload(image_file=image, title=request.data['nom'], description='', filename=request.data['nom'])
+
+                    photo_id = response.get('photoid')
+                    photo = flickr.photos.getInfo(photo_id=photo_id)
+                    extension_photo = photo.get("photo").get("originalformat")
+                    url = "https://farm{farm_id}.staticflickr.com/{server_id}/{id}_{secret}.{extension}".format(
+                        farm_id=photo.get("photo").get("farm"),
+                        server_id=photo.get("photo").get("server"),
+                        id=photo.get("photo").get("id"),
+                        secret=photo.get("photo").get("secret"),
+                        extension=extension_photo,
+                    )
+                    product = product_serializer.save()
+
+                    image = Image.objects.create(title=request.data['nom'], flickr_id=photo_id, source=url, produit=product)
+                    image.save()
 
                 try:
                     add_logo_to_img(product.image1.url)

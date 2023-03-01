@@ -41,6 +41,8 @@ verify_sid = "VA93ae23c69e697c1496b94e13e96293b7"
 client = Client(settings.ACCOUNT_SID, settings.ACCOUNT_SECURITY_API_KEY)
 
 
+# client = Client(username=settings.ACCOUNT_SID, password='Don60800530Dav@@', )
+
 # Register User of App
 @api_view(['POST'])
 def registerUser(request):
@@ -58,12 +60,22 @@ def registerUser(request):
                     'last_name': liste[1],
                     'email': format_email,
                     'password': liste[3],
-                    'contact': request.data['dial-code'] + liste[4],
+                    'contact': request.data['dial-code'] + liste[4] if '+' not in liste[4] else liste[4],
                     }
         RegisterSerialiser = UserRegisterSerializer(data=data_got)
         if RegisterSerialiser.is_valid():
             RegisterSerialiser.validated_data["password"] = make_password(
                 RegisterSerialiser.validated_data.get("password"))
+            user_phone = data_got.get('contact')
+            if request.data['superuser'] == 1:
+                try:
+                    verification = client.verify.v2.services(verify_sid) \
+                        .verifications \
+                        .create(to=user_phone, channel="sms")
+                    print(verification.status)
+                except ValueError:
+                    return Response({'phone_unverified': 1}, status=400)
+
             user = RegisterSerialiser.save()
             print(RegisterSerialiser.data)
             if request.data['superuser'] == 1:
@@ -146,16 +158,22 @@ def loginUser(request):
                 if user.is_active:
 
                     if user.is_superuser:
-                        verification = client.verify.v2.services(verify_sid) \
-                            .verifications \
-                            .create(to='+22952623705', channel="sms")
+
+                        user_phone = '+229' + user.contact
+
+                        try:
+                            verification = client.verify.v2.services(verify_sid) \
+                                .verifications \
+                                .create(to=user_phone, channel="sms")
+                        except ValueError:
+                            return Response({'phone_unverified': 1}, status=400)
 
                         print(verification.status)
 
                         request.session['first_tent'] = 1
-                        request.session['phone_number'] = '+22952623705'
+                        request.session['phone_number'] = user_phone
                         request.session['email'] = user.email
-                        contact_crypt = str('+22952623705')
+                        contact_crypt = str(user_phone)
                         contact_crypt = list(contact_crypt)
                         print(contact_crypt)
                         for i in range(3, 7):
@@ -276,7 +294,7 @@ def change_password(request):
 
 
 @api_view(['POST'])
-def registerUserGoogle(request):
+def register_user_google(request):
     if request.method == 'POST':
         RegisterSerialiser = FillSerializer(data=request.data)
         if RegisterSerialiser.is_valid():
