@@ -195,7 +195,7 @@
                                             {% for categorie in categories %}
                                             <li class="megamenu-container">
                                                 <a class="sf-with-ul" href="{% url 'retrieve_categorie' id=categorie.categorie_pk %}"><i class="icon-couch"></i>{{categorie.categorie_data.nom}}</a>
-                                                {% if categorie.len_sous_categories != 0 %}
+                                                {% if categorie.len_sous_categorie != 0 %}
 
                                                 <div class="megamenu" style="display: none;">
                                                     <div class="row no-gutters">
@@ -205,7 +205,7 @@
                                                                     <div class="col-md-6">
                                                                         {% for sous_categorie in categorie.its_sous_categorie %}
 
-                                                                        <div class="menu-title"><a href="">{{sous.categorie.nom}}</a></div><!-- End .menu-title -->
+                                                                        <div class="menu-title"><a href="{% url 'retrieve_sous_categorie' id=sous_categorie.pk %}">{{sous_categorie.data.nom}}</a></div><!-- End .menu-title -->
 
 
                                                                         {% endfor %}
@@ -1163,15 +1163,15 @@
     </div>
     <div class="alert alert-dismissible text-center cookiealert" role="alert">
 
-  <div class="cookiealert-container">
+      <div class="cookiealert-container">
 
-    <b>Aimez vous les cookies?</b> &#x1F36A; Nous utilisons des cookies pour vous assurer la meilleure expérience sur notre site Web. <a href="http://cookiesandyou.com/" target="_blank">Pour en savoir plus</a>
+        <b>Aimez vous les cookies?</b> &#x1F36A; Nous utilisons des cookies pour vous assurer la meilleure expérience sur notre site Web. <a href="http://cookiesandyou.com/" target="_blank">Pour en savoir plus</a>
 
-    <button type="button" class="btn btn-primary btn-sm acceptcookies" aria-label="Close">
-        Je suis d'accord
-    </button>
-  </div>
-</div>
+        <button type="button" class="btn btn-primary btn-sm acceptcookies" aria-label="Close">
+            Je suis d'accord
+        </button>
+      </div>
+    </div>
 
 
  	<!-- Plugins JS File -->
@@ -1602,16 +1602,18 @@
 
         let inactivityTime = function(){
             let time ;
-            window.onload = resetTimer ;
-            window.onmousemove = resetTimer;
-            window.onkeypress = resetTimer ;
-
-
-
+            window.onload = resetTimer;
+            document.onmousemove = resetTimer;
+            document.onmousedown = resetTimer; // touchscreen presses
+            document.ontouchstart = resetTimer;
+            document.onclick = resetTimer; // touchpad clicks
+            document.onkeypress = resetTimer;
+            document.addEventListener('scroll', resetTimer, true);
             function resetTimer(){
                 clearTimeout(time);
                 time = setTimeout(logout, 1000*1200);
             }
+
 
 
 

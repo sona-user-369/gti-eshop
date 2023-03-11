@@ -299,6 +299,7 @@ def category(request):
     product_info = []
     query_not_match = 0
     set_cookie(request)
+    print('+++++=++++++++')
 
     # Getting recents products
     recent_products = get_recent_products()
@@ -308,13 +309,18 @@ def category(request):
 
     try:
         session = request.session['search_phrase']
-    except:
+    except KeyError:
         session = None
 
     try:
         session_categorie = request.session['category_name']
-    except:
+    except KeyError:
         session_categorie = None
+
+    try:
+        session_sous_categorie = request.session['sous_category_name']
+    except KeyError:
+        session_sous_categorie = None
 
     if session is not None:
         search_done = search_for_product(session)
@@ -342,17 +348,32 @@ def category(request):
                     pass
                 product_info.append({'produit': p, 'review': len_review, 'note_product': note_for_product})
         else:
-            for p in product:
-                note_for_product = 0
-                len_review = len(Avis.objects.filter(produit=p))
-                for avis in Avis.objects.filter(produit=p):
-                    note_for_product += avis.rating
-                try:
-                    note_for_product = int(note_for_product / len_review)
-                except:
-                    pass
-                product_info.append({'produit': p, 'review': len_review, 'note_product': note_for_product})
-
+            if session_sous_categorie is not None:
+                request.session['sous_category_name'] = None
+                sous_category_name = session_sous_categorie
+                got_categorie = SousCategorie.objects.get(nom=sous_category_name)
+                products = Produit.objects.filter(sous_categorie=got_categorie, is_archive=False)
+                for p in products:
+                    note_for_product = 0
+                    len_review = len(Avis.objects.filter(produit=p))
+                    for avis in Avis.objects.filter(produit=p):
+                        note_for_product += avis.rating
+                    try:
+                        note_for_product = int(note_for_product / len_review)
+                    except:
+                        pass
+                    product_info.append({'produit': p, 'review': len_review, 'note_product': note_for_product})
+            else:
+                for p in product:
+                    note_for_product = 0
+                    len_review = len(Avis.objects.filter(produit=p))
+                    for avis in Avis.objects.filter(produit=p):
+                        note_for_product += avis.rating
+                    try:
+                        note_for_product = int(note_for_product / len_review)
+                    except:
+                        pass
+                    product_info.append({'produit': p, 'review': len_review, 'note_product': note_for_product})
     paginator_all = Paginator(product_info, 4)
     page_number_all = request.GET.get('page')
     page_obj_all = paginator_all.get_page(page_number_all)
@@ -392,7 +413,7 @@ def category(request):
                'total_products': len(product),
                'copywrite_year': upload_sense_data(request)['copywrite_year']
                }
-
+    print(context)
     return render(request, 'home/category.html', context)
 
 
@@ -403,6 +424,17 @@ def retrieve_categorie(request, id):
     categorie = Categorie.objects.get(pk=id)
 
     request.session['category_name'] = categorie.nom
+
+    return redirect('category')
+
+
+def retrieve_sous_categorie(request,id):
+    id = str(id)
+    id = id.replace('-', '')
+
+    sous_categorie = SousCategorie.objects.get(pk=id)
+
+    request.session['sous_category_name'] = sous_categorie.nom
 
     return redirect('category')
 

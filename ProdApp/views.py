@@ -24,8 +24,7 @@ import qrcode
 from .document import DocumentProduit
 from .serializer import *
 from elasticsearch_dsl import Q
-
-
+from PIL import Image as _Image
 
 @api_view(["GET"])
 def Produit_all(request):
@@ -58,7 +57,7 @@ def add_cart_cookie(request):
     produit = Produit.objects.get(pk=id_produit)
     produit_set = cart['produit_set']
     products_ids = []
-    if produit.stock > 0 :
+    if produit.stock > 0:
         for product in produit_set:
             products_ids.append(product['id'])
 
@@ -146,7 +145,7 @@ def update_cart_cookie(request):
             produit = Produit.objects.get(pk=val_1)
             produit_set_copy = produit_set.copy()
             produit_set_copy.pop(products_ids.index(str(produit.pk)))
-            updated_produit = {'id': str(produit.pk), 'nom': produit.nom, 'prix': produit.prix,
+            updated_produit = {'id': str(produit.pk), 'nom': produit.nom, 'prix': produit.prix,'image': produit.image1.url,
                                'quantite': val_2}
             updated_produit.update({'subtotal': updated_produit['prix'] * updated_produit['quantite']})
             produit_set_copy.append(updated_produit)
@@ -327,13 +326,16 @@ def update_to_wishlist_object(request):
     wishlist_cookie = json.loads(request.session['wishlist'])
     user = Utilisateurs.objects.get(pk=request.session["user_primary"])
     wishlist, _ = Favoris.objects.get_or_create(utilisateur=user)
+    product_in_wishlist = wishlist.produit_set.all()
     wishlist.save()
     produit_set = wishlist_cookie['produit_set']
     for produit_str in produit_set:
         produit = Produit.objects.get(pk=produit_str['id'])
-
-        produit.favoris.add(wishlist)
-        produit.save()
+        if produit in product_in_wishlist:
+            pass
+        else:
+            produit.favoris.add(wishlist)
+            produit.save()
     return Response(status=200)
 
 
@@ -380,11 +382,12 @@ def Delete_to_wishlist(request):
 def Command_product(request):
     ship_price = {'Free Shipping': 0, 'Standart Shipping': 10, 'Express Shipping': 20}
     user = Utilisateurs.objects.get(pk=request.session['user_primary'])
+
     user_cart = Panier.objects.get(utilisateur=user)
     prix_total = 0
     try:
         ship_session = request.session['ship_option']
-    except:
+    except KeyError:
         ship_session = None
 
     if ship_session == 'No Option':
@@ -484,48 +487,60 @@ def command_instance(request, user):
 @transaction.atomic
 def comment_product(request):
     user = Utilisateurs.objects.get(pk=request.session['user_primary'])
+    print(request.data)
     id = request.data['produit_id']
     id = id.replace('-', '')
     product = Produit.objects.get(pk=id)
+    can_comment = 0
 
-    a = request.data['data'].split('&')
-    liste = []
-    for i in range(1, 3):
-        b = a[i].split('=')
-        liste.append(b[1])
-    string_unicode_content = str(liste[0])
-    string_encode_content = string_unicode_content.encode('utf8')
-    string_decode_content = string_encode_content.decode('utf8')
-    s = re.sub(r'(%[0-9A-Fa-f]+)', lambda matchobj: chr(int(matchobj.group(0)[2:], 16)), string_unicode_content)
-    print(string_decode_content)
-    print(string_unicode_content)
-    print(s)
+    user_commande = Commandes.ojects.filter(utilisateur=user, valide=True)
+    for commande in user_commande:
+        if product in commande.produit_set.all():
+            can_comment = 1
+            break
 
-    string_unicode_name = str(liste[1])
-    string_encode_name = string_unicode_name.encode('ascii', 'ignore')
-    string_decode_name = string_encode_name.decode()
+    if can_comment:
 
-    data_got = {'contenu': string_decode_content, 'name': string_decode_name}
+        # a = request.data['data'].split('&')
+        # liste = []
+        # for i in range(1, 3):
+        #     b = a[i].split('=')
+        #     liste.append(b[1])
+        string_unicode_content = str(request.data['contenu'])
+        # string_encode_content = string_unicode_content.encode('utf8')
+        # string_decode_content = string_encode_content.decode('utf8')
+        # s = re.sub(r'(%[0-9A-Fa-f]+)', lambda matchobj: chr(int(matchobj.group(0)[2:], 16)), string_unicode_content)
+        # print(string_decode_content)
+        print(string_unicode_content)
 
-    review_content = ReviewSerializer(data=data_got)
-    if review_content.is_valid():
-        try:
-            review = Avis.objects.get(utilisateur=user, produit=product)
-            review.delete()
-        except:
-            pass
+        string_unicode_name = str(request.data['name'])
+        # string_encode_name = string_unicode_name.encode('ascii', 'ignore')
+        # string_decode_name = string_encode_name.decode()
 
-        review = Avis.objects.create(utilisateur=user, produit=product,
-                                     contenu=review_content.validated_data['contenu'],
-                                     name=review_content.validated_data['name'], rating=request.data['rate'],
-                                     date=timezone.now())
-        review.save()
+        data_got = {'contenu': string_unicode_content, 'name': string_unicode_name}
 
-        return Response(model_to_dict(review), status=200)
+        review_content = ReviewSerializer(data=data_got)
+        if review_content.is_valid():
+            try:
+                review = Avis.objects.get(utilisateur=user, produit=product)
+                review.delete()
+            except:
+                pass
 
+            review = Avis.objects.create(utilisateur=user, produit=product,
+                                         contenu=review_content.validated_data['contenu'],
+                                         name=review_content.validated_data['name'], rating=request.data['rate'],
+                                         date=timezone.now())
+            review.save()
+
+            return Response(model_to_dict(review), status=200)
+
+
+        else:
+
+            return Response(review_content.errors, status=400)
     else:
-
-        return Response(review_content.errors, status=400)
+        return Response(status=400)
 
 
 @api_view(['GET', 'POST'])
@@ -603,7 +618,7 @@ def get_all_categorie(request):
         its_sous_categorie = SousCategorie.objects.filter(categorie=categorie)
         if len(its_sous_categorie) != 0:
             for sous_categorie in its_sous_categorie:
-                data_categorie_sous_categorie.append(model_to_dict(sous_categorie))
+                data_categorie_sous_categorie.append({'pk': sous_categorie.pk, 'data': model_to_dict(sous_categorie)})
         else:
             data_categorie_sous_categorie = []
 
@@ -623,7 +638,6 @@ def get_all_categorie(request):
             have_product = 0
         else:
             have_product = 1
-
         if categorie_serializer.is_valid():
 
             data_categorie.append({'categorie_pk': categorie.pk,
@@ -650,7 +664,7 @@ def get_all_sousCategories(request):
 
         sousCategorie_serializer = SousCategorieSerializer_ext(data=model_to_dict(sousCategorie))
 
-        products_in_sousCategorie = Produit.objects.filter(sous_catgeorie=sousCategorie)
+        products_in_sousCategorie = Produit.objects.filter(sous_categorie=sousCategorie)
         if len(products_in_sousCategorie) == 0:
             have_product = 0
         else:
@@ -811,36 +825,58 @@ def add_product(request):
                 return Response({'category_not_exist': 1}, status=400)
             else:
 
+                # try:
                 image = request.data['image1']
-                flickr = FlickrAPICustom(settings.FLICKR_API_KEY, settings.FLICKR_SECRET_KEY, store_token=True)
-                q = flickr.get_access_token(verifier='267207c6b83b0d63')
-                request.session['flickr_token'] = q
+                # flickr = FlickrAPICustom(settings.FLICKR_API_KEY, settings.FLICKR_SECRET_KEY, store_token=True)
+                # q = flickr.get_access_token(verifier='267207c6b83b0d63')
+                # request.session['flickr_token'] = q
 
-                token = request.session.get('flickr_token')
+                token = 'some'
                 if token is None:
-                    flickr.authenticate_via_browser(perms='write')
+                    pass
+                    # flickr.authenticate_via_browser(perms='write')
                 else:
-                    flickr = FlickrAPICustom(settings.FLICKR_API_KEY, settings.FLICKR_SECRET_KEY, store_token=True, token=token)
-                    response = flickr.upload(image_file=image, title=request.data['nom'], description='', filename=request.data['nom'])
+                    # flickr = FlickrAPICustom(settings.FLICKR_API_KEY, settings.FLICKR_SECRET_KEY, store_token=True,
+                    #                          token=token)
+                    # response = flickr.upload(image_file=image, title=request.data['nom'], description='',
+                    #                          filename=request.data['nom'])
+                    #
+                    # photo_id = response.get('photoid')
+                    # photo = flickr.photos.getInfo(photo_id=photo_id)
+                    # extension_photo = photo.get("photo").get("originalformat")
+                    # url = "https://farm{farm_id}.staticflickr.com/{server_id}/{id}_{secret}.{extension}".format(
+                    #     farm_id=photo.get("photo").get("farm"),
+                    #     server_id=photo.get("photo").get("server"),
+                    #     id=photo.get("photo").get("id"),
+                    #     secret=photo.get("photo").get("secret"),
+                    #     extension=extension_photo,
+                    # )
+                    payload ={"data": {"api_key":settings.ABSTRACT_KEY,"lossy":True}}
+                    file = {"image": image}
+                    response_upload = requests.post('https://images.abstractapi.com/v1/upload/', data=payload,
+                                                    files=file,)
+                    if response_upload.status_code != 200:
+                        print(response_upload.json())
+                        print(response_upload.status_code)
+                    else:
+                        print(response_upload.json())
+                        print(response_upload.status_code)
+                        product = product_serializer.save()
+                        url = response_upload.json()["url"]
+                        print(url)
+                        img = _Image.open(requests.get(url, stream=True).raw)
+                        # img.save('images/greenland_02a.png')
+                        image = Image.objects.create(title=request.data['nom'], source=url,
+                                                     produit=product, image=img)
+                        image.save()
+                # except:
+                #     pass
 
-                    photo_id = response.get('photoid')
-                    photo = flickr.photos.getInfo(photo_id=photo_id)
-                    extension_photo = photo.get("photo").get("originalformat")
-                    url = "https://farm{farm_id}.staticflickr.com/{server_id}/{id}_{secret}.{extension}".format(
-                        farm_id=photo.get("photo").get("farm"),
-                        server_id=photo.get("photo").get("server"),
-                        id=photo.get("photo").get("id"),
-                        secret=photo.get("photo").get("secret"),
-                        extension=extension_photo,
-                    )
-                    product = product_serializer.save()
-
-                    image = Image.objects.create(title=request.data['nom'], flickr_id=photo_id, source=url, produit=product)
-                    image.save()
+                product = product_serializer.save()
 
                 try:
                     add_logo_to_img(product.image1.url)
-                except IsADirectoryError:
+                except FileNotFoundError:
                     pass
 
                 data = 'http://' + SITE_HOSTNAME + '/product/' + str(product.pk)
@@ -861,12 +897,12 @@ def add_product(request):
         return Response(status=401)
 
 
-@api_view(['GET', 'POST'])
+@api_view(['POST'])
 def add_categorie(request):
     if request.method == 'POST':
 
-        data_got = {'image': request.FILES['image'],
-                    'nom': request.data['nom']}
+        # data_got = {'image': request.FILES['image'],
+        #             'nom': request.data['nom']}
         # print(request.data)
         categorie_serializer = CategorieSerializer_ext(data=request.data)
 
@@ -879,11 +915,12 @@ def add_categorie(request):
 
             return Response(categorie_serializer.data, status=200)
         else:
+            print(categorie_serializer.errors)
             return Response(categorie_serializer.errors, status=400)
 
 
-@api_view(['GET', 'POST'])
-def add_sousCategorie(request):
+@api_view(['POST'])
+def add_sous_categorie(request):
     if request.method == 'POST':
         sousCategorie_serializer = SousCategorieSerializer(data=request.data)
 
@@ -896,25 +933,36 @@ def add_sousCategorie(request):
             return Response(sousCategorie_serializer.data, status=200)
         else:
             return Response(sousCategorie_serializer.errors, status=400)
+    else:
+        return 1
 
 
 @api_view(['POST'])
 def update_product(request):
+    print(dict(request.data))
     product = Produit.objects.get(pk=request.data['id'])
     if request.method == 'POST':
-
-        update_serializer = ProduitSerializer(data=request.data['data'])
+        data = dict(request.data)
+        update_serializer = ProduitSerializer(data=request.data)
+        # print(request.data)
 
         if update_serializer.is_valid():
-
-            update_serializer.save()
-
-            product.__dict__.update(update_serializer.data)
-
-            product.save()
+            # update_serializer.save()
+            # update_serializer.update(product, validated_data=request.data)
+            # print(len(request.data['image1']))
+            if len(request.data['image1']) != 0:
+                update_serializer.validated_data['image1'] = request.data['image1']
+            else:
+                update_serializer.validated_data.pop('image1')
+                print(update_serializer.validated_data)
+            update_serializer.update(product, validated_data=update_serializer.validated_data)
+            # product.__dict__.update(update_serializer.validated_data)
+            #
+            # product.save()
 
             return Response(update_serializer.data, status=200)
         else:
+            print(update_serializer.errors)
             return Response(update_serializer.errors, status=400)
 
 
@@ -923,15 +971,22 @@ def update_categorie(request):
     categorie = Categorie.objects.get(pk=request.data['id'])
     if request.method == 'POST':
 
-        update_serializer = CategorieSerializer(data=request.data['data'])
+        update_serializer = CategorieSerializer_ext(data=request.data['data'])
 
         if update_serializer.is_valid():
 
-            update_serializer.save()
+            if len(request.data['image']) != 0:
+                update_serializer.validated_data['image'] = request.data['image']
+            else:
+                update_serializer.validated_data.pop('image')
+                print(update_serializer.validated_data)
+            update_serializer.update(categorie, validated_data=update_serializer.validated_data)
 
-            categorie.__dict__.update(update_serializer.data)
-
-            categorie.save()
+            # update_serializer.save()
+            #
+            # categorie.__dict__.update(update_serializer.data)
+            #
+            # categorie.save()
 
             return Response(update_serializer.data, status=200)
         else:
@@ -939,19 +994,26 @@ def update_categorie(request):
 
 
 @api_view(['POST'])
-def update_sousCategorie(request):
+def update_sous_categorie(request):
     sousCategorie = SousCategorie.objects.get(pk=request.data['id'])
     if request.method == 'POST':
 
-        update_serializer = SousCategorieSerializer(data=request.data['data'])
+        update_serializer = SousCategorieSerializer_ext(data=request.data['data'])
 
         if update_serializer.is_valid():
 
-            update_serializer.save()
+            if len(request.data['image']) != 0:
+                update_serializer.validated_data['image'] = request.data['image']
+            else:
+                update_serializer.validated_data.pop('image')
+                print(update_serializer.validated_data)
+            update_serializer.update(sousCategorie, validated_data=update_serializer.validated_data)
 
-            sousCategorie.__dict__.update(update_serializer.data)
-
-            sousCategorie.save()
+            # update_serializer.save()
+            #
+            # sousCategorie.__dict__.update(update_serializer.data)
+            #
+            # sousCategorie.save()
 
             return Response(update_serializer.data, status=200)
         else:

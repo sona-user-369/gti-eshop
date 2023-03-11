@@ -126,7 +126,7 @@ def loginUser(request):
 
         try:
             from_google = request.data['from_google']
-        except:
+        except KeyError:
             from_google = None
 
         if from_google is None:
@@ -226,22 +226,25 @@ def loginUser(request):
 
 @api_view(['POST'])
 def phone_verification(request):
-    print('cool')
     if request.session['first_tent'] == 1:
         request.session['first_tent'] = 0
-        request.session['tentative'] = 1
-    if int(request.session['tentative']) <= 3:
+        request.session['tentative'] = 0
+    if int(request.session['tentative']) < 3:
         try:
             verification_check = client.verify.v2.services(verify_sid) \
                 .verification_checks \
                 .create(to=request.session['phone_number'], code=request.data['otp'])
-        except:
+        except ValueError:
             return Response({'expired_code': 1}, status=400)
     else:
-        return Response({'expired_code': 1}, status=400)
-    request.session['tentative'] = request.session.get('tentative') + 1
+        print('cool')
+        return Response({'expired_time': 1}, status=400)
+
     if verification_check.status == 'pending':
-        request.session['tentative'] = 1
+        request.session['tentative'] = request.session.get('tentative') + 1
+        if request.session['tentative'] >= 3:
+            print('Voila')
+            return Response({'expired_time': 1}, status=400)
         return Response({'code_invalid': 1}, status=400)
     else:
         user = Utilisateurs.objects.get(email=request.session.get('email'))
@@ -331,11 +334,14 @@ def register_user_google(request):
 def logout(request):
     try:
         token = Token.objects.get(key=request.session["token"])
+        cart = Panier.objects.get(utilisateur=token.user)
         t = model_to_dict(token)
         # print(t)
         token.delete()
+        cart.delete()
+
         return Response({"token": "delete"}, status=200)
-    except(Token.DoesNotExist):
+    except Token.DoesNotExist:
         return Response({"token": "not delete"}, status=400)
 
 

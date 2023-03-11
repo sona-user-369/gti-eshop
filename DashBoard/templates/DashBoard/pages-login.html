@@ -1,5 +1,5 @@
 {% extends 'DashBoard/index.html' %}
-
+{% load static %}
 {% block dash %}
 
 <body>
@@ -14,8 +14,8 @@
 
               <div class="d-flex justify-content-center py-4">
                 <a href="index.html" class="logo d-flex align-items-center w-auto">
-                  <img src="assets/img/logo.png" alt="">
-                  <span class="d-none d-lg-block">NiceAdmin</span>
+                  <img src="{% static 'assets_home/images/icons/gti-logo.png' %}" alt="">
+                  <span class="d-none d-lg-block">GTI ShopAdmin</span>
                 </a>
               </div><!-- End Logo -->
 
@@ -72,9 +72,9 @@
                     <div class="col-12">
                       <button class="btn btn-primary w-100" type="submit">Se connecter</button>
                     </div>
-                    <div class="col-12">
-                      <p class="small mb-0">Vous n'avez pas de compte? <a href="{% url 'register_admin' %}">Creer un compte</a></p>
-                    </div>
+<!--                    <div class="col-12">-->
+<!--                      <p class="small mb-0">Vous n'avez pas de compte? <a href="{% url 'register_admin' %}">Creer un compte</a></p>-->
+<!--                    </div>-->
                   </form>
 
                 </div>
@@ -91,8 +91,10 @@
                    <div class="col-12 has-error">
                       <label for="id_otp" class="form-label">Votre OTP Verification</label>
                       <input type="text" name="otp" class="form-control" id="id_otp" required>
-                      <div class="invalid-feedback">Le code OTP entre est invalide!</div>
+                      <div id="invalid_text_otp" class="invalid-feedback">Le code OTP entre est invalide!</div>
+                     <div id="invalid_text" class="'font-weight-bold"></div>
                    </div>
+
 
                    
 
@@ -214,12 +216,47 @@
 
                 if(response.responseJSON.code_invalid){
                   document.getElementById('id_otp').classList.add('is-invalid');
+                }else{
+                  
+                  if (response.responseJSON.expired_time){
+                  alert('countdown') ;
+                  var time = 60*15 ;
+                  localStorage.time = time ;
+                  var x = setInterval(function(){
+                      countdown = localStorage.time -1;
+                      localStorage.time = countdown ;
+                      var current_time = localStorage.time ;
+                      if(current_time > 60 ){
+                        document.getElementById('invalid_text').innerHTML = 'Réessayer dans  ' + Math.floor(current_time / 60)  + 'min' ;
+                      }else{
+                          document.getElementById('invalid_text').innerHTML = 'Réessayer dans  ' + current_time + 's' ;
+                      }
+                      document.getElementById('id_otp').disabled = true
+                      //document.getElementById('invalid_text_otp').innerHTML = 'Réessayer dans' + current_time + 's' ;
+                      document.getElementById('id_otp').classList.add('is-invalid');
+
+                      if(current_time < 0){
+                        clearInterval(x);
+                        document.getElementById('invalid_text').innerHTML = '' ;
+                        document.getElementById('id_otp').disabled = false ;
+                        document.getElementById('id_otp').classList.add('is-valid');
+
+                      }
+
+
+
+                  }, 1000);
+                }
+
                 }
 
                 if(response.responseJSON.expired_code){
-                  window.location.reload() ;
-
+                  //window.location.reload() ;
+                  document.getElementById('id_otp').classList.add('is-invalid');
+                  document.getElementByID('invalid_text_otp').innerHTML = 'Votre code otp est expire' ;
                 }
+
+                
 
               }
 

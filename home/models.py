@@ -109,8 +109,9 @@ class Produit(models.Model):
     nom = models.CharField(max_length=100, null=False, blank=False)
     date_de_stock = models.DateTimeField(null=False, blank=False, default=timezone.now())
     stock = models.PositiveIntegerField(null=False, blank=False)
-    description_courte = models.TextField(max_length=500, null=True, blank=False)
-    description_longue = models.TextField(max_length=500, null=True, blank=False)
+    description_courte = models.TextField(max_length=1000, null=True, blank=False)
+    description_longue = models.TextField(max_length=1000, null=True, blank=False)
+    additional_info = models.TextField(max_length=1000, null=True)
     prix = models.PositiveIntegerField(null=False, blank=False)
     categorie = models.ForeignKey(Categorie, on_delete=models.PROTECT)
     sous_categorie = models.ForeignKey(SousCategorie, on_delete=models.PROTECT, default=None, null=True, blank=False)
@@ -145,6 +146,7 @@ class Image(models.Model):
     flickr_id = models.IntegerField(default=0)
     source = models.CharField(max_length=50)
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
+    image = models.ImageField(null=False, default=None)
 
     def __str__(self):
         return '{}'.format(self.source)

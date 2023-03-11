@@ -5,60 +5,14 @@
 
 {% block other %}
     <section class="section">
-      {% if type == 'user' %}
-      <div class="col-lg-8 mx-auto">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Ajout d'utilisateur</h5>
-
-              <!-- Vertical Form -->
-              <form class="row g-3" id="form_user" method="post">
-                {% csrf_token %}
-
-                {% for field in form %}
-                  <div class="col-12">
-                    {{ field.label_tag }}
-
-                    {% if field.id_for_label == 'id_email' %}
-                          <div class="input-group has-validation">
-                            <span class="input-group-text" id="inputGroupPrepend">@</span>
-                          {{ field }}
-                    {% else %}
-
-                          {{ field }}
-
-                    {% endif %}
-
-                    {% if field.id_for_label == 'id_email' %}
-                            <div id="email_exist" class="invalid-feedback">Cet email existe deja!</div>
-                          </div>
-                    {% endif %}
-
-                    {% if field.id_for_label == 'id_contact' %}
-                          <div id="contact_invalid" class="invalid-feedback">Please, enter your contact!</div>
-                    {% endif %}
-
-                  </div>
-                {% endfor %}
-
-                <div class="text-center">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                  <button type="reset" class="btn btn-secondary">Reset</button>
-                </div>
-              </form><!-- Vertical Form -->
-
-            </div>
-          </div>
-      </div><!-- End Recent Sales -->
-      {% endif %}
-
+     
 
       {% if type == 'categorie' %}
 
         <div class="col-12">
             <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Ajout de Categorie</h5>
+              <h5 class="card-title">Modification de Categorie</h5>
 
               <!-- Vertical Form -->
               <form class="row g-3" id="form_categorie" method="post">
@@ -71,7 +25,7 @@
 
                     {% if field.id_for_label == 'id_image' %}
 
-                        <div class="invalid-feedback">Please enter an Image!</div>
+                        <div class="invalid-feedback">Entrer svp, une image valide!</div>
 
                     {% endif %}
 
@@ -83,8 +37,8 @@
                   </div>
                 {% endfor %}
                 <div class="text-center">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                  <button type="reset" class="btn btn-secondary">Reset</button>
+                  <button type="submit" onclick="update_categorie('{{id}}')" class="btn btn-primary">Valider</button>
+                  <button type="reset" class="btn btn-secondary">Réinitialiser</button>
                 </div>
               </form><!-- Vertical Form -->
 
@@ -99,7 +53,7 @@
         <div class="col-12">
               <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Ajout de Sous-Categorie</h5>
+              <h5 class="card-title">Modification de Sous-Categorie</h5>
 
               <!-- Vertical Form -->
               <form class="row g-3" id="form_sous_categorie" method="post">
@@ -122,8 +76,8 @@
                 {% endfor %}
 
                 <div class="text-center">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                  <button type="reset" class="btn btn-secondary">Reset</button>
+                  <button type="submit" onclick="update_sous_categorie('{{id}}') ;" class="btn btn-primary">Valider</button>
+                  <button type="reset" class="btn btn-secondary">Réinitialiser</button>
                 </div>
               </form><!-- Vertical Form -->
 
@@ -138,7 +92,7 @@
       <div class="col-12">
         <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Ajout de Produit</h5>
+              <h5 class="card-title">Modification de Produit</h5>
 
               <!-- Vertical Form -->
               <form class="row g-3" id="form_product" method="post">
@@ -166,14 +120,14 @@
                     {% endif %}
                     {% if field.id_for_label == 'id_sous_categorie' %}
 
-                        <div class="invalid-feedback">Please enter a sous-categorie matching categorie!</div>
+                        <div class="invalid-feedback">Entrer s'il vous plait un sous-categorie qui relève d'une catégorie!</div>
 
                     {% endif %}
                   </div>
                 {% endfor %}
                 <div class="text-center">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                  <button type="reset" class="btn btn-secondary">Reset</button>
+                  <button type="submit" onclick="update_product('{{id}}') ;" class="btn btn-primary">Valider</button>
+                  <button type="reset" class="btn btn-secondary">Réinitialiser</button>
                 </div>
               </form><!-- Vertical Form -->
 
@@ -190,124 +144,151 @@
 {% block script %}
 
 <script>
-  $(document).ready(function () {
-            // catch the form's submit event
-            $('#form_user').submit(function () {
-                // create an AJAX call
-                donne = {'data' : $(this).serialize() , 'superuser' : 0 , 'add': 1 } ;
-                $.ajax({
-                    data: $(this).serialize() , // get the form data
-                    type: $(this).attr('method'), // GET or POST
-                    url: "{% url 'up' %}",
-                    // on success
-                    success: function (response) {
+
+    function is_connected(){
+        $.ajax({
+            url: "{% url 'verify_connection' %}",
+            success: function(response){
+                return true ;
+            },
+            error: function(response){
+                return false ;
+            }
+
+        })
+
+    }
+
+ 
+    function update_categorie(prod){
+
+          $('#form_categorie').submit(function () {
+            // create an AJAX call
+            //donne = {'data' : $(this).serialize() , 'superuser' : 0 , 'add': 1 } ;
+            var form_data = new FormData(this) ;
+            form_data.append('id', prod);
+
+            if(is_connected()){
+
+              $.ajax({
+                data: form_data , // get the form data
+                type: $(this).attr('method'), // GET or POST
+                url: "{% url 'update_categorie' %}",
+                enctype: "multipart/form-data",
+                processData: false,
+                contentType: false,
+                // on success
+                success: function (response) {
+
+                    swal('Modifié' , 'Categorie modifié avec succés', 'success').then(function() { location.reload(); });
+                },
+                // on error
+                error: function (response) {
+                    // alert the error if any error occured
 
 
-                        swal('Modifié' , 'Utilisateur modifié avec succés', 'success').then(function() { location.reload(); });
-                    },
-                    // on error
-                    error: function (response) {
-                        // alert the error if any error occured
 
-
-
-                        if(response.responseJSON.email){
-                        $('input[type="email"]#id_email').addClass("is-invalid") ;
-                        }
-
-                        if(response.responseJSON.contact){
-                        document.getElementById('id_contact').classList.add('is-invalid');
-                        }
-
-
-
-
-
+                    if(response.responseJSON.image){
+                      document.getElementById('id_image').classList.add('is-invalid');
                     }
-                });
-                return false;
+
+                    if(response.responseJSON.nom){
+                    document.getElementById('id_contact').classList.add('is-invalid');
+                    }
+
+
+
+
+
+                }
             });
 
+            }else{
+              
+                document.location.href = "{% url 'login_admin' %}" ;
+            }
+            
+            return false;
+          });
 
-            $('#form_categorie').submit(function () {
-                // create an AJAX call
-                donne = {'data' : $(this).serialize() , 'superuser' : 0 , 'add': 1 } ;
+
+}
+
+
+
+
+  function update_sous_categorie(prod){
+
+        $('#form_sous_categorie').submit(function () {
+        // create an AJAX call
+        //donne = {'data' : $(this).serialize() , 'superuser' : 0 , 'add': 1 } ;
+        if (is_connected()){
+
+          var form_data = new FormData(this);
+        form_data.append('id', prod);
+        $.ajax({
+            data: form_data , // get the form data
+            type: $(this).attr('method'), // GET or POST
+            url: "{% url 'update_sousCategorie' %}",
+            enctype: "multipart/form-data",
+            processData: false,
+            contentType: false,
+            
+            // on success
+            success: function (response) {
+
+                //$(this).trigger('reset');
+                swal('Modifié' , 'Sous-categorie modifié avec succés', 'success').then(function() { location.reload(); });
+            },
+            // on error
+            error: function (response) {
+                // alert the error if any error occured
+
+
+
+                if(response.responseJSON.nom){
+                  document.getElementById('id_image').classList.add('is-invalid');
+                }
+
+
+
+
+
+
+
+            }
+        });
+          
+
+        }else{
+
+          document.location.href = "{% url 'login_admin' %}" ;
+        }
+        
+        return false;
+        });
+
+
+}
+
+  function update_product(prod){
+
+                $('#form_product').submit(function () {
+
+                //donne = {'data' : , } ;
+                if(is_connected()){
+
+
+                  var form_data = new FormData(this) ;
+                form_data.append('id', prod);
                 $.ajax({
-                    data: $(this).serialize() , // get the form data
-                    type: $(this).attr('method'), // GET or POST
-                    url: "{% url 'update_categorie' %}",
-                    // on success
-                    success: function (response) {
-
-
-                        swal('Modifié' , 'Categorie modifié avec succés', 'success').then(function() { location.reload(); });
-                    },
-                    // on error
-                    error: function (response) {
-                        // alert the error if any error occured
-
-
-
-                        if(response.responseJSON.image){
-                          document.getElementById('id_image').classList.add('is-invalid');
-                        }
-
-                        if(response.responseJSON.nom){
-                        document.getElementById('id_contact').classList.add('is-invalid');
-                        }
-
-
-
-
-
-                    }
-                });
-                return false;
-            });
-
-
-            $('#form_sous_categorie').submit(function () {
-                // create an AJAX call
-                donne = {'data' : $(this).serialize() , 'superuser' : 0 , 'add': 1 } ;
-                $.ajax({
-                    data: $(this).serialize() , // get the form data
-                    type: $(this).attr('method'), // GET or POST
-                    url: "{% url 'update_sousCategorie' %}",
-                    // on success
-                    success: function (response) {
-
-                        $(this).trigger('reset');
-                        swal('Modifié' , 'Sous-categorie modifié avec succés', 'success').then(function() { location.reload(); });
-                    },
-                    // on error
-                    error: function (response) {
-                        // alert the error if any error occured
-
-
-
-                        if(response.responseJSON.nom){
-                          document.getElementById('id_image').classList.add('is-invalid');
-                        }
-
-
-
-
-
-
-
-                    }
-                });
-                return false;
-            });
-
-
-            $('#form_product').submit(function () {
-                // create an AJAX call
-                donne = {'data' : $(this).serialize() , 'superuser' : 0 , 'add': 1 } ;
-                $.ajax({
-                    data: $(this).serialize() , // get the form data
+                    data: form_data , // get the form data
                     type: $(this).attr('method'), // GET or POST
                     url: "{% url 'update_product' %}",
+                    enctype : "multipart/form-data",
+                    processData: false,
+                    contentType: false,
+
                     // on success
                     success: function (response) {
 
@@ -340,13 +321,20 @@
 
                     }
                 });
+
+
+
+                }else{
+
+                    document.location.href = "{% url 'login_admin' %}" ;
+
+                }
+                
                 return false;
             });
 
+            }
 
-
-
-  }) ;
 </script>
 
 {% endblock %}

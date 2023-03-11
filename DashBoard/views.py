@@ -6,6 +6,7 @@ from home.Manage import verify_user
 from .Manage import *
 from dateutil.relativedelta import relativedelta
 
+
 # Create your views here.
 # @decorator_dashboard
 def dashboard(request):
@@ -21,17 +22,18 @@ def dashboard(request):
     print(timezone.now() + relativedelta(days=1))
 
     context = {
-               'user': user,
-                'top_selling': best_sellers_product,
-                'recent_sales': recent_sales_day,
-                'get_sales': get_sales,
-                'get_revenue': get_revenue,
-                'get_customer': get_customer,
-               }
+        'user': user,
+        'top_selling': best_sellers_product,
+        'recent_sales': recent_sales_day,
+        'get_sales': get_sales,
+        'get_revenue': get_revenue,
+        'get_customer': get_customer,
+    }
 
     return render(request, 'DashBoard/index.html', context)
 
 
+@decorator_dashboard
 def page_register(request):
     user = verify_user(request)["user"]
     if user is not None:
@@ -57,11 +59,11 @@ def page_login(request):
 
     return render(request, 'DashBoard/pages-login.html', context)
 
+
 @decorator_dashboard
 def page_profile(request):
-
     user = verify_user(request)["user"]
-    if not user :
+    if not user:
         return redirect('login_admin')
 
     change_password_form = ChangeForm()
@@ -74,15 +76,13 @@ def page_profile(request):
 
     return render(request, 'DashBoard/users-profile.html', context)
 
+
 # @decorator_dashboard_ext
 def dashboard_tables(request, intitule):
     user = verify_user(request)["user"]
     context = {}
     context['user'] = user
-    if intitule == 'user' :
-
-
-
+    if intitule == 'user':
         table = get_tables(request)['data_users']
 
         context['table'] = table
@@ -90,18 +90,14 @@ def dashboard_tables(request, intitule):
 
         return render(request, 'DashBoard/tables-data.html', context)
     if intitule == 'categorie':
-
         table = get_tables(request)['data_categories']
 
         context['table'] = table
         context['type'] = 'categorie'
 
-
-
         return render(request, 'DashBoard/tables-data.html', context)
 
-    if intitule == 'sous_categorie' :
-
+    if intitule == 'sous_categorie':
         table = get_tables(request)['data_sousCategories']
 
         context['table'] = table
@@ -110,7 +106,6 @@ def dashboard_tables(request, intitule):
         return render(request, 'DashBoard/tables-data.html', context)
 
     if intitule == 'product':
-
         table = get_tables(request)['data_products']
 
         context['table'] = table
@@ -118,7 +113,7 @@ def dashboard_tables(request, intitule):
 
         return render(request, 'DashBoard/tables-data.html', context)
 
-    if intitule == 'review' :
+    if intitule == 'review':
         table = get_tables(request)['data_reviews']
 
         context['table'] = table
@@ -135,6 +130,7 @@ def dashboard_tables(request, intitule):
         return render(request, 'DashBoard/tables-data.html', context)
 
     return render(request, 'DashBoard/tables-data.html', context)
+
 
 # @decorator_dashboard_ext
 def dashboard_forms(request, intitule):
@@ -173,10 +169,8 @@ def dashboard_forms(request, intitule):
 
         return render(request, 'DashBoard/forms-data.html', context)
 
-
-
-
     return render(request, 'DashBoard/forms-data.html', context)
+
 
 # @decorator_dashboard_ext
 def dashboard_forms_update(request, intitule, id):
@@ -203,6 +197,7 @@ def dashboard_forms_update(request, intitule, id):
 
         context['form'] = form
         context['type'] = 'product'
+        context['id'] = id
 
         return render(request, 'DashBoard/forms-update-data.html', context)
     if intitule == 'categorie':
@@ -228,4 +223,3 @@ def dashboard_forms_update(request, intitule, id):
         return render(request, 'DashBoard/forms-update-data.html', context)
 
     return render(request, 'DashBoard/forms-update-data.html', context)
-

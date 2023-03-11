@@ -42,15 +42,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_elasticsearch_dsl',
+
     'home',
     'Applink',
     'ProdApp',
     'DashBoard',
+    'ship',
+
     'rest_framework',
     'rest_framework.authtoken',
     'django_social_share',
     'unsplash',
     'sslserver',
+    'django_summernote'
+
 
 ]
 
@@ -226,6 +231,8 @@ WHITENOISE_USE_FINDERS = True
 # FLICKR API INTEGRATION
 FLICKR_API_KEY = config("FLICKR_API_KEY")
 FLICKR_SECRET_KEY = config("FLICKR_SECRET_KEY")
+
+ABSTRACT_KEY = config("ABSTRACT_KEY")
 
 # ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 # SECURE_CONTENT_TYPE_NOSNIFF = False

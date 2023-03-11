@@ -67,7 +67,7 @@ def decorator_dashboard_ext(func):
     return handle
 
 
-def combine_products(_list):
+def combine_products(_list, a=1):
     """combine products with same name by quantity sold"""
 
     _final_list = []
@@ -77,7 +77,9 @@ def combine_products(_list):
         _list_copy.pop(_list_copy.index(_instance))
         for _instance_ext in _list_copy:
             if _instance_ext['produit'] == _instance['produit']:
+                _list_copy.pop(_list_copy.index(_instance_ext))
                 quantity_for_products += int(_instance_ext['quantite'])
+
         _final_list.append({
             'produit_pk': _instance['produit_pk'],
             'produit': _instance['produit'],
@@ -89,7 +91,7 @@ def combine_products(_list):
 
 
 def get_best_sellers_time():
-    """Get the best sellers based on time (day, month, year)"""
+    """Get the bestsellers based on time (day, month, year)"""
 
     all_commandes = Commandes.objects.all()
 
@@ -160,12 +162,15 @@ def get_best_sellers_time():
                         'sales_time': commande.date_commande})
         else:
             pass
-    product_best_sell = combine_products(product_best_sell)
+    # print(product_best_sell)
+    product_best_sell = combine_products(product_best_sell, a=0)
+    # print(len(product_best_sell))
     for _instance in product_best_sell:
         _instance.update({'revenue': _instance['produit']['prix'] * _instance['quantite']})
     sorted_products_year = sorted(product_best_sell, key=get_product_quantity, reverse=True)
 
     final_products = [sorted_products_day, sorted_products_month, sorted_products_year]
+    # print(final_products[2])
 
     return final_products
 
@@ -191,7 +196,7 @@ def get_recent_sales():
             for product in commande.produit_set.all():
                 quantite = CommandeProduit.objects.get(commande=commande, produit=product).quantite
                 products_day.append({'product': product,
-                                     'quantite': quantite,})
+                                     'quantite': quantite, })
 
             products_day_copy = products_day.copy()
             products_day_copy.pop(0)
@@ -220,14 +225,14 @@ def get_recent_sales():
 
             else:
                 for product in commande.produit_set.all():
-                    quantite = CommandeProduit.objects.get(commande=commande, produit=product)
+                    quantite = CommandeProduit.objects.get(commande=commande, produit=product).quantite
                     products_year.append({'product': model_to_dict(product),
                                           'product_pk': product.pk,
                                           'quantite': quantite})
                 recent_sales_year.append(
                     {'user': commande.utilisateur.first_name + " " + commande.utilisateur.last_name,
                      'commande_pk': commande.pk,
-                     'product_commande': products_day})
+                     'product_commande': products_year})
     final_sales = [recent_sales_day, recent_sales_month, recent_sales_year]
 
     return final_sales
@@ -271,7 +276,10 @@ def stats_sales():
         sold_2days += _instance['quantite']
 
     stats_day = sold - sold_2days
-    if stats_day < 100:
+    if sold_2days == 0 and sold == 0:
+        percent = None
+
+    elif stats_day < 100:
         percent = stats_day
     else:
         percent = 99
@@ -317,7 +325,9 @@ def stats_sales():
         sold_2month += _instance['quantite']
 
     stats_month = sold - sold_2month
-    if stats_month < 100:
+    if sold == 0 and sold_2month == 0:
+        percent = None
+    elif stats_month < 100:
         percent = stats_month
     else:
         percent = 99
@@ -361,7 +371,9 @@ def stats_sales():
         sold_2year += _instance['quantite']
 
     stats_year = sold - sold_2year
-    if stats_year < 100:
+    if sold == 0 and sold_2year == 0:
+        percent = None
+    elif stats_year < 100:
         percent = stats_year
     else:
         percent = 99
@@ -411,7 +423,10 @@ def stats_revenu():
         sold_2days += _instance['revenue']
 
     stats_day = sold - sold_2days
-    if stats_day < 100:
+
+    if sold_2days == 0 and sold == 0:
+        percent = None
+    elif stats_day < 100:
         percent = stats_day
     else:
         percent = 99
@@ -455,7 +470,10 @@ def stats_revenu():
         sold_2month += _instance['revenue']
 
     stats_month = sold - sold_2month
-    if stats_month < 100:
+
+    if sold_2month == 0 and sold == 0:
+        percent = None
+    elif stats_month < 100:
         percent = stats_month
     else:
         percent = 99
@@ -499,7 +517,10 @@ def stats_revenu():
         sold_2year += _instance['revenue']
 
     stats_year = sold - sold_2year
-    if stats_year < 100:
+
+    if sold_2year == 0 and sold == 0:
+        percent = None
+    elif stats_year < 100:
         percent = stats_year
     else:
         percent = 99
@@ -549,7 +570,9 @@ def stats_customer():
 
     stats_user_2days = user_2days - user_days
     stats_user_days = user_days - stats_user_2days
-    if stats_user_days < 100:
+    if user_2days == 0 and user_days == 0:
+        percent = None
+    elif stats_user_days < 100:
         percent = stats_user_days
     else:
         percent = 99
@@ -557,7 +580,10 @@ def stats_customer():
 
     stats_user_2month = user_2month - user_month
     stats_user_month = user_month - stats_user_2month
-    if stats_user_month < 100:
+
+    if user_2month == 0 and user_month == 0:
+        percent = None
+    elif stats_user_month < 100:
         percent = stats_user_month
     else:
         percent = 99
@@ -565,7 +591,10 @@ def stats_customer():
 
     stats_user_2year = user_2year - user_year
     stats_user_year = user_year - stats_user_2year
-    if stats_user_year < 100:
+
+    if user_2year == 0 and user_year == 0:
+        percent = None
+    elif stats_user_year < 100:
         percent = stats_user_year
     else:
         percent = 99
@@ -695,8 +724,9 @@ class FlickrAPICustom(FlickrAPI):
 
         self.token_cache.token = self.flickr_oauth.get_access_token()
         return self.token_cache.token
-def get_flickr_token(request, API_KEY, API_SECRET):
 
+
+def get_flickr_token(request, API_KEY, API_SECRET):
     # Effectuez la requête API pour obtenir le token d'authentification
     response = requests.get(
         f'https://www.flickr.com/services/oauth/request_token?oauth_callback={request.build_absolute_uri()}&oauth_consumer_key={API_KEY}&oauth_signature={API_SECRET}&oauth_signature_method=HMAC-SHA1&oauth_timestamp={time.time()}&oauth_nonce={random.random()}')

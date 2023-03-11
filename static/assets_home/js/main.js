@@ -162,82 +162,82 @@ $(document).ready(function () {
     }
 
     // Slider For category pages / filter price
-
-    all_product = [] ;
-    //alert(all_product);
-
-    $.ajax({
-        url : "{% url 'all_tables_products' %}",
-
-        success: function(response){
-            all_product = response.responseJSON.products;
-
-        },
-        error: function(response){
-
-        }
-
-    }) ;
-
-    function filterItems(items, price) {
-        return items.filter(item => {
-            return item.price >= price[0] && item.price <= price[1]
-        })
-    }
-
-    function renderItems(items) {
-
-        var display_products = document.querySelector('.display')
-            display_products.innerHTML = items.map(item =>
-                `
-                <div class="col-6 col-md-4 col-lg-4 all_product">
-                <div class="product product-3 text-center">
-                    <figure class="product-media">
-                        <span class="product-label label-sale">Sale</span>
-                        <a href="{% url 'product' id=${item.product_pk} %}">
-                            <img src="${item.product_data.image.url}" alt="Product image" class="product-image">
-                        </a>
-
-                        <div class="product-action-vertical">
-                            <a href="#" onclick="addWishlist(${item.product_pk}); return false;" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                        </div><!-- End .product-action-vertical -->
-                    </figure><!-- End .product-media -->
-
-                    <div class="product-body">
-                        <div class="product-cat categorie">
-                            <a href="#"><b>${item.product_categorie}</b></a>
-                        </div><!-- End .product-cat -->
-                        <h3 class="product-title"><a href="{% url 'product' id=${item.product_pk} %}">${item.product_data.nom}</a></h3><!-- End .product-title -->
-                        <div class="product-price">
-                            <span class="new-price">${item.product_data.prix}</span>
-                            <span class="old-price">Was $330.00</span>
-                        </div><!-- End .product-price -->
-                    </div><!-- End .product-body -->
-
-                    <div class="product-footer">
-                        <div class="ratings-container">
-                            <div class="ratings">
-                                <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                            </div><!-- End .ratings -->
-                            <span class="ratings-text">( {{ produit.review }} Reviews )</span>
-                        </div><!-- End .rating-container -->
-
-                        <div class="product-nav product-nav-dots">
-                            <a href="#" class="active" style="background: #af5f23;"><span class="sr-only">Color name</span></a>
-                            <a href="#" style="background: #806f55;"><span class="sr-only">Color name</span></a>
-                            <a href="#" style="background: #333333;"><span class="sr-only">Color name</span></a>
-                        </div><!-- End .product-nav -->
-
-                        <div class="product-action">
-                            <a href="#"   onclick="addCart(${item.product_pk}); return false;" class="btn-product btn-cart" title="Add to cart"></a>
-                            <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"></a>
-                        </div><!-- End .product-action -->
-                    </div><!-- End .product-footer -->
-                </div><!-- End .product -->
-            </div>
-            `
-        ).join('')
-    }
+//
+//    var all_product = [] ;
+//    //alert(all_product);
+//
+//    $.ajax({
+//        url : "{% url 'all_tables_products' %}",
+//
+//        success: function(response){
+//            all_product = response.responseJSON.products;
+//
+//        },
+//        error: function(response){
+//
+//        }
+//
+//    }) ;
+//
+//    function filterItems(items, price) {
+//        return items.filter(item => {
+//            return item.price >= price[0] && item.price <= price[1]
+//        })
+//    }
+//
+//    function renderItems(items) {
+//
+//        var display_products = document.querySelector('.display')
+//            display_products.innerHTML = items.map(item =>
+//                `
+//                <div class="col-6 col-md-4 col-lg-4 all_product">
+//                <div class="product product-3 text-center">
+//                    <figure class="product-media">
+//                        <span class="product-label label-sale">Sale</span>
+//                        <a href="{% url 'product' id=${item.product_pk} %}">
+//                            <img src="${item.product_data.image.url}" alt="Product image" class="product-image">
+//                        </a>
+//
+//                        <div class="product-action-vertical">
+//                            <a href="#" onclick="addWishlist(${item.product_pk}); return false;" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+//                        </div><!-- End .product-action-vertical -->
+//                    </figure><!-- End .product-media -->
+//
+//                    <div class="product-body">
+//                        <div class="product-cat categorie">
+//                            <a href="#"><b>${item.product_categorie}</b></a>
+//                        </div><!-- End .product-cat -->
+//                        <h3 class="product-title"><a href="{% url 'product' id=${item.product_pk} %}">${item.product_data.nom}</a></h3><!-- End .product-title -->
+//                        <div class="product-price">
+//                            <span class="new-price">${item.product_data.prix}</span>
+//                            <span class="old-price">Was $330.00</span>
+//                        </div><!-- End .product-price -->
+//                    </div><!-- End .product-body -->
+//
+//                    <div class="product-footer">
+//                        <div class="ratings-container">
+//                            <div class="ratings">
+//                                <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
+//                            </div><!-- End .ratings -->
+//                            <span class="ratings-text">( {{ produit.review }} Reviews )</span>
+//                        </div><!-- End .rating-container -->
+//
+//                        <div class="product-nav product-nav-dots">
+//                            <a href="#" class="active" style="background: #af5f23;"><span class="sr-only">Color name</span></a>
+//                            <a href="#" style="background: #806f55;"><span class="sr-only">Color name</span></a>
+//                            <a href="#" style="background: #333333;"><span class="sr-only">Color name</span></a>
+//                        </div><!-- End .product-nav -->
+//
+//                        <div class="product-action">
+//                            <a href="#"   onclick="addCart(${item.product_pk}); return false;" class="btn-product btn-cart" title="Add to cart"></a>
+//                            <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"></a>
+//                        </div><!-- End .product-action -->
+//                    </div><!-- End .product-footer -->
+//                </div><!-- End .product -->
+//            </div>
+//            `
+//        ).join('')
+//    }
 
     if ( typeof noUiSlider === 'object' ) {
 		var priceSlider  = document.getElementById('price-slider');

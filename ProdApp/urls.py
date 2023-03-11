@@ -23,10 +23,10 @@ urlpatterns =[
     path('deleteOnCommande', delete_commande, name='delete_commande'),
     path('addproduct', add_product, name='add_product'),
     path('addcategorie', add_categorie, name='add_categorie'),
-    path('addsouscategorie', add_sousCategorie, name='add_sousCategorie'),
+    path('addsouscategorie', add_sous_categorie, name='add_sousCategorie'),
     path('updateproduct', update_product, name='update_product'),
     path('updatecategorie', update_categorie, name='update_categorie'),
-    path('updatesouscategorie', update_sousCategorie, name='update_sousCategorie'),
+    path('updatesouscategorie', update_sous_categorie, name='update_sousCategorie'),
     path('validatecommande', vaidate_commande, name='validate_commande'),
     path('livratecommande', mark_livrate, name='livrate_commande'),
     path('download/<id>', download_invoice, name='download'),
@@ -45,6 +45,7 @@ urlpatterns =[
     path('add_wishlist_cookie', add_wishlist_cookie, name='add_wishlist_cookie'),
     path('delete_wishlist_cookie', delete_wishlist_cookie, name='delete_wishlist_cookie'),
     path('update_to_wishlist_object', update_to_wishlist_object, name='update_to_wishlist_object'),
+
     # path('flickr_callback', flickr_callback, name='flickr_callback'),
 
 

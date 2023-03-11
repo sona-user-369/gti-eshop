@@ -239,34 +239,18 @@
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="product-desc-tab" role="tabpanel" aria-labelledby="product-desc-link">
                                 <div class="product-desc-content">
-                                    <h3>Product Information</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis. Phasellus ultrices nulla quis nibh. Quisque a lectus. Donec consectetuer ligula vulputate sem tristique cursus. </p>
-                                    <ul>
-                                        <li>Nunc nec porttitor turpis. In eu risus enim. In vitae mollis elit. </li>
-                                        <li>Vivamus finibus vel mauris ut vehicula.</li>
-                                        <li>Nullam a magna porttitor, dictum risus nec, faucibus sapien.</li>
-                                    </ul>
-
-                                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis. Phasellus ultrices nulla quis nibh. Quisque a lectus. Donec consectetuer ligula vulputate sem tristique cursus. </p>
+                                    <h3>Information sur le produit</h3>
+                                    {% if produit.description_longue is not None %}
+                                    {{produit.description_longue|safe}}
+                                    {% endif %}
                                 </div><!-- End .product-desc-content -->
                             </div><!-- .End .tab-pane -->
                             <div class="tab-pane fade" id="product-info-tab" role="tabpanel" aria-labelledby="product-info-link">
                                 <div class="product-desc-content">
-                                    <h3>Information</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. </p>
-
-                                    <h3>Fabric & care</h3>
-                                    <ul>
-                                        <li>Faux suede fabric</li>
-                                        <li>Gold tone metal hoop handles.</li>
-                                        <li>RI branding</li>
-                                        <li>Snake print trim interior </li>
-                                        <li>Adjustable cross body strap</li>
-                                        <li> Height: 31cm; Width: 32cm; Depth: 12cm; Handle Drop: 61cm</li>
-                                    </ul>
-
-                                    <h3>Size</h3>
-                                    <p>one size</p>
+                                    <h3>Information additionnelle</h3>
+                                    {% if produit.additional_info is not None %}
+                                    {{ produit.additional_info|safe }}
+                                    {% endif %}
                                 </div><!-- End .product-desc-content -->
                             </div><!-- .End .tab-pane -->
                             <div class="tab-pane fade" id="product-shipping-tab" role="tabpanel" aria-labelledby="product-shipping-link">
@@ -357,7 +341,7 @@
                                                         <label for="star3" title="text">3 stars</label>
                                                         <input type="radio" id="star2" name="rate" value="2" />
                                                         <label for="star2" title="text">2 stars</label>
-                                                        <input type="radio" id="star1" name="rate" value="1" required />
+                                                        <input type="radio" id="star1" name="rate" value="1"/>
                                                         <label for="star1" title="text">1 star</label>
                                                     </div>
 
@@ -466,7 +450,7 @@
 
        $('#reviewForm').submit(function () {
                     // create an AJAX call
-
+                    var form = this ;
                     $.ajax({
                         url: "{% url 'verify_connection' %}",
 
@@ -486,13 +470,21 @@
                             }
                             
                             
-                            alert(String(id) + "/" + String(rating));
-                            var donne = {'data': $('#reviewForm').serialize(), 'produit_id': id , 'rate': rating} ;
+                            //alert(String(id) + "/" + String(rating));
+                            //var donne = {'data': new FormData(form), 'produit_id': id , 'rate': rating} ;
+                            form_data = new FormData(form);
+                            form_data.append('produit_id', id);
+                            form_data.append('rate', rating);
+                            //alert('cool') ;
                             
                             $.ajax({
-                                data: donne , // get the form data
+                                data: form_data , // get the form data
                                 type: $('#reviewForm').attr('method'), // GET or POST
                                 url: "{% url 'comment' %}",
+                                enctype: "multipart/form-data",
+                                processData: false,
+                                contentType: false,
+                                //cache:false,
                                 // on success
                                 success: function (response) {
 
@@ -511,7 +503,14 @@
                                     // alert the error if any error occured
 
 
-
+                                       swal(
+                                            "Produit non achete!",
+                                            "Vous ne pouvez pas ajouter de commentaire à un produit non acheté!",
+                                            "warning"
+                                             ).then(function(){
+                                            location.reload();
+                                            }
+                                        );
 
 
 

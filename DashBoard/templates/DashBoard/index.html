@@ -265,7 +265,9 @@
                     </div>
                     <div class="ps-3 display_sales">
                       <h6>{{ get_sales.sales }}</h6>
-                      {% if get_sales.percent > 0 %}
+                      {% if get_sales.percent == None %}
+
+                      {% elif get_sales.percent > 0 %}
                         <span class="text-success small pt-1 fw-bold">{{ get_sales.percent }}%</span> <span class="text-muted small pt-2 ps-1">increase</span>
                       {% else %}
                            <span class="text-danger small pt-1 fw-bold">{{ get_sales.percent }}%</span> <span class="text-muted small pt-2 ps-1">increase</span>
@@ -304,7 +306,9 @@
                     </div>
                     <div class="ps-3 display_revenue">
                       <h6>${{ get_revenue.revenue }}</h6>
-                      {% if get_revenue.percent > 0 %}
+                      {% if get_revenue.percent == None %}
+
+                      {% elif get_revenue.percent > 0 %}
                         <span class="text-success small pt-1 fw-bold">{{ get_revenue.percent }}%</span> <span class="text-muted small pt-2 ps-1">accroitre</span>
                       {% else %}
                            <span class="text-danger small pt-1 fw-bold">{{ get_revenue.percent }}%</span> <span class="text-muted small pt-2 ps-1">decroitre</span>
@@ -344,7 +348,9 @@
                     </div>
                     <div class="ps-3 display_customer">
                       <h6>{{ get_customer.customer }}</h6>
-                      {% if get_customer.percent > 0 %}
+                      {% if get_customer.percent == None %}
+
+                      {% elif get_customer.percent > 0 %}
                         <span class="text-success small pt-1 fw-bold">{{ get_customer.percent }}%</span> <span class="text-muted small pt-2 ps-1">accroitre</span>
                       {% else %}
                            <span class="text-danger small pt-1 fw-bold">{{ get_customer.percent }}%</span> <span class="text-muted small pt-2 ps-1">decroitre</span>
@@ -673,13 +679,7 @@
         }
 
 
-         let inactivityTime = function(){
-            let time ;
-            window.onload = resetTimer ;
-            window.onmousemove = resetTimer;
-            window.onkeypress = resetTimer ;
-
-            function logout(){
+        function logout(){
 
                 $.ajax({
                     url: "{% url 'verify_connection' %}",
@@ -719,10 +719,18 @@
 
             }
 
+
+         let inactivityTime = function(){
+            let time ;
             function resetTimer(){
                 clearTimeout(time);
-                time = setTimeout(logout, 1000*300);
+                time = setTimeout(logout, 1000*1200);
             }
+            resetTimer();
+            const events = ["mousemove", "keydown", "scroll", "touchstart"];
+            events.forEach((event) => {
+              window.addEventListener(event, resetTimer);
+            });
 
 
 
@@ -884,7 +892,12 @@
                 a = JSON.stringify(response);
                 b = JSON.parse(a) ;
                 console.log(typeof(b)) ;
-                if(b[1] > 0){
+                if(b[1] == null){
+                      display_sales.innerHTML = `<h6>${b[0]}</h6>
+
+                      `
+                }else{
+                  if(b[1] > 0){
                   display_sales.innerHTML = `<h6>${b[0]}</h6>
                         <span class="text-success small pt-1 fw-bold">${b[1]}%</span> <span class="text-muted small pt-2 ps-1">increase</span>
                       `
@@ -894,6 +907,8 @@
                         <span class="text-danger small pt-1 fw-bold">${b[1]}%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
                       `
                 }
+              }
+
               },
 
               error: function(response){
@@ -921,7 +936,15 @@
                   a = JSON.stringify(response);
                   b = JSON.parse(a) ;
                   console.log(typeof(b)) ;
-                  if(b[1] > 0){
+                  if(b[1] == null){
+
+                      display_sales.innerHTML = `<h6>${b[0]}</h6>
+
+                      `
+
+                  }else{
+
+                    if(b[1] > 0){
                     display_sales.innerHTML = `<h6>${b[0]}</h6>
                           <span class="text-success small pt-1 fw-bold">${b[1]}%</span> <span class="text-muted small pt-2 ps-1">increase</span>
                         `
@@ -931,6 +954,10 @@
                           <span class="text-danger small pt-1 fw-bold">${b[1]}%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
                         `
                   }
+
+
+                  }
+
 
                 },
 
@@ -957,7 +984,13 @@
                     a = JSON.stringify(response);
                     b = JSON.parse(a) ;
                     console.log(typeof(b)) ;
-                    if(b[1] > 0){
+                    if(b[1] == null){
+                      display_sales.innerHTML = `<h6>${b[0]}</h6>
+
+                      `
+                    }else{
+
+                        if(b[1] > 0){
                       display_sales.innerHTML = `<h6>${b[0]}</h6>
                             <span class="text-success small pt-1 fw-bold">${b[1]}%</span> <span class="text-muted small pt-2 ps-1">increase</span>
                           `
@@ -966,6 +999,9 @@
                       display_sales.innerHTML = `<h6>${b[0]}</h6>
                             <span class="text-danger small pt-1 fw-bold">${b[1]}%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
                           `
+                    }
+
+
                     }
 
 
@@ -1003,7 +1039,11 @@
                 a = JSON.stringify(response);
                 b = JSON.parse(a) ;
                 console.log(typeof(b)) ;
-                if(b[1] > 0){
+                if(b[1] == null){
+                   display_revenue.innerHTML = `<h6>$${b[0]}</h6>`
+                }else{
+
+                  if(b[1] > 0){
                   display_revenue.innerHTML = `<h6>$${b[0]}</h6>
                         <span class="text-success small pt-1 fw-bold">${b[1]}%</span> <span class="text-muted small pt-2 ps-1">increase</span>
                       `
@@ -1013,6 +1053,9 @@
                         <span class="text-danger small pt-1 fw-bold">${b[1]}%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
                       `
                 }
+
+                }
+
               },
 
               error: function(response){
@@ -1040,7 +1083,11 @@
                   a = JSON.stringify(response);
                   b = JSON.parse(a) ;
                   console.log(typeof(b)) ;
-                  if(b[1] > 0){
+                  if(b[1] == null){
+                     display_revenue.innerHTML = `<h6>$${b[0]}</h6>`
+                  }else{
+
+                    if(b[1] > 0){
                     display_revenue.innerHTML = `<h6>$${b[0]}</h6>
                           <span class="text-success small pt-1 fw-bold">${b[1]}%</span> <span class="text-muted small pt-2 ps-1">increase</span>
                         `
@@ -1050,6 +1097,9 @@
                           <span class="text-danger small pt-1 fw-bold">${b[1]}%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
                         `
                   }
+
+                  }
+
 
                 },
 
@@ -1076,7 +1126,11 @@
                     a = JSON.stringify(response);
                     b = JSON.parse(a) ;
                     console.log(typeof(b)) ;
-                    if(b[1] > 0){
+                    if(b[1] == null){
+                      display_revenue.innerHTML = `<h6>$${b[0]}</h6>`
+                    }else{
+
+                        if(b[1] > 0){
                       display_revenue.innerHTML = `<h6>$${b[0]}</h6>
                             <span class="text-success small pt-1 fw-bold">${b[1]}%</span> <span class="text-muted small pt-2 ps-1">increase</span>
                           `
@@ -1086,6 +1140,10 @@
                             <span class="text-danger small pt-1 fw-bold">${b[1]}%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
                           `
                     }
+
+
+                    }
+
 
 
                   },
@@ -1123,7 +1181,13 @@
                 a = JSON.stringify(response);
                 b = JSON.parse(a) ;
                 console.log(typeof(b)) ;
-                if(b[1] > 0){
+                if(b[1] == null){
+
+                  display_customer.innerHTML = `<h6>${b[0]}</h6>`
+
+                }else{
+
+                    if(b[1] > 0){
                   display_customer.innerHTML = `<h6>${b[0]}</h6>
                         <span class="text-success small pt-1 fw-bold">${b[1]}%</span> <span class="text-muted small pt-2 ps-1">increase</span>
                       `
@@ -1133,6 +1197,9 @@
                         <span class="text-danger small pt-1 fw-bold">${b[1]}%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
                       `
                 }
+
+                }
+
               },
 
               error: function(response){
@@ -1160,7 +1227,14 @@
                   a = JSON.stringify(response);
                   b = JSON.parse(a) ;
                   console.log(typeof(b)) ;
-                  if(b[1] > 0){
+
+                  if(b[1] == null){
+
+                    display_customer.innerHTML = `<h6>${b[0]}</h6>`
+
+                  }else{
+
+                      if(b[1] > 0){
                     display_customer.innerHTML = `<h6>${b[0]}</h6>
                           <span class="text-success small pt-1 fw-bold">${b[1]}%</span> <span class="text-muted small pt-2 ps-1">increase</span>
                         `
@@ -1170,6 +1244,9 @@
                           <span class="text-danger small pt-1 fw-bold">${b[1]}%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
                         `
                   }
+
+                  }
+
 
                 },
 
@@ -1196,7 +1273,14 @@
                     a = JSON.stringify(response);
                     b = JSON.parse(a) ;
                     console.log(typeof(b)) ;
-                    if(b[1] > 0){
+
+                    if(b[1] == null){
+
+                        display_customer.innerHTML = `<h6>${b[0]}</h6>`
+
+                    }else{
+
+                        if(b[1] > 0){
                       display_customer.innerHTML = `<h6>${b[0]}</h6>
                             <span class="text-success small pt-1 fw-bold">${b[1]}%</span> <span class="text-muted small pt-2 ps-1">increase</span>
                           `
@@ -1205,6 +1289,9 @@
                       display_customer.innerHTML = `<h6>${b[0]}</h6>
                             <span class="text-danger small pt-1 fw-bold">${b[1]}%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
                           `
+                    }
+
+
                     }
 
 

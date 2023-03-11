@@ -347,7 +347,7 @@ def upload_sense_data(object):
     # total = verify_user(request)["total"]
     languages = select_languages(object)
     copywrite_year = get_copywrite_year()
-
+    print(cart)
     data = {
         'user': user,
         'cart_count': cart_count,

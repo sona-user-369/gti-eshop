@@ -31,6 +31,7 @@ urlpatterns = [
     path('shipping', views.shipping, name='shipping'),
     path('search', views.search_product, name='search_product'),
     path('retrieve_categorie/<id>', views.retrieve_categorie, name='retrieve_categorie'),
+    path('retrieve_sous_categorie/<id>', views.retrieve_sous_categorie, name='retrieve_sous_categorie'),
     re_path('telegram_send/(?P<image_url>)', views.share_message_telegram , name='telegram_send'),
 ]
 

@@ -7,7 +7,7 @@ urlpatterns = [
 
     path('register',registerUser, name='register'),
     path('fillGoogle',register_user_google, name='fillup'),
-    path('subscribtion', subscribtion, name='subscribe' ),
+    path('subscription', subscribtion, name='subscribe' ),
     path('auth', obtain_auth_token ),
     path('login', loginUser , name='login'),
     path('sample', sample_api ),

@@ -95,8 +95,8 @@
                                   Sous-Categorie
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                  {% for sous_categorie in field.its_sous_categories %}
-                                  <button class="dropdown-item" type="button">{{ sous_categorie.nom }}</button>
+                                  {% for sous_categorie in field.its_sous_categorie %}
+                                  <button class="dropdown-item" type="button">{{ sous_categorie.data.nom }}</button>
                                  {% endfor %}
                                 </div>
                               </div>
@@ -217,7 +217,7 @@
                         <td><a href="{% url 'dash_forms_update' intitule='product' id=field.product_pk %}">{{ field.product_data.nom }}</td>
                         <td>{{ field.product_data.date_de_stock }}</td>
                         <td>{{ field.product_data.stock }}</td>
-                        <td>{{ field.product_data.description_longue }}</td>
+                        <td>{{ field.product_data.description_longue|safe }}</td>
                         <td>{{ field.product_data.description_courte }}</td>
                         <td>{{ field.product_data.prix }}</td>
                         <td>{{ field.product_categorie }}</td>
